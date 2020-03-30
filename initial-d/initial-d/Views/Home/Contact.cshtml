@@ -1,17 +1,28 @@
 ﻿@{
     ViewBag.Title = "Contact";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+@section InternalNavbarOptions{
+    @Html.Partial("Partial/_InternalNavbar", new ViewDataDictionary { { "Action", "Contact" } })
+}
 
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+<h2 class="font-weight-bold">Tittle</h2>
+<h3>Bajada de título Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
+
+<hr />
+
+<div>
+    <h1>Texto con H1</h1>
+    <h2>Texto con H2</h2>
+    <h3>Texto con H3</h3>
+    <h4>Texto con H4</h4>
+    <h5>Texto con H5</h5>
+    <p>Texto con p</p>
+    <a href="#">Texto con con link</a>
+    <div class="mb-2"></div>
+    <ul>
+        <li>Lista 1</li>
+        <li>Lista 2</li>
+        <li>Lista 3</li>
+    </ul>
+</div>

@@ -1,4 +1,18 @@
-﻿<!DOCTYPE html>
+﻿@{
+    // To keep track of the Sidebar State (open or closed)
+    string sdStatus = "closed";
+    if (Request.Cookies["sdStatus"] != null)
+    {
+        sdStatus = Request.Cookies["sdStatus"].Value;
+    }
+
+    string ProdUrl = "#";
+    string ServUrl = "#";
+    string MechUrl = "#";
+    string UserUrl = "#";
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -8,54 +22,58 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 
-
 <body>
     <div class="wrapper">
         <!-- Sidebar  -->
-        <nav id="sidebar" class="active">
+        <nav id="sidebar" class="@sdStatus">
 
-            <button type="button" class="btn btn-info collapse-side d-none d-md-inline w-100">
+            <button id="sb-toggle-in-button" type="button" class="btn collapse-side d-none d-md-inline w-100 sidebar-toggle">
                 <i class="fas fa-bars"></i>
-                <span>Toggle Sidebar</span>
+                <span>Minimizar Barra</span>
             </button>
 
-            <div class="sidebar-header">
-                <h3>Initial-D</h3>
-                <strong>ID</strong>
-            </div>
+            <a href="/">
+                <div class="sidebar-header">
+                    <h3 class="mb-0">Initial-D</h3>
+                    <small>Sistema de Administración</small>
+                    <strong>ID</strong>
+                </div>
+            </a>
 
             <ul class="list-unstyled components">
 
-                <li class="active">
-                    <a href="#">
+                <li>
+                    <a href="@ProdUrl">
                         <i class="fas fa-boxes"></i>
                         <span>Productos</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="@ServUrl">
                         <i class="fas fa-tools"></i>
                         <span>Servicios</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="@MechUrl">
                         <i class="fas fa-wrench"></i>
                         <span>Mecánicos</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="@UserUrl">
                         <i class="fas fa-user"></i>
                         <span>Usuarios</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+
+                @* -------- COLLAPSE BUTTON TEST -------- *@
+                @*<li>
+                    <a id="collapse-test" href="#collapse-test-sub" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                         <i class="fas fa-bug"></i>
                         <span>Collapse Test</span>
                     </a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <ul class="collapse list-unstyled" id="collapse-test-sub">
                         <li>
                             <a href="#">Page 1</a>
                         </li>
@@ -66,47 +84,40 @@
                             <a href="#">Page 3</a>
                         </li>
                     </ul>
-                </li>
+                </li>*@
             </ul>
 
-            <ul class="list-unstyled CTAs">
+            <ul class="list-unstyled CTAs ">
                 <li>
-                    <a href="#" class="white-cta">CTA Test</a>
+                    <a href="#" class="btn-yellow">CTA Test</a>
                 </li>
             </ul>
         </nav>
 
         <!-- Page Content  -->
         <div class="w-100">
-            <nav class="navbar navbar-expand-lg navbar-light ">
+            <nav class="navbar navbar-expand-md navbar-light ">
                 <div class="container-fluid">
 
-                    <button type="button" class="btn btn-info collapse-side d-md-none">
+                    <button type="button" class="btn collapse-side d-md-none sidebar-toggle ml-3">
                         <i class="fas fa-bars"></i>
                     </button>
 
-                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="btn btn-dark d-inline-block d-md-none ml-auto mr-3" type="button" data-toggle="collapse"
+                            data-target="#internalNavbar"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <i class="fas fa-align-justify"></i>
                     </button>
 
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="collapse navbar-collapse mr-3 mr-md-0" id="internalNavbar">
                         <ul class="nav navbar-nav">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("About", "Home")">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
-                            </li>
+                            @RenderSection("InternalNavbarOptions", false)
                         </ul>
 
-                        <ul class="nav navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index", "UserAuth")">Login</a>
-                            </li>
-                        </ul>
+                        <div class="nav navbar-nav ml-auto mr-3">
+                            <a class="btn btn-secondary" href="@Url.Action("Logoff", "UserAuth")">Logoff</a>
+                        </div>
+
                     </div>
                 </div>
             </nav>
@@ -119,7 +130,7 @@
                 </div>
 
                 <footer>
-                    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+                    <p>&copy; @DateTime.Now.Year  -  Initia-D | Sistema de Administración para Jaramillo</p>
                 </footer>
             </div>
         </div>
@@ -128,16 +139,49 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/MainScripts")
     @RenderSection("scripts", required: false)
 
     <script>
         $(document).ready(function () {
 
-            $('.collapse-side').on('click', function () {
-                $('#sidebar').toggleClass('active');
-            });
+            // Toggle the sidebar state on sidebar-toggle click
+            $('.sidebar-toggle').on('click', toggleSidebar);
+
+            // To toggle the state of the sidebar on mouse enter or leave, but it doesn't work well enough on mobile to be acceptable
+            //$('#sidebar').on('mouseenter', toggleSidebar);
+            //$('#sidebar').on('mouseleave', toggleSidebar);
 
         });
+
+        // Togle the status of the Sidebar between Open and Closed
+        function toggleSidebar() {
+            let sd = $('#sidebar');
+
+            if (sd.hasClass('closed')) {
+                // whithout this it looks weird
+                sd.addClass('pre-open');
+
+                setTimeout(function () {
+                    sd.toggleClass('pre-open');
+                    sd.toggleClass('closed');
+                    updateSdStatus();
+                }, 120);
+
+            }
+            else {
+                sd.toggleClass('closed');
+                updateSdStatus();
+            }
+        }
+
+        /// Update the cookie that store the status of the sidebar
+        function updateSdStatus() {
+            var status = $('#sidebar').hasClass('closed') ? 'closed' : 'open';
+            Cookies.set('sdStatus', status);
+        }
+
+
     </script>
 </body>
 </html>

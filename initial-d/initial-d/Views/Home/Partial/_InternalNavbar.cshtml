@@ -1,0 +1,18 @@
+﻿@{ 
+    var Action = (string)ViewData["Action"];
+}
+
+<li class="nav-item" id="int-nav-Index">
+    <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a>
+</li>
+<li class="nav-item" id="int-nav-About">
+    <a class="nav-link" href="@Url.Action("About", "Home")">About</a>
+</li>
+<li class="nav-item" id="int-nav-Contact">
+    <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+</li>
+
+<script>
+    let action = '@Action';
+    document.getElementById('int-nav-' + action).classList.add('active');
+</script>

@@ -26,5 +26,6 @@ namespace initial_d.Controllers
 
             return View();
         }
+    
     }
 }
