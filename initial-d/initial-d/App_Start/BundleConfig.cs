@@ -29,7 +29,8 @@ namespace initial_d
                       "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/MainScripts").Include(
-                        "~/Scripts/js.cookie.min.js"));
+                        "~/Scripts/js.cookie.min.js",
+                        "~/Content/JS/_layout.js"));
 
         }
     }
