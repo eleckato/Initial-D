@@ -1,0 +1,28 @@
+﻿#login-dw {
+    background: var(--black-2);
+    border: none;
+}
+
+#login-dw:hover {
+    color: var(--yellow-3);
+}
+
+#login-dw:focus {
+    color: var(--yellow-3);
+}
+
+.login-dw-box {
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    background: #2D2D2D;
+}
+
+    .login-dw-box a {
+        color: whitesmoke;
+    }
+
+        .login-dw-box a:hover {
+            color: var(--yellow-3);
+            background: var(--black-2);
+        }

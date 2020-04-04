@@ -75,18 +75,29 @@ namespace initial_d.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+            /*
+             * No tenemos suficientes SignInStatus asi que voy a usar estos dos para otra cosa
+             * LockedOut                Invalid Username
+             * RequiresVerification     Invalid Credentials
+             */
+            SignInStatus result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, shouldLockout: false);
+
             switch (result)
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
+
                 case SignInStatus.LockedOut:
-                    return View("Lockout");
+                    ModelState.AddModelError("", "El nombre de usuario no existe.");
+                    return View(model);
+
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
+                    ModelState.AddModelError("", "La contraseña ingresada no es correcta.");
+                    return View(model);
+
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "Hubo un error procesando su solicitud, por favor intentelo nuevamente o ponganse en contacto con soporte.");
                     return View(model);
             }
         }

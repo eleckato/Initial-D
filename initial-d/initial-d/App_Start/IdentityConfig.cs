@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using initial_d.Models;
+using System.Diagnostics;
+using initial_d.Common;
 
 namespace initial_d
 {
@@ -104,6 +106,64 @@ namespace initial_d
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+        }
+
+
+        /*
+         * No tenemos suficientes SignInStatus asi que voy a usar estos dos para otra cosa
+         * LockedOut                Invalid Username
+         * RequiresVerification     Invalid Credentials
+         */
+        public override async Task<SignInStatus> PasswordSignInAsync(string userName, string password, bool isPersistent, bool shouldLockout)
+        {
+            // Authorization server end point
+            string uri = "http://localhost:8888";
+
+            var jwtProvider = Providers.JwtProvider.Create(uri);
+
+            string Response = await jwtProvider.GetTokenAsync(userName, password);
+
+            if (Response == null)
+            {
+                return SignInStatus.Failure;
+            }
+            else if (Response.StartsWith("ERR"))
+            {
+                switch (Response)
+                {
+                    // Invalid Username
+                    case "ERR-AUTH-001":
+                        return SignInStatus.LockedOut;
+
+                    // Invalid Credentials
+                    case "ERR-AUTH-002":
+                        return SignInStatus.RequiresVerification;
+
+                    default:
+                        return SignInStatus.Failure;
+                }
+            }
+            else
+            {
+                // Decode payload
+                dynamic payload = jwtProvider.DecodePayload(Response);
+
+                // ERROR: Malformed Token
+                if(payload == null) return SignInStatus.Failure;
+
+                // Create an Identity Claim
+                ClaimsIdentity claims = jwtProvider.CreateIdentity(true, userName, payload);
+
+                // ERROR: Malformed Token
+                if (claims == null) return SignInStatus.Failure;
+
+                // Sign in
+                var context = HttpContext.Current.Request.GetOwinContext();
+                var authenticationManager = context.Authentication;
+                authenticationManager.SignIn(claims);
+
+                return SignInStatus.Success;
+            }
         }
     }
 }
