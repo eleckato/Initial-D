@@ -6,10 +6,13 @@
         sdStatus = Request.Cookies["sdStatus"].Value;
     }
 
+    // URLs
     string ProdUrl = "#";
     string ServUrl = "#";
     string MechUrl = "#";
     string UserUrl = "#";
+
+    //@Html.Partial("_LoginPartial")
 }
 
 <!DOCTYPE html>
@@ -20,6 +23,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/ContentCSS")
     @Scripts.Render("~/bundles/modernizr")
+
 </head>
 
 <body>
@@ -67,24 +71,6 @@
                     </a>
                 </li>
 
-                @* -------- COLLAPSE BUTTON TEST -------- *@
-                @*<li>
-                    <a id="collapse-test" href="#collapse-test-sub" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="fas fa-bug"></i>
-                        <span>Collapse Test</span>
-                    </a>
-                    <ul class="collapse list-unstyled" id="collapse-test-sub">
-                        <li>
-                            <a href="#">Page 1</a>
-                        </li>
-                        <li>
-                            <a href="#">Page 2</a>
-                        </li>
-                        <li>
-                            <a href="#">Page 3</a>
-                        </li>
-                    </ul>
-                </li>*@
             </ul>
 
             <ul class="list-unstyled CTAs ">
@@ -115,6 +101,8 @@
                         </ul>
 
                         <div class="nav navbar-nav ml-auto mr-3">
+                            @*@Html.Partial("_LoginPartial")*@
+
                             <a class="btn btn-secondary" href="@Url.Action("Logoff", "UserAuth")">Logoff</a>
                         </div>
 
@@ -184,4 +172,5 @@
 
     </script>
 </body>
+
 </html>

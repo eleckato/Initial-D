@@ -1,24 +1,21 @@
 ﻿
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
-:root{
+:root {
     --black-0: #485531;
     --black-1: #1e2118;
     --black-2: #0b0e00;
-
     --white-1: #f5f5f5;
-    
     --yellow-0: #edb409;
     --yellow-1: #ffc107;
     --yellow-2: #e0c52c;
     --yellow-3: #f0e054;
-    
     --sidebar-width: 260px;
     --sidebar-width-closed: 80px;
     --transition-speed: 0.2s;
 }
 
-footer{
+footer {
     font-size: 0.7em;
 }
 
@@ -35,19 +32,21 @@ p, li, a {
     color: #4d4d4d;
 }
 
-a, a:hover, a:focus {
-    text-decoration: none;
-    transition: all var(--transition-speed);
-    color: var(--yellow-0)
-}
-    a:hover{
-        text-decoration-line: underline;
-        text-decoration-style: dotted;
-        color: var(--yellow-1)
+    a, a:hover, a:focus {
+        text-decoration: none;
+        transition: all var(--transition-speed);
+        color: var(--yellow-0)
     }
-a:focus{
-    text-decoration: none !important;
-}
+
+        a:hover {
+            text-decoration-line: underline;
+            text-decoration-style: dotted;
+            color: var(--yellow-1)
+        }
+
+        a:focus {
+            text-decoration: none !important;
+        }
 
 .btn-yellow {
     background: var(--yellow-2) !important;
@@ -66,18 +65,21 @@ a:focus{
     padding: 5px;
     background: #2D2D2D;
 }
+
     .navbar .nav .nav-link {
         color: whitesmoke;
         font-weight: 100;
     }
+
         .navbar .nav .nav-link:hover {
             color: var(--yellow-1);
         }
-    .navbar-light .navbar-nav .active > .nav-link {
-        color: var(--yellow-1);
-        font-weight: 600;
-    }
-    
+
+.navbar-light .navbar-nav .active > .nav-link {
+    color: var(--yellow-1);
+    font-weight: 600;
+}
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -86,16 +88,17 @@ a:focus{
     align-items: stretch;
 }
 
-#sb-toggle-in-button{
+#sb-toggle-in-button {
     /* height: ; */
 }
 
-.sidebar-toggle{
+.sidebar-toggle {
     background: var(--yellow-2);
     color: var(--black-2);
     border-radius: 0px;
 }
-    .sidebar-toggle:hover{
+
+    .sidebar-toggle:hover {
         background: var(--yellow-3);
         color: var(--black-2);
     }
@@ -110,11 +113,11 @@ a:focus{
 }
 
 
-#sidebar a{
-    color: var(--white-1);
-    font-size: 1em;
-    text-decoration: none;
-}
+    #sidebar a {
+        color: var(--white-1);
+        font-size: 1em;
+        text-decoration: none;
+    }
 
     /* CLOSED Sidebar Base */
     #sidebar.closed {
@@ -122,11 +125,12 @@ a:focus{
         max-width: var(--sidebar-width-closed);
         text-align: center;
     }
-    #sidebar.pre-open{
+
+    #sidebar.pre-open {
         min-width: var(--sidebar-width);
         max-width: var(--sidebar-width);
     }
-    
+
     /* CLOSED: Sidebar links style */
     #sidebar.closed ul li a {
         padding: 10px 10px;
@@ -160,38 +164,40 @@ a:focus{
     /* HEADER */
     #sidebar .sidebar-header {
         padding: 20px;
-        background:var(--black-2);
+        background: var(--black-2);
         color: var(--yellow-1);
     }
-    #sidebar .sidebar-header strong {
-        display: none;
-        font-size: 1.8em;
-    }
-        /* CLOSED: Hide the Big Header and the CTA */
-        #sidebar.closed .sidebar-header h3,
-        #sidebar.closed .CTAs,
-        #sidebar.closed .sidebar-header small {
-            display: none;
-        }
 
-        /* CLOSED: Show the Small Header */
-        #sidebar.closed .sidebar-header strong {
-            display: block;
-        }
-        /* Hide all text when is collapsed */
-        #sidebar.closed span{
+        #sidebar .sidebar-header strong {
             display: none;
+            font-size: 1.8em;
         }
-        
+    /* CLOSED: Hide the Big Header and the CTA */
+    #sidebar.closed .sidebar-header h3,
+    #sidebar.closed .CTAs,
+    #sidebar.closed .sidebar-header small {
+        display: none;
+    }
+
+    /* CLOSED: Show the Small Header */
+    #sidebar.closed .sidebar-header strong {
+        display: block;
+    }
+    /* Hide all text when is collapsed */
+    #sidebar.closed span {
+        display: none;
+    }
+
 
     /* Links container */
     #sidebar ul.components {
         padding: 20px 0;
         border-bottom: 1px solid var(--yellow-1);
     }
-        #sidebar.closed ul.components {
-            border: 0px;
-        }
+
+    #sidebar.closed ul.components {
+        border: 0px;
+    }
 
     /* Links */
     #sidebar ul li a {
@@ -217,42 +223,42 @@ a:focus{
         background: var(--black-2);
     }
 
-#sidebar a[data-toggle="collapse"] {
-    position: relative;
-}
+    #sidebar a[data-toggle="collapse"] {
+        position: relative;
+    }
 
-/* Dropdown Link - Flechita */
-#sidebar .dropdown-toggle::after {
-    display: block;
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-}
+    /* Dropdown Link - Flechita */
+    #sidebar .dropdown-toggle::after {
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+    }
 
-/* Sub-Links */
-#sidebar ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    background: var(--black-2);
-}
+    /* Sub-Links */
+    #sidebar ul ul a {
+        font-size: 0.9em !important;
+        padding-left: 30px !important;
+        background: var(--black-2);
+    }
     /* Sub-Links Hover */
     #sidebar ul ul li a:hover {
         background: var(--black-1);
     }
 
-/* Sidebar CTA */
-#sidebar ul.CTAs {
-    padding: 20px;
-}
     /* Sidebar CTA */
-    #sidebar ul.CTAs a {
-        text-align: center;
-        font-size: 0.9em !important;
-        display: block;
-        border-radius: 5px;
-        margin-bottom: 5px;
+    #sidebar ul.CTAs {
+        padding: 20px;
     }
+        /* Sidebar CTA */
+        #sidebar ul.CTAs a {
+            text-align: center;
+            font-size: 0.9em !important;
+            display: block;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
 
 
 /* ---------------------------------------------------
@@ -276,9 +282,9 @@ a:focus{
         max-width: 0px;
     }
 
-    #sidebar.closed .sidebar-header{
-        display: none;
-    }
+        #sidebar.closed .sidebar-header {
+            display: none;
+        }
 
 
     /* .sidebar-toggle{
@@ -355,32 +361,37 @@ a:focus{
 
 }
 
-@media (max-width: 1550px){
-    :root{
+@media (max-width: 1550px) {
+    :root {
         --sidebar-width: 220px;
         --sidebar-width-closed: 60px;
     }
 
-    body{
+    body {
         font-size: 80%;
     }
-    span{
+
+    span {
         font-size: 85%;
     }
-    
-    h1{
+
+    h1 {
         font-size: 2.1rem;
     }
-    h2{
+
+    h2 {
         font-size: 1.75rem;
     }
-    h3{
+
+    h3 {
         font-size: 1.5rem;
     }
-    h4{
+
+    h4 {
         font-size: 1.25rem;
     }
-    h5{
+
+    h5 {
         font-size: 1rem;
     }
 }

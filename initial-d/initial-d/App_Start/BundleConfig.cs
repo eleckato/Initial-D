@@ -22,15 +22,15 @@ namespace initial_d
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
-            bundles.Add(new ScriptBundle("~/MainScripts").Include(
-                      "~/Scripts/js.cookie.min.js"));
-
-
             bundles.Add(new StyleBundle("~/ContentCSS").Include(
                       "~/Content/bootstrap.min.css",
                       "~/Content/fontawesome.min.css",
                       "~/Content/solid.min.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new ScriptBundle("~/MainScripts").Include(
+                        "~/Scripts/js.cookie.min.js"));
+
         }
     }
 }

@@ -3,10 +3,7 @@
 }
 
 @section InternalNavbarOptions{
-    @Html.Partial("Partial/_InternalNavbar", new ViewDataDictionary { { "Action", "About" } })
+    @Html.Partial("_InternalNavbar", new ViewDataDictionary { { "Action", "About" } })
 }
 
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
-
-<p>Use this area to provide additional information.</p>
+<h2>About</h2>
