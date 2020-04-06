@@ -13,45 +13,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/ContentCSS")
+    @Styles.Render("~/Content/CSS/login-view.css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 
 <body>
-
-    <style>
-        .main-wrap {
-            height: 100vh;
-            /* d-flex */
-            display: -ms-flexbox !important;
-            display: flex !important;
-            /* justify-content-center */
-            -ms-flex-pack: center !important;
-            justify-content: center !important;
-            /* align-items-center */
-            -ms-flex-align: center !important;
-            align-items: center !important;
-            background: var(--black-1);
-        }
-
-        .login-cont {
-            max-width: 25rem;
-            background: var(--yellow-3);
-            padding: 20px 30px;
-            margin: 30px;
-            border-radius: 10px;
-            height: max-content;
-        }
-
-        #login-btn {
-            width: 8rem;
-        }
-        .custom-checkbox .custom-control-input:checked~.custom-control-label::before{
-          background-color: var(--yellow-1);
-          border-color: var(--yellow-0);
-        }
-    </style>
-
-
     <div class="main-wrap">
 
 

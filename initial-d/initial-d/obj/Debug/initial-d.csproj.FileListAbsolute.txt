@@ -208,3 +208,7 @@ C:\C_Dctos\PORTAFOLIO\repos\Initial-D\initial-d\initial-d\obj\Debug\initial-d.cs
 C:\C_Dctos\PORTAFOLIO\repos\Initial-D\initial-d\initial-d\obj\Debug\initial-d.csproj.CopyComplete
 C:\C_Dctos\PORTAFOLIO\repos\Initial-D\initial-d\initial-d\obj\Debug\initial-d.dll
 C:\C_Dctos\PORTAFOLIO\repos\Initial-D\initial-d\initial-d\obj\Debug\initial-d.pdb
+C:\C_Dctos\PORTAFOLIO\repos\Initial-D\initial-d\initial-d\bin\RestSharp.dll
+C:\C_Dctos\PORTAFOLIO\repos\Initial-D\initial-d\initial-d\bin\System.Net.Http.Formatting.dll
+C:\C_Dctos\PORTAFOLIO\repos\Initial-D\initial-d\initial-d\bin\RestSharp.xml
+C:\C_Dctos\PORTAFOLIO\repos\Initial-D\initial-d\initial-d\bin\System.Net.Http.Formatting.xml

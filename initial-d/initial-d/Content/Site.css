@@ -206,12 +206,12 @@ p, li, a {
         display: block;
     }
         /* Links Hover */
-        #sidebar ul li a:hover {
-            color: var(--yellow-1);
-            background: var(--black-2);
+        #sidebar ul li a:hover, #sidebar ul li.active a {
+            color: var(--yellow-1) !important;
+            background: var(--black-2) !important;
         }
         /* Links Icons */
-        #sidebar ul li a i {
+        #sidebar ul li a i, #sidebar ul li.active a i {
             margin-right: 10px;
             margin-left: 10px;
         }

@@ -12,7 +12,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using initial_d.Models;
 using System.Diagnostics;
-using initial_d.Common;
+using System.Configuration;
 
 namespace initial_d
 {
@@ -90,6 +90,7 @@ namespace initial_d
         }
     }
 
+
     // Configure the application sign-in manager which is used in this application.
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {
@@ -117,7 +118,7 @@ namespace initial_d
         public override async Task<SignInStatus> PasswordSignInAsync(string userName, string password, bool isPersistent, bool shouldLockout)
         {
             // Authorization server end point
-            string uri = "http://localhost:8888";
+            string uri = ConfigurationManager.AppSettings["BuffetAPI.url"];
 
             var jwtProvider = Providers.JwtProvider.Create(uri);
 

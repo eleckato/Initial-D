@@ -6,13 +6,17 @@
         sdStatus = Request.Cookies["sdStatus"].Value;
     }
 
-    // URLs
-    string ProdUrl = "#";
-    string ServUrl = "#";
-    string MechUrl = "#";
-    string UserUrl = "#";
-}
+    // Current controller in action
+    var controller = ViewContext.RouteData.Values["controller"];
 
+    var InternalNavbar = (List<initial_d.Common.NavbarItems>)ViewBag.InternalNavbar;
+
+    // URLs
+    string ProdUrl = Url.Action("ProdList", "Productos");
+    string ServUrl = Url.Action("ServList", "Servicios");
+    string MechUrl = Url.Action("MechList", "Mecanicos");
+    string UserUrl = Url.Action("UserList", "Usuarios");
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,26 +47,26 @@
             </a>
 
             <ul class="list-unstyled components">
-
-                <li>
+                @* Active or deactive the button depending on the controller *@
+                <li class="@(controller.Equals("Productos") ? "active" : "")">
                     <a href="@ProdUrl">
                         <i class="fas fa-boxes"></i>
                         <span>Productos</span>
                     </a>
                 </li>
-                <li>
+                <li class="@(controller.Equals("Servicios") ? "active" : "")">
                     <a href="@ServUrl">
                         <i class="fas fa-tools"></i>
                         <span>Servicios</span>
                     </a>
                 </li>
-                <li>
+                <li class="@(controller.Equals("Mecanicos") ? "active" : "")">
                     <a href="@MechUrl">
                         <i class="fas fa-wrench"></i>
                         <span>Mecánicos</span>
                     </a>
                 </li>
-                <li>
+                <li class="@(controller.Equals("Usuarios") ? "active" : "")">
                     <a href="@UserUrl">
                         <i class="fas fa-user"></i>
                         <span>Usuarios</span>
@@ -95,7 +99,7 @@
 
                     <div class="collapse navbar-collapse mr-3 mr-md-0" id="internalNavbar">
                         <ul class="nav navbar-nav">
-                            @RenderSection("InternalNavbarOptions", false)
+                            @Html.Partial("_InternalNavbar", InternalNavbar)
                         </ul>
 
                         <div class="nav navbar-nav ml-auto mr-3">

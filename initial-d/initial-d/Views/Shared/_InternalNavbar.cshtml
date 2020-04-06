@@ -1,0 +1,15 @@
+﻿@model List<initial_d.Common.NavbarItems>
+
+@{
+    var CurrentAction = ViewContext.RouteData.Values["action"];
+}
+
+@foreach (var item in Model)
+{
+    string active = (CurrentAction.Equals(item.ActionName) ? "active" : "");
+
+    <li class="nav-item @active">
+        <a class="nav-link" href="@Url.Action(item.ActionName, item.ControllerName)"> @item.ViewName </a>
+    </li>
+}
+

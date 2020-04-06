@@ -2,6 +2,8 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -27,31 +29,44 @@ namespace initial_d.Providers
 
         public async Task<string> GetTokenAsync(string username, string password)
         {
+            if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                return null;
+
+            string methodName = "JwtProvider.GetTokenAsync";
+
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(_tokenUri);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                
-                var content = new FormUrlEncodedContent(new[]
+                try
                 {
+                    client.BaseAddress = new Uri(_tokenUri);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    var content = new FormUrlEncodedContent(new[]
+                    {
                     new KeyValuePair<string, string>("email", username),
                     new KeyValuePair<string, string>("hash", password),
                 });
 
-                var response = await client.PostAsync("/user-auth", content);
+                    var response = await client.PostAsync("/user-auth", content);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    return await response.Content.ReadAsStringAsync();
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        return await response.Content.ReadAsStringAsync();
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        var res = response.Headers.GetValues("error-code").First();
+                        return res;
+                    }
+                    else
+                    {
+                        // Return null if unauthenticated
+                        return null;
+                    }
                 }
-                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                catch (Exception e)
                 {
-                    var res = response.Headers.GetValues("error-code").First();
-                    return res;
-                }
-                else
-                {
-                    // Return null if unauthenticated
+                    Debug.WriteLine($"ERROR {methodName}: {e.Message}");
                     return null;
                 }
             }
@@ -59,6 +74,11 @@ namespace initial_d.Providers
 
         public JObject DecodePayload(string token)
         {
+            if (string.IsNullOrEmpty(token))
+                return null;
+
+            string methodName = "JwtProvider.DecodePayload";
+
             try
             {
                 var parts = token.Split('.');
@@ -67,14 +87,20 @@ namespace initial_d.Providers
                 var payloadJson = Encoding.UTF8.GetString(Base64UrlDecode(payload));
                 return JObject.Parse(payloadJson);
             }
-            catch
+            catch (Exception e)
             {
+                Debug.WriteLine($"ERROR {methodName}: {e.Message}");
                 return null;
             }
         }
 
         public ClaimsIdentity CreateIdentity(bool isAuthenticated, string userName, dynamic payload)
         {
+            if (string.IsNullOrEmpty(userName) || payload == null)
+                return null;
+
+            string methodName = "JwtProvider.CreateIdentity";
+
             try
             {
                 // Decode the payload from token in order to create a claim
@@ -92,8 +118,9 @@ namespace initial_d.Providers
 
                 return jwtIdentity;
             }
-            catch
+            catch (Exception e)
             {
+                Debug.WriteLine($"ERROR {methodName}: {e.Message}");
                 return null;
             }
         }

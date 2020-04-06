@@ -1,0 +1,57 @@
+﻿@model IEnumerable<initial_d.Models.APIModels.Usuario>
+@{
+    ViewBag.Title = "Admin. de Clientes";
+
+
+}
+
+<h2>Administrador de Usuarios</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">@Html.DisplayNameFor(m => m.name)</th>
+            <th scope="col">@Html.DisplayNameFor(m => m.last_names)</th>
+            <th scope="col">@Html.DisplayNameFor(m => m.email)</th>
+            <th scope="col">@Html.DisplayNameFor(m => m.user_type_id)</th>
+            <th scope="col">@Html.DisplayNameFor(m => m.status_id)</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <th scope="row">1</th>
+
+                <td>
+                    @Html.DisplayFor(m => user.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.last_names)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.email)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.user_type_id)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.status_id)
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+
+
+
+
+@*<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "ID_USER_CATO" })" class="btn btn-success btn-sm">
+    ID_USER_CATO
+</a>*@
+
