@@ -2,56 +2,123 @@
 @{
     ViewBag.Title = "Admin. de Clientes";
 
-
+    string AddUrl = Url.Action("AddUser", "Usuarios");
 }
 
-<h2>Administrador de Usuarios</h2>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">@Html.DisplayNameFor(m => m.name)</th>
-            <th scope="col">@Html.DisplayNameFor(m => m.last_names)</th>
-            <th scope="col">@Html.DisplayNameFor(m => m.email)</th>
-            <th scope="col">@Html.DisplayNameFor(m => m.user_type_id)</th>
-            <th scope="col">@Html.DisplayNameFor(m => m.status_id)</th>
-        </tr>
-    </thead>
+<div class="mb-3 row">
+    <h2>Administrador de Usuarios</h2>
+    <div class="ml-auto d-flex align-items-center">
+        <a href="@AddUrl" class="btn btn-sm btn-success" role="button">Agregar Usuario</a>
+    </div>
+</div>
 
-    <tbody>
-        @foreach (var user in Model)
-        {
+<div>
+    <table class="table table-hover table-sm table-striped border">
+        <thead>
             <tr>
-                <th scope="row">1</th>
-
-                <td>
-                    @Html.DisplayFor(m => user.name)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => user.last_names)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => user.email)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => user.user_type_id)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => user.status_id)
-                </td>
+                <th scope="col">ID</th>
+                <th scope="col">@Html.DisplayNameFor(m => m.username)</th>
+                <th scope="col">@Html.DisplayNameFor(m => m.name)</th>
+                <th scope="col">@Html.DisplayNameFor(m => m.last_names)</th>
+                <th scope="col">@Html.DisplayNameFor(m => m.email)</th>
+                <th scope="col">@Html.DisplayNameFor(m => m.user_type_id)</th>
+                <th scope="col">@Html.DisplayNameFor(m => m.status_id)</th>
+                <th scope="col">Actions</th>
             </tr>
-        }
-    </tbody>
+        </thead>
 
-</table>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                string DetailsUrl = Url.Action("UserDetails", "Usuarios", new { userId = user.appuser_id });
 
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => user.appuser_id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => user.username)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => user.name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => user.last_names)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => user.email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => user.user_type_id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => user.status_id)
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <a href="@DetailsUrl" class="btn btn-xsm btn-info mr-2" role="button">
+                                <i class="fa fa-bars mr-1" aria-hidden="true"></i>
+                                Detalles
+                            </a>
+                            <a href="#delete-modal" class="btn btn-xsm btn-danger" role="button" data-toggle="modal" data-user-id="@user.appuser_id">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
 
+    </table>
+</div>
 
+<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Adertencia</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Estas seguro/a que quieres eliminar a este Usuario?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a id="modal-delete-btn" href="#" role="button" class="btn btn-sm btn-danger">Eliminar</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section customScripts{
+
+    <script>
+        $('#delete-modal').on('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = $(event.relatedTarget)
+
+            // Extract the userId
+            var userId = button.data('user-id')
+
+            // Get the actual delete button from the modal
+            var delbtn = $(this).find('#modal-delete-btn');
+
+            // Change the href. Maybe this shouldn't be so hardcoded.
+            delbtn.attr('href', value = `user-admin/${userId}/delete`);
+        });
+    </script>
+}
 
 
 
 @*<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "ID_USER_CATO" })" class="btn btn-success btn-sm">
-    ID_USER_CATO
-</a>*@
+        ID_USER_CATO
+    </a>*@
 

@@ -59,5 +59,23 @@ namespace initial_d.Models.APIModels
         {
 
         }
+
+        public Usuario(bool isTemplate)
+        {
+            this.appuser_id = string.Empty;
+            this.username = string.Empty;
+            this.email = string.Empty;
+            this.name = string.Empty;
+            this.last_names = string.Empty;
+            this.adress = string.Empty;
+            this.phone = string.Empty;
+            this.description = string.Empty;
+            this.user_type_id = string.Empty;
+
+            this.hash = null;
+            this.isdelete = false;
+            this.lastlogin = DateTime.Today;
+            this.status_id = "1";
+        }
     }
 }

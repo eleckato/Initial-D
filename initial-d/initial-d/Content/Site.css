@@ -48,15 +48,6 @@ p, li, a {
             text-decoration: none !important;
         }
 
-.btn-yellow {
-    background: var(--yellow-2) !important;
-    color: var(--black-2) !important;
-}
-
-    .btn-yellow:hover {
-        background: var(--yellow-3) !important;
-        color: var(--black-2) !important;
-    }
 
 /* ---------------------------------------------------
     LOCAL NAVBAR
@@ -69,6 +60,7 @@ p, li, a {
     .navbar .nav .nav-link {
         color: whitesmoke;
         font-weight: 100;
+        font-size: 0.9rem;
     }
 
         .navbar .nav .nav-link:hover {

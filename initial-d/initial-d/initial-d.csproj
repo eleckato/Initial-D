@@ -186,6 +186,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Common\ErrorWriter.cs" />
     <Compile Include="Common\NavbarItems.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -214,6 +215,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\brands.css" />
     <Content Include="Content\brands.min.css" />
+    <Content Include="Content\CSS\Elements\buttons.css" />
     <Content Include="Content\CSS\login-view.css" />
     <Content Include="Content\CSS\partial-login.css" />
     <Content Include="Content\fontawesome-all.css" />
@@ -420,6 +422,7 @@
     <Content Include="Views\Usuarios\AddUser.cshtml" />
     <Content Include="Views\Servicios\AddServ.cshtml" />
     <Content Include="Views\Usuarios\UserDetails.cshtml" />
+    <Content Include="Views\Usuarios\UpdateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

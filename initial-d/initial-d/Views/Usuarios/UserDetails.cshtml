@@ -1,8 +1,17 @@
-﻿@{
+﻿@model initial_d.Models.APIModels.Usuario
+
+@{
     ViewBag.Title = "UserDetails";
+
+    string UpdateUser = Url.Action("UpdateUser", "Usuarios", new { userId = Model.appuser_id });
 }
 
-<h2>Detalles de Usuario</h2>
+<div class="mb-3 row">
+    <h2>Detalles de Usuario</h2>
+    <div class="ml-auto d-flex align-items-center">
+        <a href="@UpdateUser" class="btn btn-sm btn-success" role="button">Agregar Usuario</a>
+    </div>
+</div>
 
-<h3> @ViewBag.userId </h3>
+<h3> @Model.username </h3>
 

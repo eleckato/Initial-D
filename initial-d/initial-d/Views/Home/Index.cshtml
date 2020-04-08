@@ -1,8 +1,22 @@
 ﻿@{
     ViewBag.Title = "Inicio";
+
+    string err = ViewBag.ErrMsg ?? "";
 }
 
 <div class="jumbotron">
     <h1>Initial-D</h1>
     <p class="lead"> Lorem Ipsum </p>
 </div>
+
+
+@section customScripts{
+<script>
+    {
+        // Get the error message and show an alert with it
+        let err = '@err';
+        if (err) ShowAlert(err, 'alert-danger')
+    }
+</script>
+}
+

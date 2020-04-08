@@ -26,7 +26,8 @@ namespace initial_d
                       "~/Content/bootstrap.min.css",
                       "~/Content/fontawesome.min.css",
                       "~/Content/solid.min.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/CSS/Elements/buttons.css"));
 
             bundles.Add(new ScriptBundle("~/MainScripts").Include(
                         "~/Scripts/js.cookie.min.js",

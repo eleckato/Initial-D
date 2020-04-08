@@ -12,6 +12,8 @@ namespace initial_d.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.ErrMsg = TempData["ErrorMessage"] ?? null;
+
             SetNavbar();
             return View();
         }
