@@ -23,8 +23,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Initial-D</title>
+
     @Styles.Render("~/ContentCSS")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/HeadScrips")
 
 </head>
 
@@ -33,7 +35,7 @@
     <div id="alerts" class="fixed-top mx-3 mt-3"> </div>
 
     <div class="wrapper">
-        <!-- Sidebar  -->
+        <!-- Sidebar -->
         <nav id="sidebar" class="@sdStatus">
 
             <button id="sb-toggle-in-button" type="button" class="btn collapse-side d-none d-md-inline w-100 sidebar-toggle">
@@ -127,12 +129,17 @@
         </div>
     </div>
 
+    <!-- Jquery 3.4.1 -->
     @Scripts.Render("~/bundles/jquery")
+    <!-- Bootstrap 4.4.1 -->
     @Scripts.Render("~/bundles/bootstrap")
+    <!-- Sitewide custom Scripts  -->
     @Scripts.Render("~/MainScripts")
-    @RenderSection("scripts", required: false)
+    <!-- Page specific custom Scripts  -->
 
-    @RenderSection("customScripts", false);
+    <!-- customScripts  -->
+    @RenderSection("customScripts", false)
+    <!-- /customScripts  -->
 
 </body>
 

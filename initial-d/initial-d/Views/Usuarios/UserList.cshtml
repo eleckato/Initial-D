@@ -5,16 +5,22 @@
     string AddUrl = Url.Action("AddUser", "Usuarios");
 }
 
+<div class="header">
 
-<div class="mb-3 row">
-    <h2>Administrador de Usuarios</h2>
+    <div class="title">
+        <i class="fa fa-users" aria-hidden="true"></i>
+        <h2>Administrador de Usuarios</h2>
+    </div>
+
     <div class="ml-auto d-flex align-items-center">
         <a href="@AddUrl" class="btn btn-sm btn-success" role="button">Agregar Usuario</a>
     </div>
+
 </div>
 
 <div>
-    <table class="table table-hover table-sm table-striped border">
+    <table class="table c-info-table">
+
         <thead>
             <tr>
                 <th scope="col">ID</th>
@@ -29,6 +35,7 @@
         </thead>
 
         <tbody>
+            @* Print one row by User *@
             @foreach (var user in Model)
             {
                 string DetailsUrl = Url.Action("UserDetails", "Usuarios", new { userId = user.appuser_id });
@@ -61,7 +68,7 @@
                                 <i class="fa fa-bars mr-1" aria-hidden="true"></i>
                                 Detalles
                             </a>
-                            <a href="#delete-modal" class="btn btn-xsm btn-danger" role="button" data-toggle="modal" data-user-id="@user.appuser_id">
+                            <a class="btn btn-xsm btn-danger" role="button" data-toggle="modal" data-user-id="@user.appuser_id" href="#delete-modal">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -73,52 +80,10 @@
     </table>
 </div>
 
-<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+@Html.Partial("Partial/_DeleteModalAndScript")
 
-            <div class="modal-header">
-                <h5 class="modal-title">Adertencia</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <p>¿Estas seguro/a que quieres eliminar a este Usuario?</p>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
-                <a id="modal-delete-btn" href="#" role="button" class="btn btn-sm btn-danger">Eliminar</a>
-            </div>
-
-        </div>
-    </div>
-</div>
 
 @section customScripts{
 
-    <script>
-        $('#delete-modal').on('show.bs.modal', function (event) {
-            // Button that triggered the modal
-            var button = $(event.relatedTarget)
 
-            // Extract the userId
-            var userId = button.data('user-id')
-
-            // Get the actual delete button from the modal
-            var delbtn = $(this).find('#modal-delete-btn');
-
-            // Change the href. Maybe this shouldn't be so hardcoded.
-            delbtn.attr('href', value = `user-admin/${userId}/delete`);
-        });
-    </script>
 }
-
-
-
-@*<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "ID_USER_CATO" })" class="btn btn-success btn-sm">
-        ID_USER_CATO
-    </a>*@
-

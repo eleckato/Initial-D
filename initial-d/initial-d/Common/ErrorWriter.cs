@@ -4,18 +4,37 @@ using System.Linq;
 using System.Web;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.IO;
 
 namespace initial_d.Common
 {
     public class ErrorWriter
     {
-        public static void InvalidArgumentsError([CallerMemberName] string callerName = "")
+        /// <summary>
+        /// Print a Invalid Arguments error on the Debug Console, with the caller name and the file of it
+        /// <para> callerName and callerFilePath are filled automatically </para>
+        /// </summary>
+        public static void InvalidArgumentsError([CallerMemberName] string callerName = "", [CallerFilePath]string callerFilePath = null)
         {
-            Debug.WriteLine($"ERROR in {callerName} : Invalid Arguments");
+            var callerFile = Path.GetFileName(callerFilePath);
+
+            Debug.WriteLine("----------------------------------------------------------------");
+            Debug.WriteLine($"ERROR in {callerName}()  :  Invalid Arguments\non file  :  {callerFile}");
+            Debug.WriteLine("----------------------------------------------------------------");
         }
-        public static void ExceptionError(Exception exception, [CallerMemberName] string callerName = "")
+
+        /// <summary>
+        /// Print the message of an Exception on the Debug Console, with the caller name and the file of it
+        /// <para> callerName and callerFilePath are filled automatically </para>
+        /// </summary>
+        /// <param name="exception"> Exception from where to extract the message </param>
+        public static void ExceptionError(Exception exception, [CallerMemberName] string callerName = "", [CallerFilePath]string callerFilePath = null)
         {
-            Debug.WriteLine($"ERROR in {callerName} : {exception.Message}");
+            var callerFile = Path.GetFileName(callerFilePath);
+
+            Debug.WriteLine("----------------------------------------------------------------");
+            Debug.WriteLine($"ERROR in {callerName}()  :  {exception.Message}\non file  :  {callerFile}");
+            Debug.WriteLine("----------------------------------------------------------------");
         }
 
     }

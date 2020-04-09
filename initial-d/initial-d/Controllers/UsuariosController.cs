@@ -30,6 +30,7 @@ namespace initial_d.Controllers
         [Route]
         public ActionResult UserList()
         {
+            ErrorWriter.InvalidArgumentsError();
             List<Usuario> Usuarios;
 
             try

@@ -3,15 +3,90 @@
 @{
     ViewBag.Title = "UserDetails";
 
-    string UpdateUser = Url.Action("UpdateUser", "Usuarios", new { userId = Model.appuser_id });
+    string UpdateUser_Url = Url.Action("UpdateUser", "Usuarios", new { userId = Model.appuser_id });
+    string GoBack_Url = Url.Action("UserList", "Usuarios");
+
 }
 
-<div class="mb-3 row">
-    <h2>Detalles de Usuario</h2>
-    <div class="ml-auto d-flex align-items-center">
-        <a href="@UpdateUser" class="btn btn-sm btn-success" role="button">Agregar Usuario</a>
+    <div class="d-none shadow-"></div>
+
+<div class="header">
+
+    <div class="title">
+        <i class="fa fa-address-card" aria-hidden="true"></i>
+        <h2>Detalles de Usuario</h2>
     </div>
+
+    <div class="ml-auto d-flex align-items-center">
+        <a href="@UpdateUser_Url" class="btn btn-sm btn-info mr-3" role="button">Actualizar Datos</a>
+        <a href="@GoBack_Url" class="btn btn-sm btn-secondary" role="button">Volver</a>
+    </div>
+
 </div>
 
-<h3> @Model.username </h3>
+
+<div class="row justify-content-around">
+
+    <div class="col-5 c-jumbotron">
+        <h3 class="mb-4"> Información Personal </h3>
+
+        <table class="table table-borderless c-info-table">
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.email)</td>
+                <td>@Html.DisplayFor(m => m.email)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.name)</td>
+                <td>@Html.DisplayFor(m => m.name)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.last_names)</td>
+                <td>@Html.DisplayFor(m => m.last_names)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.adress)</td>
+                <td>@Html.DisplayFor(m => m.adress)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.phone)</td>
+                <td>@Html.DisplayFor(m => m.phone)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.description)</td>
+                <td>@Html.DisplayFor(m => m.description)</td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="col-5 c-jumbotron">
+        <h3 class="mb-4"> Información de Sistema </h3>
+
+        <table class="table table-borderless c-info-table">
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.appuser_id)</td>
+                <td>@Html.DisplayFor(m => m.appuser_id)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.username)</td>
+                <td>@Html.DisplayFor(m => m.username)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.user_type_id)</td>
+                <td>@Html.DisplayFor(m => m.user_type_id)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.lastlogin)</td>
+                <td>@Html.DisplayFor(m => m.lastlogin)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.status_id)</td>
+                <td>@Html.DisplayFor(m => m.status_id)</td>
+            </tr>
+        </table>
+
+    </div>
+
+</div>
+
 

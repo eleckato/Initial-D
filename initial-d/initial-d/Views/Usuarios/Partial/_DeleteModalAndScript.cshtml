@@ -1,0 +1,45 @@
+﻿@* Just make a button these attributes and done      
+   data-toggle="modal" href="#delete-modal" data-user-id="{userId}" *@
+
+<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Adertencia</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Estas seguro/a que quieres eliminar a este Usuario?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a id="modal-delete-btn" href="#" role="button" class="btn btn-sm btn-danger">Eliminar</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function LoadDeleteScript() {
+        $(document).on('show.bs.modal', '#delete-modal', function (event) {
+            // Button that triggered the modal
+            var button = $(event.relatedTarget)
+
+            // Extract the userId
+            var userId = button.data('user-id')
+
+            // Get the actual delete button from the modal
+            var delbtn = $(this).find('#modal-delete-btn');
+
+            // Change the href. Maybe this shouldn't be so hardcoded.
+            delbtn.attr('href', value = `user-admin/${userId}/delete`);
+        });
+    }
+    WaitForJquery(LoadDeleteScript);
+</script>
