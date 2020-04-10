@@ -19,6 +19,7 @@ namespace initial_d.Models.APIModels
 
         [Required]
         [Display(Name = "Email")]
+        [EmailAddress(ErrorMessage = "El email ingresado no es valido")]
         public string email { get; set; }
 
         [Required]

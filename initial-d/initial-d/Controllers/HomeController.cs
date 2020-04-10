@@ -12,8 +12,6 @@ namespace initial_d.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.ErrMsg = TempData["ErrorMessage"] ?? null;
-
             SetNavbar();
             return View();
         }
@@ -27,6 +25,14 @@ namespace initial_d.Controllers
         public ActionResult Contact()
         {
             SetNavbar();
+            return View();
+        }
+
+
+        [Route("pagina-no-encontrada")]
+        public ActionResult Error()
+        {
+            ViewBag.InternalNavbar = new List<NavbarItems>();
             return View();
         }
 

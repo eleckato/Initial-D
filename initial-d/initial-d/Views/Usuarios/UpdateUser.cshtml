@@ -1,12 +1,104 @@
 ﻿@model initial_d.Models.APIModels.Usuario
 
 @{
-    ViewBag.Title = "Actualizar Usuario";
+    ViewBag.Title = $"{Model.name} | Actualizar Datos";
+
+    string GoBack_Url = Url.Action("UserDetails", "Usuarios", new { userId = Model.appuser_id });
 }
 
-<div class="mb-3 row">
-    <h2>Actualizar Usuario</h2>
+<div class="header">
+
+    <div class="title">
+        <i class="fa fa-user-edit" aria-hidden="true"></i>
+        <h2>Actualizar Datos de Usuario</h2>
+    </div>
+
 </div>
 
-<h3> @Model.username </h3>
+@using (Html.BeginForm("UpdateUser", "Usuarios"))
+{
+    @Html.HiddenFor(m => m.appuser_id);
+
+    <div class="row justify-content-around mb-4">
+        <div class="col-5 c-jumbotron">
+            <h3 class="mb-4"> Información Personal </h3>
+
+            <table class="table table-borderless c-info-table">
+                <tr>
+                    <td>@Html.DisplayNameFor(m => m.email)</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.email, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.email)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(m => m.name)</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.name)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(m => m.last_names)</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.last_names, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.last_names)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(m => m.adress)</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.adress, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.adress)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(m => m.phone)</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.phone, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.phone)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(m => m.description)</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.description, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.description)
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="col-5 c-jumbotron">
+            <h3 class="mb-4"> Información de Sistema </h3>
+
+            <table class="table table-borderless c-info-table">
+                <tr>
+                    <td>@Html.DisplayNameFor(m => m.user_type_id)</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.user_type_id, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.user_type_id)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(m => m.status_id)</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.status_id, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.status_id)
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+
+    <div>
+        <a href="@GoBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">Cancelar</a>
+        <button href="#" class="btn btn-sm btn-success mr-3" role="button">Aceptar</button>
+    </div>
+
+}
 

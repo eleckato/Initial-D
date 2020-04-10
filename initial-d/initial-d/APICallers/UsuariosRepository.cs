@@ -131,7 +131,6 @@ namespace initial_d.APICallers
 
             try
             {
-                mockData.Add(newUser);
                 return true;
             }
             catch (Exception e)
@@ -207,8 +206,9 @@ namespace initial_d.APICallers
 
             try
             {
-                var del = GetUser(UserId);
-                return mockData.Remove(del);
+                // CALL THE API
+
+                return true;
             }
             catch (Exception e)
             {
@@ -231,9 +231,8 @@ namespace initial_d.APICallers
 
             try
             {
-                var oldUser = GetUser(newUser.appuser_id);
-                var idx = mockData.IndexOf(oldUser);
-                mockData[idx] = newUser;
+                // CALL THE API
+
                 return true;
 
             }
@@ -243,16 +242,5 @@ namespace initial_d.APICallers
                 return false;
             }
         }
-
-
-        private void InvalidArgumentsError([CallerMemberName] string callerName = "")
-        {
-            Debug.WriteLine($"ERROR in {callerName} : Invalid Arguments");
-        }
-        private void ExceptionError(Exception exception, [CallerMemberName] string callerName = "")
-        {
-            Debug.WriteLine($"ERROR in {callerName} : {exception.Message}");
-        }
-
     }
 }

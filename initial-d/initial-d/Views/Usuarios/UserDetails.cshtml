@@ -1,14 +1,12 @@
 ﻿@model initial_d.Models.APIModels.Usuario
 
 @{
-    ViewBag.Title = "UserDetails";
+    ViewBag.Title = $"{Model.name} | Detalles de Usuario";
 
     string UpdateUser_Url = Url.Action("UpdateUser", "Usuarios", new { userId = Model.appuser_id });
     string GoBack_Url = Url.Action("UserList", "Usuarios");
 
 }
-
-    <div class="d-none shadow-"></div>
 
 <div class="header">
 
@@ -32,16 +30,16 @@
 
         <table class="table table-borderless c-info-table">
             <tr>
-                <td>@Html.DisplayNameFor(m => m.email)</td>
-                <td>@Html.DisplayFor(m => m.email)</td>
-            </tr>
-            <tr>
                 <td>@Html.DisplayNameFor(m => m.name)</td>
                 <td>@Html.DisplayFor(m => m.name)</td>
             </tr>
             <tr>
                 <td>@Html.DisplayNameFor(m => m.last_names)</td>
                 <td>@Html.DisplayFor(m => m.last_names)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.email)</td>
+                <td>@Html.DisplayFor(m => m.email)</td>
             </tr>
             <tr>
                 <td>@Html.DisplayNameFor(m => m.adress)</td>
@@ -64,20 +62,16 @@
 
         <table class="table table-borderless c-info-table">
             <tr>
-                <td>@Html.DisplayNameFor(m => m.appuser_id)</td>
-                <td>@Html.DisplayFor(m => m.appuser_id)</td>
-            </tr>
-            <tr>
                 <td>@Html.DisplayNameFor(m => m.username)</td>
                 <td>@Html.DisplayFor(m => m.username)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(m => m.user_type_id)</td>
-                <td>@Html.DisplayFor(m => m.user_type_id)</td>
-            </tr>
-            <tr>
                 <td>@Html.DisplayNameFor(m => m.lastlogin)</td>
                 <td>@Html.DisplayFor(m => m.lastlogin)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(m => m.user_type_id)</td>
+                <td>@Html.DisplayFor(m => m.user_type_id)</td>
             </tr>
             <tr>
                 <td>@Html.DisplayNameFor(m => m.status_id)</td>

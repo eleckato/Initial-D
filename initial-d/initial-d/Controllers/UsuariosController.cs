@@ -14,9 +14,7 @@ namespace initial_d.Controllers
     [RoutePrefix("user-admin")]
     public class UsuariosController : Controller
     {
-
         UsuariosRepository UP = new UsuariosRepository();
-
 
         /* ---------------------------------------------------------------- */
         /* USER LIST */
@@ -30,20 +28,11 @@ namespace initial_d.Controllers
         [Route]
         public ActionResult UserList()
         {
-            ErrorWriter.InvalidArgumentsError();
             List<Usuario> Usuarios;
 
-            try
-            {
-                Usuarios = UP.GetAllUsers().ToList();
+            Usuarios = UP.GetAllUsers().ToList();
 
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                TempData["ErrorMessage"] = "Hubo un error procesando su solicitud";
-                return RedirectToAction("Index", "Home");
-            }
+            if (Usuarios == null) return FailedRequest();
 
             SetNavbar();
             return View(Usuarios);
@@ -62,7 +51,11 @@ namespace initial_d.Controllers
         [Route("{userId}")]
         public ActionResult UserDetails(string userId)
         {
+            if (string.IsNullOrEmpty(userId)) return URLInvalida();
+
             var usuario = UP.GetUser(userId);
+
+            if(usuario == null) return FailedRequest();
 
             SetNavbar();
             return View(usuario);
@@ -81,7 +74,11 @@ namespace initial_d.Controllers
         [Route("{userId}/actualizar")]
         public ActionResult UpdateUser(string userId)
         {
+            if (string.IsNullOrEmpty(userId)) return URLInvalida();
+
             var usuario = UP.GetUser(userId);
+
+            if (usuario == null) return FailedRequest();
 
             SetNavbar();
             return View(usuario);
@@ -95,11 +92,18 @@ namespace initial_d.Controllers
         [Route("{userId}/actualizar")]
         public ActionResult UpdateUser(Usuario newUser)
         {
+            if (newUser == null) return URLInvalida();
+
             var res = UP.UpdateUser(newUser);
+
+            if (!res) return FailedRequest();
+
+            TempData["SuccessMessage"] = "El usuario fue actualizado con Exito";
+
             string useriD = newUser.appuser_id;
 
             SetNavbar();
-            return RedirectToAction("UserDetails", useriD);
+            return RedirectToAction("UserDetails", new { useriD });
         }
 
 
@@ -117,6 +121,8 @@ namespace initial_d.Controllers
         {
             var userTemplate = new Usuario(true);
 
+            if (userTemplate == null) return FailedRequest();
+
             SetNavbar();
             return View(userTemplate);
         }
@@ -129,7 +135,13 @@ namespace initial_d.Controllers
         [Route("agregar")]
         public ActionResult AddUser(Usuario newUser)
         {
+            if (newUser == null) return URLInvalida();
+
             var res = UP.AddUser(newUser);
+
+            if (!res) return FailedRequest();
+
+            TempData["SuccessMessage"] = "El usuario fue agregado con Exito";
             string userId = newUser.appuser_id;
 
             SetNavbar();
@@ -149,9 +161,13 @@ namespace initial_d.Controllers
         [Route("{userId}/delete")]
         public ActionResult DeleteUser(string userId)
         {
-            //var res = UP.DeleteUser(userId);
-            Debug.WriteLine("USER DELETED");
+            if (string.IsNullOrEmpty(userId)) return URLInvalida();
 
+            var res = UP.DeleteUser(userId);
+
+            if (!res) return FailedRequest();
+
+            TempData["SuccessMessage"] = "El usuario fue eliminado con Exito";
             SetNavbar();
             return RedirectToAction("UserList");
         }
@@ -170,6 +186,30 @@ namespace initial_d.Controllers
             };
 
             ViewBag.InternalNavbar = InternalNavbar;
+        }
+
+        private string GetReferer(HttpRequestBase request)
+        {
+            try
+            {
+                return request.UrlReferrer.AbsoluteUri;
+            }
+            catch
+            {
+                return Url.Action("Error", "Home");
+            }
+
+        }
+
+        private RedirectResult URLInvalida()
+        {
+            TempData["ErrorMessage"] = Resources.Messages.Error_URLInvalida;
+            return Redirect(GetReferer(Request));
+        }
+        private RedirectResult FailedRequest()
+        {
+            TempData["ErrorMessage"] = Resources.Messages.Error_SolicitudFallida;
+            return Redirect(GetReferer(Request));
         }
     }
 }

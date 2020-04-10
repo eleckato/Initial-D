@@ -88,6 +88,15 @@ p, li, a {
         margin-bottom: 0;
     }
 
+
+.field-validation-error span {
+    color: red;
+    font-size: 0.8em;
+}
+.field-validation-error span::before{
+    content:"* ";
+}
+    
 .c-jumbotron{
     padding: 1rem !important;
     box-shadow: 0 .125rem .25rem #00000013 !important;
@@ -95,9 +104,11 @@ p, li, a {
     background-color: #fff !important;
 }
 
-.c-info-table{
-    
-}
+
+/* ---------------------------------------------------
+    INFO TABLE        |        c-info-table
+----------------------------------------------------- */
+
 /* Make it small */
 .c-info-table td, .c-info-table th {
 	padding: .4rem;
