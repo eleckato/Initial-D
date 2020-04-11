@@ -5,17 +5,18 @@
 
     string UpdateUser_Url = Url.Action("UpdateUser", "Usuarios", new { userId = Model.appuser_id });
     string GoBack_Url = Url.Action("UserList", "Usuarios");
-
 }
 
 <div class="header">
 
     <div class="title">
-        <i class="fa fa-address-card" aria-hidden="true"></i>
-        <h2>Detalles de Usuario</h2>
+        <h2>
+            <i class="fa fa-address-card" aria-hidden="true"></i>
+            Detalles de Usuario
+        </h2>
     </div>
 
-    <div class="ml-auto d-flex align-items-center">
+    <div class="mt-3 mt-lg-0 ml-lg-auto d-flex align-items-center">
         <a href="@UpdateUser_Url" class="btn btn-sm btn-info mr-3" role="button">Actualizar Datos</a>
         <a href="@GoBack_Url" class="btn btn-sm btn-secondary" role="button">Volver</a>
     </div>
@@ -25,57 +26,80 @@
 
 <div class="row justify-content-around">
 
-    <div class="col-5 c-jumbotron">
+    <div class="col-12 col-ms-11 col-md-10 col-lg-5 c-jumbotron">
         <h3 class="mb-4"> Información Personal </h3>
 
         <table class="table table-borderless c-info-table">
             <tr>
-                <td>@Html.DisplayNameFor(m => m.name)</td>
+                <th>@Html.DisplayNameFor(m => m.name)</th>
                 <td>@Html.DisplayFor(m => m.name)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(m => m.last_names)</td>
+                <th>@Html.DisplayNameFor(m => m.last_names)</th>
                 <td>@Html.DisplayFor(m => m.last_names)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(m => m.email)</td>
+                <th>@Html.DisplayNameFor(m => m.email)</th>
                 <td>@Html.DisplayFor(m => m.email)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(m => m.adress)</td>
+                <th>@Html.DisplayNameFor(m => m.adress)</th>
                 <td>@Html.DisplayFor(m => m.adress)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(m => m.phone)</td>
+                <th>@Html.DisplayNameFor(m => m.phone)</th>
                 <td>@Html.DisplayFor(m => m.phone)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(m => m.description)</td>
-                <td>@Html.DisplayFor(m => m.description)</td>
+                <th>@Html.DisplayNameFor(m => m.birthday)</th>
+                <td>@Html.DisplayFor(m => m.birthday)</td>
             </tr>
         </table>
 
     </div>
 
-    <div class="col-5 c-jumbotron">
+    <div class="col-12 col-ms-11 col-md-10 col-lg-5 c-jumbotron">
         <h3 class="mb-4"> Información de Sistema </h3>
 
         <table class="table table-borderless c-info-table">
             <tr>
-                <td>@Html.DisplayNameFor(m => m.username)</td>
+                <th>@Html.DisplayNameFor(m => m.username)</th>
                 <td>@Html.DisplayFor(m => m.username)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(m => m.lastlogin)</td>
+                <th>@Html.DisplayNameFor(m => m.lastlogin)</th>
                 <td>@Html.DisplayFor(m => m.lastlogin)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(m => m.user_type_id)</td>
+                <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
                 <td>@Html.DisplayFor(m => m.user_type_id)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(m => m.status_id)</td>
-                <td>@Html.DisplayFor(m => m.status_id)</td>
+                <th>@Html.DisplayNameFor(m => m.status_id)</th>
+                <td>
+                    @if (Model.status_id.Equals("Banneado")){<i class="fa fa-user-lock mr-1 text-danger" aria-hidden="true"></i>}
+                    @if (Model.status_id.Equals("Activo")){<i class="fa fa-user-check mr-1 color-green" aria-hidden="true"></i>}
+                    @Html.DisplayFor(m => m.status_id)
+                </td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.mail_confirmed)</th>
+                @{ 
+                    var emailConfirmed = Model.mail_confirmed;
+                    var str = emailConfirmed ? "Si" : "No";
+                    var color = emailConfirmed ? "bg-green" : "bg-black";
+                }
+                <td>
+                    <div class="c-badge @color">@str</div>
+                </td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.updated_at)</th>
+                <td>@Html.DisplayFor(m => m.updated_at)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.created_at)</th>
+                <td>@Html.DisplayFor(m => m.created_at)</td>
             </tr>
         </table>
 

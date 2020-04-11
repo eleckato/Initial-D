@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using initial_d.Common;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,41 +34,50 @@ namespace initial_d.Providers
             if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
 
-            string methodName = "JwtProvider.GetTokenAsync";
+            // Encrypt the password using the key in Web.config
+            password = EncryptHMAC(password);
 
+            // Make the call to the API
             using (var client = new HttpClient())
             {
                 try
                 {
+                    // Set the base adress
                     client.BaseAddress = new Uri(_tokenUri);
+                    // Set the Accept header value
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+                    // Define the content of the request
                     var content = new FormUrlEncodedContent(new[]
                     {
-                    new KeyValuePair<string, string>("email", username),
-                    new KeyValuePair<string, string>("hash", password),
-                });
+                        new KeyValuePair<string, string>("username", username),
+                        new KeyValuePair<string, string>("hash", password),
+                    });
 
+                    // Call the api and save the response
                     var response = await client.PostAsync("/user-auth", content);
 
+                    // Error handling by status code
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
+                        // If OK get the content (that is the token) and return it instead of the token
                         return await response.Content.ReadAsStringAsync();
                     }
                     else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
+                        // If Unauthorized get the error-code and return it instead of the token
                         var res = response.Headers.GetValues("error-code").First();
                         return res;
                     }
                     else
                     {
-                        // Return null if unauthenticated
+                        // Return null if another thing happened
                         return null;
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine($"ERROR {methodName}: {e.Message}");
+                    ErrorWriter.ExceptionError(e);
                     return null;
                 }
             }
@@ -99,8 +110,6 @@ namespace initial_d.Providers
             if (string.IsNullOrEmpty(userName) || payload == null)
                 return null;
 
-            string methodName = "JwtProvider.CreateIdentity";
-
             try
             {
                 // Decode the payload from token in order to create a claim
@@ -120,7 +129,36 @@ namespace initial_d.Providers
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"ERROR {methodName}: {e.Message}");
+                ErrorWriter.ExceptionError(e);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// CREATES A FAKE IDENTITY FOR TESTING WITHOUT API
+        /// </summary>
+        public ClaimsIdentity CreateFakeIdentity()
+        {
+            try
+            {
+                // Decode the payload from token in order to create a claim
+                string userId = "FAKE_USER_ID";
+                string role = "ADM";
+
+                // Define the claim
+                var jwtIdentity = new ClaimsIdentity(
+                    new JwtIdentity(true, "FAKE_USER", DefaultAuthenticationTypes.ApplicationCookie)
+                );
+
+                // Add Claims NameIdentifier and Role
+                jwtIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId));
+                jwtIdentity.AddClaim(new Claim(ClaimTypes.Role, role));
+
+                return jwtIdentity;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
                 return null;
             }
         }
@@ -139,6 +177,32 @@ namespace initial_d.Providers
             }
             var converted = Convert.FromBase64String(output); // Standard base64 decoder
             return converted;
+        }
+
+
+        /// <summary>
+        /// Encrtypt some text using the key provided in Web.config.PswKey
+        /// </summary>
+        /// <param name="text"> Text to encrypt </param>
+        /// <returns></returns>
+        public static string EncryptHMAC(string text)
+        {
+            // Get the key from the file Web.config 
+            string key = ConfigurationManager.AppSettings["PswKey"];
+
+            // Define the encoding
+            UTF8Encoding encoding = new UTF8Encoding();
+
+            // Encrypt all stuff
+            byte[] textBytes = encoding.GetBytes(text);
+            byte[] keyBytes = encoding.GetBytes(key);
+            byte[] hashBytes;
+
+            using (HMACSHA256 hash = new HMACSHA256(keyBytes))
+                hashBytes = hash.ComputeHash(textBytes);
+
+            // Return the hash as a string without "-"
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
     }
 

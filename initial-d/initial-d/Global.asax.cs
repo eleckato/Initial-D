@@ -1,3 +1,6 @@
+using initial_d.Common;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Web.Helpers;
 using System.Web.Mvc;
@@ -14,6 +17,11 @@ namespace initial_d
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            DataAnnotationsModelValidatorProvider.RegisterAdapterFactory(
+                typeof(RequiredAttribute),
+                (metadata, controllerContext, attribute) => new FixedRequiredAttributeAdapter(metadata, controllerContext, (RequiredAttribute)attribute)
+            );
 
             //set the antiforgery claim to user id
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;

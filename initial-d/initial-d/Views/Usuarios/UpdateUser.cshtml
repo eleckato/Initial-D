@@ -5,12 +5,13 @@
 
     string GoBack_Url = Url.Action("UserDetails", "Usuarios", new { userId = Model.appuser_id });
 }
-
 <div class="header">
 
     <div class="title">
-        <i class="fa fa-user-edit" aria-hidden="true"></i>
-        <h2>Actualizar Datos de Usuario</h2>
+        <h2>
+            <i class="fa fa-edit" aria-hidden="true"></i>
+            Actualizar Datos de Usuario
+        </h2>
     </div>
 
 </div>
@@ -20,17 +21,10 @@
     @Html.HiddenFor(m => m.appuser_id);
 
     <div class="row justify-content-around mb-4">
-        <div class="col-5 c-jumbotron">
+        <div class="col-12 col-ms-11 col-lg-10 col-xl-5 c-jumbotron mb-3 mb-xl-0">
             <h3 class="mb-4"> Información Personal </h3>
 
-            <table class="table table-borderless c-info-table">
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.email)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.email, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.email)
-                    </td>
-                </tr>
+            <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive">
                 <tr>
                     <td>@Html.DisplayNameFor(m => m.name)</td>
                     <td>
@@ -43,6 +37,13 @@
                     <td>
                         @Html.TextBoxFor(m => m.last_names, new { @class = "form-control" })
                         @Html.ValidationMessageFor(x => x.last_names)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(m => m.email)</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.email, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.email)
                     </td>
                 </tr>
                 <tr>
@@ -61,20 +62,20 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>@Html.DisplayNameFor(m => m.description)</td>
+                    <td>@Html.DisplayNameFor(m => m.birthday)</td>
                     <td>
-                        @Html.TextBoxFor(m => m.description, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.description)
+                        @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker", @Value = Model.birthday.ToString("dd/MM/yyyy") })
+                        @Html.ValidationMessageFor(x => x.birthday)
                     </td>
                 </tr>
             </table>
 
         </div>
 
-        <div class="col-5 c-jumbotron">
+        <div class="col-12 col-ms-11 col-lg-10 col-xl-5 c-jumbotron">
             <h3 class="mb-4"> Información de Sistema </h3>
 
-            <table class="table table-borderless c-info-table">
+            <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive">
                 <tr>
                     <td>@Html.DisplayNameFor(m => m.user_type_id)</td>
                     <td>
@@ -89,6 +90,14 @@
                         @Html.ValidationMessageFor(x => x.status_id)
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="2" id="mail_confirmed_col">
+                        <div class="custom-control custom-checkbox">
+                            @Html.CheckBoxFor(m => m.mail_confirmed, new { @class = "custom-control-input" })
+                            @Html.LabelFor(m => m.mail_confirmed, new { @class = "custom-control-label" })
+                        </div>
+                    </td>
+                </tr>
             </table>
 
         </div>
@@ -100,5 +109,18 @@
         <button href="#" class="btn btn-sm btn-success mr-3" role="button">Aceptar</button>
     </div>
 
+}
+
+
+@section customScripts{
+    @Html.Partial("Partial/_DatePickerBoilerplate")
+
+    <script>
+        // Toggle "Email Confirmed" checkbox when the row is clicked
+        $(document).on('click', '#mail_confirmed_col', function () {
+            let c = $('#mail_confirmed').prop("checked")
+            $('#mail_confirmed').prop("checked", !c);
+        });
+    </script>
 }
 

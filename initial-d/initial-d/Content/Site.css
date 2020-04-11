@@ -1,5 +1,5 @@
 ﻿
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+@import "https://fonts.googleapis.com/css2?family=Open+Sans&display=swap";
 
 :root {
     --black-0: #485531;
@@ -19,6 +19,9 @@
     --yellow-4 : #cdff6c;
     --yellow-5 : #d6ff86; */
 
+    --green: #0abb87;
+    --green-dark : #1b8a68;
+
     --sidebar-width: 260px;
     --sidebar-width-closed: 80px;
     --transition-speed: 0.2s;
@@ -29,12 +32,17 @@ footer {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     background: rgb(252, 250, 246);
 }
 
+input[type="text"]
+{
+    font-size: 1.1em;
+}
+
 p, li, a {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
@@ -62,12 +70,44 @@ p, li, a {
     margin-right: 0;
 }
 
+.clickable-row {
+    cursor: pointer;
+}
+
+.field-validation-error span {
+    color: red;
+    font-size: 0.8em;
+}
+.field-validation-error span::before{
+    content:"* ";
+}
+    
+.c-jumbotron{
+    padding: 1rem !important;
+    box-shadow: 0 .125rem .25rem #00000013 !important;
+    border-radius: .25rem !important;
+    background-color: #fff !important;
+}
+
+.dropdown-menu{
+    min-width: max-content;
+}
+
+/* ---------------------------------------------------
+    HEADERS        |        header
+----------------------------------------------------- */
 
 .header{
+    /* d-flex flex-row */
     display: -ms-flexbox;
     display: flex;
+    -ms-flex-direction: row !important;
+    flex-direction: row !important;
+
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+
+
     margin-top: 1rem !important;
     margin-bottom: 2rem !important;
 }
@@ -88,48 +128,41 @@ p, li, a {
         margin-bottom: 0;
     }
 
-
-.field-validation-error span {
-    color: red;
-    font-size: 0.8em;
-}
-.field-validation-error span::before{
-    content:"* ";
-}
+@media (max-width: 998px) {
     
-.c-jumbotron{
-    padding: 1rem !important;
-    box-shadow: 0 .125rem .25rem #00000013 !important;
-    border-radius: .25rem !important;
-    background-color: #fff !important;
-}
 
+    .header{
+        /* flex-column */
+        -ms-flex-direction: column !important;
+        flex-direction: column !important;
+    }
+
+}
 
 /* ---------------------------------------------------
-    INFO TABLE        |        c-info-table
+    BACKGROUND AND COLORS
+----------------------------------------------------- */
+.bg-green {
+    background: var(--green);
+    color: #fff;
+}
+.bg-black{
+    background: #282a3c;
+    color: #fff;
+}
+.color-green{
+    color: var(--green);
+}
+
+/* ---------------------------------------------------
+    CUSTOM BADGES        |        c-badge
 ----------------------------------------------------- */
 
-/* Make it small */
-.c-info-table td, .c-info-table th {
-	padding: .4rem;
+.c-badge {
+    width: min-content;
+    padding: 1px 10px;
+    border-radius: 5px;
 }
-.c-info-table thead{
-    background: var(--yellow-1);
-}
-/* Odd rows */
-.c-info-table tbody tr:nth-of-type(2n) {
-    background-color: #ffee001a;
-}
-/* Even Rows */
-.c-info-table tbody tr:nth-of-type(2n+1) {
-    background-color: var(--yellow-3)+33;
-}
-/* Row Hover */
-.c-info-table tbody tr:hover {
-    color: #212529;
-    background-color: #f7ff0070;
-}
-
 
 /* ---------------------------------------------------
     LOCAL NAVBAR
@@ -155,10 +188,10 @@ p, li, a {
 }
 
 
-
 /* ---------------------------------------------------
     GENERAL RESIZING FOR >1550px
 ----------------------------------------------------- */
+
 @media (max-width: 1550px) {
     :root {
         --sidebar-width: 220px;
@@ -191,6 +224,18 @@ p, li, a {
 
     h5 {
         font-size: 1rem;
+    }
+}
+
+
+@media (max-width: 580px){
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .title{
+        text-align: center;
     }
 }
 
@@ -397,6 +442,10 @@ p, li, a {
     }
 
         #sidebar.closed .sidebar-header {
+            display: none;
+        }
+        
+        #sidebar.closed ul li a{
             display: none;
         }
 

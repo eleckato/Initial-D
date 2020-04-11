@@ -5,32 +5,33 @@
     string AddUrl = Url.Action("AddUser", "Usuarios");
 }
 
-<div class="header">
+<div class="header ">
 
     <div class="title">
-        <i class="fa fa-users" aria-hidden="true"></i>
-        <h2>Administrador de Usuarios</h2>
+        <h2>
+            <i class="fa fa-users" aria-hidden="true"></i>
+            Administrador de Usuarios
+        </h2>
     </div>
 
-    <div class="ml-auto d-flex align-items-center">
-        <a href="@AddUrl" class="btn btn-sm btn-success" role="button">Agregar Usuario</a>
+    <div class="mt-3 mt-lg-0 ml-lg-auto d-flex align-items-center">
+        <a href="@AddUrl" class="btn btn-sm btn-green" role="button">Agregar Usuario</a>
     </div>
 
 </div>
 
-<div>
-    <table class="table c-info-table">
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive">
 
         <thead>
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">@Html.DisplayNameFor(m => m.username)</th>
-                <th scope="col">@Html.DisplayNameFor(m => m.name)</th>
-                <th scope="col">@Html.DisplayNameFor(m => m.last_names)</th>
-                <th scope="col">@Html.DisplayNameFor(m => m.email)</th>
-                <th scope="col">@Html.DisplayNameFor(m => m.user_type_id)</th>
-                <th scope="col">@Html.DisplayNameFor(m => m.status_id)</th>
-                <th scope="col">Actions</th>
+                @* SACAR ID DESPUES *@
+                <th >Actions</th>
+                <th >@Html.DisplayNameFor(m => m.username)</th>
+                <th  class="cell-hidden-md">@Html.DisplayNameFor(m => m.fullName)</th>
+                <th >@Html.DisplayNameFor(m => m.email)</th>
+                <th >@Html.DisplayNameFor(m => m.user_type_id)</th>
+                <th >@Html.DisplayNameFor(m => m.status_id)</th>
             </tr>
         </thead>
 
@@ -40,54 +41,98 @@
             {
                 string DetailsUrl = Url.Action("UserDetails", "Usuarios", new { userId = user.appuser_id });
 
-                <tr>
-                    <td>
-                        @Html.DisplayFor(m => user.appuser_id)
+                <tr data-user-id="@user.appuser_id" class="clickable-row">
+
+                    <td data-label="Actions" class="">
+                        <div class="dropdown">
+
+                            <button class="btn btn-yellow btn-xsm dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
+                                Actions
+                            </button>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <div class="d-flex flex-column">
+                                    @*  class="btn btn-xsm btn-info" role="button" *@
+                                    <a href="@DetailsUrl" class="dropdown-item small">
+                                        <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
+                                        Detalles
+                                    </a>
+
+                                    <a href="#" class="dropdown-item small">
+                                        <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i>
+                                        Cambiar de Tipo
+                                    </a>
+
+                                    @if (user.status_id.Equals("Banneado"))
+                                    {
+                                        <a href="#" class="dropdown-item small">
+                                            <i class="fa fa-unlock-alt mr-1" aria-hidden="true"></i>
+                                            Dar de Alta
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="dropdown-item small">
+                                            <i class="fa fa-lock mr-1" aria-hidden="true"></i>
+                                            Dar de Baja
+                                        </a>
+                                    }
+
+
+                                    <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@user.appuser_id" href="#delete-modal">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        Eliminar
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </td>
-                    <td>
+
+                    <td data-label="@Html.DisplayNameFor(m => m.username)">
+                        @{ var statClass = user.status_id.Equals("Banneado") ? "fa-user-lock text-danger" : "fa-user-check color-green"; }
+                        <i class="fa mr-1 @statClass" aria-hidden="true"></i>
                         @Html.DisplayFor(m => user.username)
                     </td>
-                    <td>
-                        @Html.DisplayFor(m => user.name)
+                    <td data-label="@Html.DisplayNameFor(m => m.fullName)" class="cell-hidden-md">
+                        @Html.DisplayFor(m => user.fullName)
                     </td>
-                    <td>
-                        @Html.DisplayFor(m => user.last_names)
+                    <td data-label="@Html.DisplayNameFor(m => m.email)" class="">
+                        @Html.ValueFor(m => user.email)
                     </td>
-                    <td>
-                        @Html.DisplayFor(m => user.email)
-                    </td>
-                    <td>
+                    <td data-label="@Html.DisplayNameFor(m => m.user_type_id)">
                         @Html.DisplayFor(m => user.user_type_id)
                     </td>
-                    <td>
+                    <td data-label="@Html.DisplayNameFor(m => m.status_id)">
                         @Html.DisplayFor(m => user.status_id)
-                    </td>
-                    <td>
-                        <div class="d-flex">
-                            <a href="@DetailsUrl" class="btn btn-xsm btn-info mr-2" role="button">
-                                <i class="fa fa-bars mr-1" aria-hidden="true"></i>
-                                Detalles
-                            </a>
-                            <a class="btn btn-xsm btn-danger" role="button" data-toggle="modal" data-user-id="@user.appuser_id" href="#delete-modal">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </a>
-                        </div>
                     </td>
                 </tr>
             }
         </tbody>
 
     </table>
-    <a href="@Url.Action("UserDetails", "Usuarios", new { userId = "AAA" })" class="btn btn-xsm btn-info mr-2" role="button">
-        <i class="fa fa-bars mr-1" aria-hidden="true"></i>
-        Detalles
-    </a>
+
 </div>
+
+
+
+<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "FFF" })" class="btn btn-xsm btn-secondary mr-2" role="button">
+    <i class="fa fa-bug mr-1" aria-hidden="true"></i>
+    TRIGGER PARA ID NO INVÁLIDO
+</a>
 
 @Html.Partial("Partial/_DeleteModalAndScript")
 
 
 @section customScripts{
-
-
+    <script>
+        $(document).on('click', '.clickable-row', function () {
+            let id = $(this).data('user-id');
+            let url = '@Url.Action("UserDetails", "Usuarios", new { userId = "user_id_replace" })'.replace('user_id_replace', id);
+            window.location = url;
+        });
+    </script>
 }

@@ -24,11 +24,15 @@ namespace initial_d.APICallers
                 last_names = "apellido cl1",
                 email = "cliente_1@mail.cl",
                 adress = "adress cl1",
-                description = "description cl1",
                 lastlogin = new DateTime(2020, 02, 18),
                 phone = "+56911111111",
-                status_id = "1",
-                user_type_id = "CLI"
+                status_id = "Activo",
+                user_type_id = "Cliente",
+                birthday = new DateTime(1990, 05, 12),
+                mail_confirmed = false,
+                created_at = DateTime.Now.AddDays(-10),
+                updated_at = DateTime.Now.AddDays(-35),
+                deleted = false,
             },
             new Usuario()
             {
@@ -38,81 +42,15 @@ namespace initial_d.APICallers
                 last_names = "apellido cl2",
                 email = "cliente_1@mail.cl",
                 adress = "adress cl2",
-                description = "description cl2",
                 lastlogin = new DateTime(2019, 8, 12),
                 phone = "+56922222222",
-                status_id = "1",
-                user_type_id = "CLI"
-            },
-            new Usuario()
-            {
-                appuser_id = "U4",
-                username = "cajero_1",
-                name = "nombres caj1",
-                last_names = "apellido caj1",
-                email = "cajero_1@mail.cl",
-                adress = "adress caj1",
-                description = "description caj1",
-                lastlogin = new DateTime(2020, 4, 2),
-                phone = "+56944444444",
-                status_id = "1",
-                user_type_id = "CAJ"
-            },
-            new Usuario()
-            {
-                appuser_id = "U5",
-                username = "mecanico_1",
-                name = "nombres mec1",
-                last_names = "apellido mec1",
-                email = "mecanico_1@mail.cl",
-                adress = "adress mec1",
-                description = "description mec1",
-                lastlogin = new DateTime(2020, 2, 12),
-                phone = "+56955555555",
-                status_id = "1",
-                user_type_id = "MEC"
-            },
-            new Usuario()
-            {
-                appuser_id = "U6",
-                username = "vendedor_1",
-                name = "nombres ven1",
-                last_names = "apellido ven1",
-                email = "vendedor_1@mail.cl",
-                adress = "adress ven1",
-                description = "description ven1",
-                lastlogin = new DateTime(2020, 2, 12),
-                phone = "+56966666666",
-                status_id = "1",
-                user_type_id = "VEN"
-            },
-            new Usuario()
-            {
-                appuser_id = "U7",
-                username = "supervisor_1",
-                name = "nombres sup1",
-                last_names = "apellido sup1",
-                email = "supervisor_1@mail.cl",
-                adress = "adress sup1",
-                description = "description sup1",
-                lastlogin = new DateTime(2020, 3, 16),
-                phone = "+56977777777",
-                status_id = "1",
-                user_type_id = "SUP"
-            },
-            new Usuario()
-            {
-                appuser_id = "U8",
-                username = "admin_1",
-                name = "nombres adm1",
-                last_names = "apellido adm1",
-                email = "admin_1@mail.cl",
-                adress = "adress adm1",
-                description = "description adm1",
-                lastlogin = new DateTime(2020, 4, 6),
-                phone = "+56988888888",
-                status_id = "1",
-                user_type_id = "ADM"
+                status_id = "Banneado",
+                user_type_id = "Cliente",
+                birthday = new DateTime(2000, 04, 20),
+                mail_confirmed = true,
+                created_at = DateTime.Now.AddDays(-10),
+                updated_at = DateTime.Now.AddDays(-35),
+                deleted = false,
             },
         };
 
@@ -242,5 +180,6 @@ namespace initial_d.APICallers
                 return false;
             }
         }
+    
     }
 }

@@ -100,10 +100,10 @@ namespace initial_d.Controllers
 
             TempData["SuccessMessage"] = "El usuario fue actualizado con Exito";
 
-            string useriD = newUser.appuser_id;
+            string userId = newUser.appuser_id;
 
             SetNavbar();
-            return RedirectToAction("UserDetails", new { useriD });
+            return RedirectToAction("UserDetails", new { userId });
         }
 
 
@@ -142,10 +142,10 @@ namespace initial_d.Controllers
             if (!res) return FailedRequest();
 
             TempData["SuccessMessage"] = "El usuario fue agregado con Exito";
-            string userId = newUser.appuser_id;
+            string userId = "U2"; // newUser.appuser_id;
 
             SetNavbar();
-            return RedirectToAction("UserDetails", userId);
+            return RedirectToAction("UserDetails", new { userId = userId });
         }
 
 

@@ -9,13 +9,15 @@ namespace initial_d.Models.APIModels
     public class Usuario
     {
         public string appuser_id { get; set; }
-        public string hash { get; set; }
-        public bool isdelete { get; set; }
 
 
         [Required]
-        [Display(Name = "Nombre de Usuario")]
+        [Display(Name = "Username")]
         public string username { get; set; }
+
+        [Required]
+        [Display(Name = "Contraseña")]
+        public string hash { get; set; }
 
         [Required]
         [Display(Name = "Email")]
@@ -39,14 +41,20 @@ namespace initial_d.Models.APIModels
         public string phone { get; set; }
 
         [Required]
-        [Display(Name = "Descripticón")]
-        public string description { get; set; }
+        [Display(Name = "Fecha de Nacimiento")]
+        [DataType(DataType.Date)]
+        public DateTime birthday { get; set; }
+
 
         [Required]
-        [Display(Name = "Ultimo Loguin")]
+        [Display(Name = "Último Login")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime lastlogin { get; set; }
+
+
+        [Required]
+        [Display(Name = "Email Confirmado")]
+        public bool mail_confirmed { get; set; }
 
         [Required]
         [Display(Name = "Tipo")]
@@ -55,6 +63,27 @@ namespace initial_d.Models.APIModels
         [Required]
         [Display(Name = "Status")]
         public string status_id { get; set; }
+
+
+        [Required]
+        [Display(Name = "Ultima Actualización")]
+        [DataType(DataType.Date)]
+        public DateTime updated_at { get; set; }
+
+        [Required]
+        [Display(Name = "Fecha de Registro")]
+        [DataType(DataType.Date)]
+        public DateTime created_at { get; set; }
+
+        public bool deleted { get; set; }
+
+
+        [Display(Name = "Nombre")]
+        public string fullName
+        {
+            get { return $"{name} {last_names}"; }
+        }
+
 
         public Usuario()
         {
@@ -70,13 +99,13 @@ namespace initial_d.Models.APIModels
             last_names = string.Empty;
             adress = string.Empty;
             phone = string.Empty;
-            description = string.Empty;
-            user_type_id = string.Empty;
-
-            hash = null;
-            isdelete = false;
             lastlogin = DateTime.Today;
-            status_id = "1";
+            mail_confirmed = false;
+            user_type_id = string.Empty;
+            status_id = string.Empty;
+            updated_at = DateTime.Today;
+            created_at = DateTime.Today;
+            deleted = false;
         }
     }
 }

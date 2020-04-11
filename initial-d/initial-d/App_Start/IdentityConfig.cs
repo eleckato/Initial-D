@@ -117,6 +117,14 @@ namespace initial_d
          */
         public override async Task<SignInStatus> PasswordSignInAsync(string userName, string password, bool isPersistent, bool shouldLockout)
         {
+            // MAKE FAKE CREDENTIALS
+            var claims = new Providers.JwtProvider().CreateFakeIdentity();
+            // SIGN IN
+            HttpContext.Current.Request.GetOwinContext().Authentication.SignIn(claims);
+            // RETURN SUCCESS
+            return SignInStatus.Success;
+
+            /*
             // Authorization server end point
             string uri = ConfigurationManager.AppSettings["BuffetAPI.url"];
 
@@ -165,6 +173,7 @@ namespace initial_d
 
                 return SignInStatus.Success;
             }
+            */
         }
     }
 }

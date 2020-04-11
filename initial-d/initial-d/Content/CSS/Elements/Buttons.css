@@ -14,3 +14,12 @@
         background: var(--yellow-3) !important;
         color: var(--black-2) !important;
     }
+
+.btn-green {
+    background: var(--green);
+    color: #fff;
+}
+    .btn-green:hover {
+        background: var(--green-dark);
+        color: #fff;
+    }

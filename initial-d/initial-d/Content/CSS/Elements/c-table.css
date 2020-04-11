@@ -1,0 +1,189 @@
+﻿
+/* ---------------------------------------------------
+    INFO TABLE        |        c-info-table
+----------------------------------------------------- */
+
+/* Make it small */
+.c-info-table td, .c-info-table th {
+	padding: .4rem;
+}
+.c-info-table thead{
+    background: var(--yellow-1);
+}
+/* Odd rows */
+.c-info-table tbody tr:nth-of-type(2n) {
+    background-color: #ffee001a;
+}
+/* Even Rows */
+.c-info-table tbody tr:nth-of-type(2n+1) {
+    background-color: var(--yellow-3)+33;
+}
+/* Row Hover */
+.c-info-table tbody tr:hover {
+    color: #212529;
+    background-color: #f7ff0070;
+}
+
+/* ---------------------------------------------------
+    TO HIDE CELLS
+----------------------------------------------------- */
+.cell-hidden-sm , .cell-hidden-md , .cell-hidden-lg {
+    display: none;
+}
+
+@media (min-width: 579px) {
+    .cell-hidden-sm{
+        display: table-cell;
+    }
+}
+@media (min-width: 767px) {
+    .cell-hidden-md{
+        display: table-cell;
+    }
+}
+@media (min-width: 998px) {
+    .cell-hidden-lg{
+        display: table-cell;
+    }
+}
+
+/* ---------------------------------------------------
+    MAKE THOSE TABLES RESPONSIVE BABE
+----------------------------------------------------- */
+/* 579px    |    sm */
+@media (max-width: 579px) {
+  
+    .c-table-sm-responsive caption {
+        font-size: 1.3em;
+    }
+    
+    .c-table-sm-responsive thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    
+    .c-table-sm-responsive tr {
+        display: block;
+        margin-bottom: .625em;
+    }
+    
+    .c-table-sm-responsive td {
+        display: block;
+        font-size: 1em;
+        text-align: right;
+    }
+
+    .c-table-sm-responsive td, table th {
+        border-top: 0;
+    }
+    
+    .c-table-sm-responsive td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .c-table-sm-responsive td:last-child {
+        border-bottom: 0;
+    }
+}
+/* 767px    |    md */
+@media (max-width: 767px) {
+  
+    .c-table-md-responsive caption {
+        font-size: 1.3em;
+    }
+    
+    .c-table-md-responsive thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    
+    .c-table-md-responsive tr {
+        display: block;
+        margin-bottom: .625em;
+    }
+    
+    .c-table-md-responsive td {
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    .c-table-md-responsive td, table th {
+        border-top: 0;
+    }
+    
+    .c-table-md-responsive td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .c-table-md-responsive td:last-child {
+        border-bottom: 0;
+    }
+}
+/* 998px    |    lg*/
+@media (max-width: 998px) {
+  
+    .c-table-lg-responsive caption {
+        font-size: 1.3em;
+    }
+    
+    .c-table-lg-responsive thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    
+    .c-table-lg-responsive tr {
+        display: block;
+        margin-bottom: .625em;
+    }
+    
+    .c-table-lg-responsive td {
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    .c-table-lg-responsive td, table th {
+        border-top: 0;
+    }
+    
+    .c-table-lg-responsive td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .c-table-lg-responsive td:last-child {
+        border-bottom: 0;
+    }
+}
+
+
+.c-table-left td {
+    text-align: left;
+}

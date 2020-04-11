@@ -25,6 +25,7 @@ namespace initial_d
 
             // Bootstrap JS
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+                      "~/Scripts/umd/popper.js",
                       "~/Scripts/bootstrap.js"));
 
             // Sitewide Styles
@@ -33,7 +34,8 @@ namespace initial_d
                       "~/Content/FontAwesome/fontawesome.min.css",  // Base FontAwesome icons
                       "~/Content/FontAwesome/solid.min.css",  // Solid FontAwesome icons
                       "~/Content/Site.css", // Sitewide styles
-                      "~/Content/CSS/Elements/buttons.css"  // Custom buttons
+                      "~/Content/CSS/Elements/buttons.css",  // Custom buttons
+                      "~/Content/CSS/Elements/c-table.css"  // Custom tables
                       ));
 
             // Sitewide Scripts
