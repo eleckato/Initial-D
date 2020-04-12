@@ -41,7 +41,7 @@
         <!-- Sidebar -->
         <nav id="sidebar" class="@sdStatus">
 
-            <button id="sb-toggle-in-button" type="button" class="btn collapse-side d-none d-md-inline w-100 sidebar-toggle">
+            <button id="sb-toggle-in-button" type="button" class="sidebar-toggle btn btn-yellow d-md-block">
                 <i class="fas fa-bars"></i>
                 <span>Minimizar Barra</span>
             </button>
@@ -95,7 +95,7 @@
             <nav class="navbar navbar-expand-md navbar-light ">
                 <div class="container-fluid">
 
-                    <button type="button" class="btn collapse-side d-md-none sidebar-toggle ml-3">
+                    <button type="button" class="sidebar-toggle btn btn-yellow d-md-none ml-3">
                         <i class="fas fa-bars"></i>
                     </button>
 
@@ -105,29 +105,29 @@
                         <i class="fas fa-align-justify"></i>
                     </button>
 
-                    <div class="collapse navbar-collapse mr-3 mr-md-0" id="internalNavbar">
-                        <ul class="nav navbar-nav">
+                    <div class="collapse navbar-collapse " id="internalNavbar">
+                        <ul class="nav navbar-nav ml-3 ml-md-0 mt-2 mt-md-0">
                             @Html.Partial("_InternalNavbar", InternalNavbar)
                         </ul>
 
-                        <div class="nav navbar-nav ml-auto mr-3">
+                        <div class="nav navbar-nav mx-3 ml-md-auto my-2 my-md-0">
                             @Html.Partial("_LoginPartial")
                         </div>
 
                     </div>
                 </div>
             </nav>
-            <div id="content">
+            <div id="content" class="d-flex flex-column">
 
                 <div class="px-1 px-md-3 px-xl-5">
                     @RenderBody()
-
-                    <hr />
                 </div>
 
-                <footer>
+                <footer class="mt-auto">
+                    <hr />
                     <p>&copy; @DateTime.Now.Year  -  Initia-D | Sistema de Administración para Jaramillo</p>
                 </footer>
+
             </div>
         </div>
     </div>

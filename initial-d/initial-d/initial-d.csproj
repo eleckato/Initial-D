@@ -451,6 +451,8 @@
     <Content Include="Views\Usuarios\UpdateUser.cshtml" />
     <Content Include="Views\Usuarios\Partial\_DeleteModalAndScript.cshtml" />
     <Content Include="Views\Shared\Partial\_DatePickerBoilerplate.cshtml" />
+    <Content Include="Views\Usuarios\Partial\_ChangeTypeModal.cshtml" />
+    <Content Include="Views\Usuarios\Partial\_BanUserModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

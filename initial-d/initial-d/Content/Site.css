@@ -21,14 +21,38 @@
 
     --green: #0abb87;
     --green-dark : #1b8a68;
+    
+    --red: #cc3d3d;
+    --red-dark : #a71e1e;
+    
+    --blue: #5ab1cc;
+    --blue-dark: #3b98b4;
 
     --sidebar-width: 260px;
     --sidebar-width-closed: 80px;
     --transition-speed: 0.2s;
 }
 
-footer {
+/* ---------------------------------------------------
+    MAIN CONTENT
+----------------------------------------------------- */
+
+#content {
+    width: 100%;
+    padding: 20px;
+    padding-top: 70px;
+    min-height: 100vh;
+    margin-top: -50px;
+    transition: all var(--transition-speed);
+}
+
+/* ---------------------------------------------------
+    GENERAL
+----------------------------------------------------- */
+
+footer p {
     font-size: 0.7em;
+    margin: 0;
 }
 
 body {
@@ -36,12 +60,11 @@ body {
     background: rgb(252, 250, 246);
 }
 
-input[type="text"]
-{
-    font-size: 1.1em;
+input, select{
+    min-width: 250px;
 }
 
-p, li, a {
+p, li, a, td, input  {
     font-family: 'Open Sans', sans-serif;
     font-size: 1.1em;
     font-weight: 300;
@@ -65,14 +88,23 @@ p, li, a {
             text-decoration: none !important;
         }
 
+
+input[type="text"]
+{
+    font-size: 0.8em;
+    height: 2.1em;
+}
+input[type="password"]
+{
+    font-size: 1em;
+    height: 2.1em;
+}
+
 .row {
     margin-left: 0;
     margin-right: 0;
 }
 
-.clickable-row {
-    cursor: pointer;
-}
 
 .field-validation-error span {
     color: red;
@@ -92,52 +124,71 @@ p, li, a {
 .dropdown-menu{
     min-width: max-content;
 }
+.dropdown-item {
+	padding: .25rem 0.8rem;
+	color: #212529;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.w-max-content {
+    width: max-content;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}
+
 
 /* ---------------------------------------------------
     HEADERS        |        header
 ----------------------------------------------------- */
-
 .header{
-    /* d-flex flex-row */
+    /* row */	
     display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: row !important;
-    flex-direction: row !important;
-
-    -ms-flex-wrap: wrap;
+	display: flex;
+	-ms-flex-wrap: wrap;
     flex-wrap: wrap;
-
-
+    
+    /* mt-3 mb-2rem*/
     margin-top: 1rem !important;
     margin-bottom: 2rem !important;
 }
-    .header .title{
+    .header .header-title{
+        /* d-flex */
         display: -ms-flexbox;
         display: flex;
-        -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
+        /* mb-1 mr-1*/
+        margin-bottom: 1rem !important;
+        margin-right: 1rem !important;
+        /* text-center */
+        text-align: center;
     }
 
-    .header .title .fa{
+    .header .header-title .fa{
         font-size:1.75rem;
+        /* mt-2 */
+        margin-right: .75rem !important;
+        /* align-self-center */
         -ms-flex-item-align: center !important;
         align-self: center !important;
-        margin-right: .75rem !important;
     }
-    .header .title h2{
+    .header .header-title h2{
+        /* mb-0 */
         margin-bottom: 0;
     }
 
-@media (max-width: 998px) {
-    
-
-    .header{
-        /* flex-column */
-        -ms-flex-direction: column !important;
-        flex-direction: column !important;
+    .header .header-buttons {
+        /* ml-auto  */
+        margin-left: auto !important;
+        /* d-flex align-items-start */
+        display: -ms-flexbox !important;
+        display: flex !important;
+        -ms-flex-align: start !important;
+        align-items: flex-start !important;
     }
-
-}
 
 /* ---------------------------------------------------
     BACKGROUND AND COLORS
@@ -170,6 +221,7 @@ p, li, a {
 .navbar {
     padding: 5px;
     background: #2D2D2D;
+    height: 50px;
 }
 
     .navbar .nav .nav-link {
@@ -203,7 +255,11 @@ p, li, a {
     }
 
     span {
-        font-size: 85%;
+        font-size: 85% !important;
+    }
+
+    button, a:not(.small), td, input[type="text"] {
+        font-size: 100% !important;
     }
 
     h1 {
@@ -225,6 +281,7 @@ p, li, a {
     h5 {
         font-size: 1rem;
     }
+
 }
 
 
@@ -248,19 +305,12 @@ p, li, a {
 }
 
 #sb-toggle-in-button {
-    /* height: ; */
+    height: 50px;
+    /*  d-none w-100 rounded-0 */
+    display: none;
+    width: 100%;
+    border-radius: 0;
 }
-
-.sidebar-toggle {
-    background: var(--yellow-3);
-    color: var(--black-2);
-    border-radius: 0px;
-}
-
-    .sidebar-toggle:hover {
-        background: var(--yellow-1);
-        color: var(--black-2);
-    }
 
 /*  Sidebar Base */
 #sidebar {
@@ -292,17 +342,17 @@ p, li, a {
 
     /* CLOSED: Sidebar links style */
     #sidebar.closed ul li a {
-        padding: 10px 10px;
+        padding: 10px 0px;
         text-align: center;
         font-size: 0.80em;
     }
         /* CLOSED: Sidebar Links Icon style */
         #sidebar.closed ul li a i {
             display: block;
-            font-size: 1.8em;
+            font-size: 1.1em;
             margin-bottom: 5px;
-            margin-right: 0;
-            margin-left: 0;
+            /* margin-right: 0;
+            margin-left: 0; */
         }
 
     /* CLOSED: Sidebar Sub-Links style */
@@ -338,6 +388,10 @@ p, li, a {
         display: none;
     }
 
+    #sidebar.closed .sidebar-header {
+        padding: 20px 0px;
+    }
+
     /* CLOSED: Show the Small Header */
     #sidebar.closed .sidebar-header strong {
         display: block;
@@ -350,7 +404,8 @@ p, li, a {
 
     /* Links container */
     #sidebar ul.components {
-        padding: 20px 0;
+        padding-top: 10px;
+        padding-bottom: 20px;
         border-bottom: 1px solid var(--yellow-3);
     }
 
@@ -361,7 +416,7 @@ p, li, a {
     /* Links */
     #sidebar ul li a {
         padding: 10px;
-        font-size: 1.1em;
+        font-size: 1.1em !important;
         display: block;
     }
         /* Links Hover */
@@ -372,39 +427,9 @@ p, li, a {
         /* Links Icons */
         #sidebar ul li a i, #sidebar ul li.active a i {
             margin-right: 10px;
-            margin-left: 10px;
+            margin-left: 5px;
+            font-size: 1.2em !important;
         }
-
-    /* CLOSED Link */
-    #sidebar ul li.closed > a,
-    a[aria-expanded="true"] {
-        color: var(--yellow-1);
-        background: var(--black-2);
-    }
-
-    #sidebar a[data-toggle="collapse"] {
-        position: relative;
-    }
-
-    /* Dropdown Link - Flechita */
-    #sidebar .dropdown-toggle::after {
-        display: block;
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-50%);
-    }
-
-    /* Sub-Links */
-    #sidebar ul ul a {
-        font-size: 0.9em !important;
-        padding-left: 30px !important;
-        background: var(--black-2);
-    }
-    /* Sub-Links Hover */
-    #sidebar ul ul li a:hover {
-        background: var(--black-1);
-    }
 
     /* Sidebar CTA */
     #sidebar ul.CTAs {
@@ -420,16 +445,6 @@ p, li, a {
         }
 
 
-/* ---------------------------------------------------
-    CONTENT STYLE
------------------------------------------------------ */
-
-#content {
-    width: 100%;
-    padding: 20px;
-    min-height: 100vh;
-    transition: all var(--transition-speed);
-}
 
 /* ---------------------------------------------------
     MEDIAQUERIES
@@ -449,4 +464,20 @@ p, li, a {
             display: none;
         }
 
+}
+
+
+.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.form-row > .col, .form-row > [class*="col-"] {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.form-row {
+	margin-right: 0;
+	margin-left: 0;
 }

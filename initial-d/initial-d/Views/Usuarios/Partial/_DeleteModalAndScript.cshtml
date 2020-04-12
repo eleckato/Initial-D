@@ -1,12 +1,16 @@
 ﻿@* Just make a button these attributes and done      
-   data-toggle="modal" href="#delete-modal" data-user-id="{userId}" *@
+   data-toggle="modal" href="#delete-modal" data-user-id="{userId}" 
+*@
 
 <div id="delete-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Adertencia</h5>
+                <h5 class="modal-title">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    Adertencia
+                </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,8 +21,14 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
-                <a id="modal-delete-btn" href="#" role="button" class="btn btn-sm btn-danger">Eliminar</a>
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <a id="modal-delete-btn" href="#" role="button" class="btn btn-sm btn-danger">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    Eliminar
+                </a>
             </div>
 
         </div>
@@ -38,7 +48,9 @@
             var delbtn = $(this).find('#modal-delete-btn');
 
             // Change the href. Maybe this shouldn't be so hardcoded.
-            delbtn.attr('href', value = `user-admin/${userId}/delete`);
+            let url = '@Url.Action("DeleteUser", "Usuarios", new { userId = "replace_this_id" })'.replace('replace_this_id', userId);
+
+            delbtn.attr('href', value = url);
         });
     }
     WaitForJquery(LoadDeleteScript);

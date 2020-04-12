@@ -1,0 +1,99 @@
+﻿@* Just make a button these attributes and done
+    data-toggle="modal" href="#user-state-modal" data-user-id="{userId}" data-new-state="{userState}"
+*@
+
+<div id="user-state-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("ChangeUserStatus", "Usuarios", FormMethod.Post))
+            {
+                @* Update with JS *@
+                @Html.Hidden("userId", "", new { id = "userId" })
+                @Html.Hidden("userStatusId", "", new { id = "userStatusId" })
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        Advertencia
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    @* Update with JS *@
+                    <p></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-backspace" aria-hidden="true"></i>
+                        <span>Cancelar</span>
+                    </button>
+                    @* Update with JS *@
+                    <button type="submit" role="button" class="btn btn-sm btn-red">
+                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                        <span>Dar de Baja</span>
+                    </button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<script>
+    {
+        function LoadChangeTypeScript() {
+            $(document).on('show.bs.modal', '#user-state-modal', function (event) {
+                // Button that triggered the modal
+                var button = $(event.relatedTarget)
+                var modal = $(this);
+
+                // Extract the userId
+                var userId = button.data('user-id')
+                // Change the userId of the hidden input
+                modal.find('#userId').val(userId);
+            
+                // Extract the userId
+                var userState = button.data('new-state')
+                console.log(userState);
+                // Change the userId of the hidden input
+                modal.find('#userStatusId').val(userState);
+
+                var main_msg = modal.find('.modal-body p');
+                var btn_submit = modal.find(':submit');
+                var submit_icon = btn_submit.find('i.fa');
+                var submit_span = btn_submit.find('span');
+
+                if (userState == 'BAN') {
+                    main_msg.text('¿Seguro/a que desea dar de baja a este usuario?');
+
+                    submit_icon.removeClass('fa-unlock-alt fa-lock');
+                    submit_icon.addClass('fa-lock');
+
+                    submit_span.text("Dar de Baja");
+
+                    btn_submit.removeClass('btn-red btn-green');
+                    btn_submit.addClass('btn-red');
+                }
+                else if (userState == 'ACT') {
+                    main_msg.text('¿Seguro/a que desea dar de alta a este usuario?');
+
+                    submit_icon.removeClass('fa-unlock-alt fa-lock');
+                    submit_icon.addClass('i.fa').addClass('fa-unlock-alt');
+
+                    submit_span.text("Dar de Alta");
+
+                    btn_submit.removeClass('btn-red btn-green');
+                    btn_submit.addClass('btn-green');
+                }
+                else {
+                    // an error or something
+                }
+            });
+        }
+
+        WaitForJquery(LoadChangeTypeScript);
+    }
+</script>

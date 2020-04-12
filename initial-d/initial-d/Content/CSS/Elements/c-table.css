@@ -47,6 +47,16 @@
     }
 }
 
+
+/* ---------------------------------------------------
+    FOR CLICKABLES ROWS
+----------------------------------------------------- */
+
+/* Use .not-clickable on a cell to exclude it from the clickable row  */
+.clickable-row td:not(.not-clickable){
+    cursor: pointer;
+}
+
 /* ---------------------------------------------------
     MAKE THOSE TABLES RESPONSIVE BABE
 ----------------------------------------------------- */
@@ -183,7 +193,6 @@
     }
 }
 
-
 .c-table-left td {
-    text-align: left;
+    /* text-align: left; */
 }

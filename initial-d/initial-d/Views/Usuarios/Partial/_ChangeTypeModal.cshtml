@@ -1,0 +1,54 @@
+﻿@* Just make a button these attributes and done
+    data-toggle="modal" href="#change-type-modal" data-user-id="{userId}"
+*@
+
+<div id="change-type-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("ChangeUsertype", "Usuarios", FormMethod.Post))
+            {
+                @Html.Hidden("userId", "", new { id="userId" })
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i> 
+                        Cambiar de Tipo
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body px-5">
+                    <p>Seleccione nuevo tipo de Usuario</p>
+                    @Html.DropDownList("userTypeId", new SelectList(new List<string> { "OPC1", "OPC2", "ETC" }) { }, new { @class = "custom-select custom-select-sm form-control" })
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-backspace" aria-hidden="true"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" role="button" class="btn btn-sm btn-green">
+                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                        Cambiar
+                    </button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function LoadChangeTypeScript() {
+        $(document).on('show.bs.modal', '#change-type-modal', function (event) {
+            // Button that triggered the modal
+            var button = $(event.relatedTarget)
+            // Extract the userId
+            var userId = button.data('user-id')
+            // Change the userId of the hidden input
+            $('#userId').val(userId);
+        });
+    }
+    WaitForJquery(LoadChangeTypeScript);
+</script>

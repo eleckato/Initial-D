@@ -8,9 +8,9 @@
 
 <div class="header">
 
-    <div class="title">
+    <div class="header-title">
         <h2>
-            <i class="fa fa-user-edit" aria-hidden="true"></i>
+            <i class="fa fa-user-plus" aria-hidden="true"></i>
             Agregar Usuario
         </h2>
     </div>
@@ -23,106 +23,117 @@
     @Html.HiddenFor(m => m.appuser_id);
 
     <div class="row justify-content-around mb-4">
-        <div class="col-12 col-ms-11 col-lg-10 col-xl-5 c-jumbotron mb-3 mb-xl-0"">
-            <h3 class="mb-4"> Información Personal </h3>
 
-            <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive ">
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.name)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.name)
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.last_names)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.last_names, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.last_names)
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.email)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.email, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.email)
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.adress)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.adress, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.adress)
-                    </td>
+        <div class="col-12 col-ms-11 col-md-10 col-lg-6 pr-lg-3">
+            <div class="c-jumbotron">
+                <h3 class="mb-4"> Información Personal </h3>
 
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.phone)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.phone, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.phone)
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.birthday)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker", @Value = string.Empty })
-                        @Html.ValidationMessageFor(x => x.birthday)
-                    </td>
-                </tr>
-            </table>
+                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive ">
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.name)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.last_names)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.last_names, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.last_names)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.email)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.email)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.adress)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.adress, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.adress)
+                        </td>
 
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.phone)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.phone, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.phone)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.birthday)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker", @Value = string.Empty })
+                            @Html.ValidationMessageFor(x => x.birthday)
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
         </div>
 
-        <div class="col-12 col-ms-11 col-lg-10 col-xl-5 c-jumbotron mb-3 mb-xl-0"">
-            <h3 class="mb-4"> Información de Sistema </h3>
+        <div class="col-12 col-ms-11 col-md-10 col-lg-6 pr-lg-3">
+            <div class="c-jumbotron">
+                <h3 class="mb-4"> Información de Sistema </h3>
 
-            <table class="table table-borderless c-info-table c-table-sm-responsive">
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.username)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.username, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.username)
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.hash)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.hash, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.hash)
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.user_type_id)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.user_type_id, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.user_type_id)
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(m => m.status_id)</td>
-                    <td>
-                        @Html.TextBoxFor(m => m.status_id, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(x => x.status_id)
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" id="mail_confirmed_col">
-                        <div class="custom-control custom-checkbox">
-                            @Html.CheckBoxFor(m => m.mail_confirmed, new { @class = "custom-control-input" })
-                            @Html.LabelFor(m => m.mail_confirmed, new { @class = "custom-control-label" })
-                        </div>
-                    </td>
-                </tr>
-            </table>
+                <table class="table table-borderless c-info-table c-table-sm-responsive">
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.username)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.username, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.username)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.hash)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.hash, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.hash)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.user_type_id, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.user_type_id)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.status_id)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.status_id, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.status_id)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" id="mail_confirmed_col">
+                            <div class="custom-control custom-checkbox">
+                                @Html.CheckBoxFor(m => m.mail_confirmed, new { @class = "custom-control-input" })
+                                @Html.LabelFor(m => m.mail_confirmed, new { @class = "custom-control-label" })
+                            </div>
+                        </th>
+                    </tr>
+                </table>
 
+            </div>
         </div>
 
     </div>
 
     <div>
-        <a href="@GoBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">Cancelar</a>
-        <button href="#" class="btn btn-sm btn-success mr-3" role="button">Aceptar</button>
+        <a href="@GoBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-backspace" aria-hidden="true"></i>
+            Cancelar
+        </a>
+        <button href="#" class="btn btn-sm btn-green mr-3" role="button">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            Agregar
+        </button>
     </div>
 
 }

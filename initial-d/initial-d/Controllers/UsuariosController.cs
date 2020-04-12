@@ -26,13 +26,18 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route]
-        public ActionResult UserList()
+        public ActionResult UserList(string userName = null, string userEmail = null, string userTypeId = null, string userStatusId = null)
         {
             List<Usuario> Usuarios;
 
             Usuarios = UP.GetAllUsers().ToList();
 
             if (Usuarios == null) return FailedRequest();
+
+            ViewBag.userName = userName;
+            ViewBag.userEmail = userEmail;
+            ViewBag.userTypeId = userTypeId;
+            ViewBag.userStatusId = userStatusId;
 
             SetNavbar();
             return View(Usuarios);
@@ -168,8 +173,57 @@ namespace initial_d.Controllers
             if (!res) return FailedRequest();
 
             TempData["SuccessMessage"] = "El usuario fue eliminado con Exito";
+
+            Debug.WriteLine($"USER {userId} DELETED");
+
             SetNavbar();
             return RedirectToAction("UserList");
+        }
+
+
+        [HttpPost]
+        public ActionResult ChangeUsertype(string userId, string userTypeId)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId)) return FomularioInvalido();
+
+            var res = true; // UP.ChangeUserType(userId, userTypeId);
+
+            if (!res) return FailedRequest();
+
+            TempData["SuccessMessage"] = "El tipo del usuario fue actualizado con con Exito";
+
+            Debug.WriteLine($"USER TYPE UPDATED TO {userTypeId}");
+
+            string referer = GetReferer(Request);
+
+            SetNavbar();
+            return Redirect(referer);
+        }
+
+
+        [HttpPost]
+        public ActionResult ChangeUserStatus(string userId, string userStatusId)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userStatusId)) return FomularioInvalido();
+
+            var res = true; // UP.ChangeUserStatus(userId, userStatusId);
+
+            if (!res) return FailedRequest();
+
+            string msg;
+            if (userStatusId.Equals("BAN"))
+                msg = "El Usuario fue dado de baja con éxito.";
+            else
+                msg = "El Usuario fue dado de alta con éxito.";
+
+            TempData["SuccessMessage"] = msg;
+
+            Debug.WriteLine($"USER CHANGED TO {userStatusId}");
+
+            string referer = GetReferer(Request);
+
+            SetNavbar();
+            return Redirect(referer);
         }
 
 
@@ -188,6 +242,9 @@ namespace initial_d.Controllers
             ViewBag.InternalNavbar = InternalNavbar;
         }
 
+        /// <summary>
+        /// Get the referer url of a Request
+        /// </summary>
         private string GetReferer(HttpRequestBase request)
         {
             try
@@ -204,6 +261,11 @@ namespace initial_d.Controllers
         private RedirectResult URLInvalida()
         {
             TempData["ErrorMessage"] = Resources.Messages.Error_URLInvalida;
+            return Redirect(GetReferer(Request));
+        }
+        private RedirectResult FomularioInvalido()
+        {
+            TempData["ErrorMessage"] = Resources.Messages.Error_FormInvalido;
             return Redirect(GetReferer(Request));
         }
         private RedirectResult FailedRequest()

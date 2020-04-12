@@ -61,6 +61,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to El fomurlario enviado es invalido, intentelo de nuevo o contante a su administrador..
+        /// </summary>
+        internal static string Error_FormInvalido {
+            get {
+                return ResourceManager.GetString("Error_FormInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hubo un error procesando su solicitud, por favor intente más tarde o contacte a su administrador..
         /// </summary>
         internal static string Error_SolicitudFallida {

@@ -3,35 +3,91 @@
     ViewBag.Title = "Admin. de Clientes";
 
     string AddUrl = Url.Action("AddUser", "Usuarios");
+
+    string userName = ViewBag.userName ?? string.Empty;
+    string userEmail = ViewBag.userEmail ?? string.Empty;
+    string userTypeId = ViewBag.userTypeId ?? string.Empty;
+    string userStatusId = ViewBag.userStatusId ?? string.Empty;
+
+    var userTypeList = new SelectList(new List<string> { "TP1", "TP2", "TP3" });
+    var userStatusList = new SelectList(new List<string> { "ST1", "ST2", "ST3" });
+
 }
 
+<!-- HEADER | GENERAL ACTION BUTTONS -->
 <div class="header ">
 
-    <div class="title">
+    <div class="header-title">
         <h2>
             <i class="fa fa-users" aria-hidden="true"></i>
             Administrador de Usuarios
         </h2>
     </div>
 
-    <div class="mt-3 mt-lg-0 ml-lg-auto d-flex align-items-center">
+    <div class="header-buttons">
         <a href="@AddUrl" class="btn btn-sm btn-green" role="button">Agregar Usuario</a>
     </div>
 
 </div>
 
+<!-- BUSCAR -->
+<div class="mb-4">
+
+    <div>
+        @*<h4>Buscar</h4>*@
+    </div>
+
+    @using (Html.BeginForm("UserList", "Usuarios", FormMethod.Get, new { @class="" }))
+    {
+        <div class="form-row">
+
+            <div class="d-flex align-content-center d-md-none bg-white rounded w-100 py-2 px-3 mb-2 cursor-pointer border" data-toggle="collapse" href="#search-collapse" >
+                <h5 class="m-0 font-weight-bold">Buscar</h5>
+                <i class="ml-auto fa fa-chevron-down align-self-center" aria-hidden="true"></i>
+            </div>
+
+            <div id="search-collapse" class="collapse row col-12">
+
+                <div class="col-12 col-md-11">
+                    <div class="row">
+                        <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-lg-0 pr-0 pr-md-3">
+                            <input class="form-control form-control-sm h-100" type="text" name="userName" placeholder="Nombre de Usuario" value="@userName">
+                        </div>
+                        <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-lg-0 pr-0 pr-md-3">
+                            <input class="form-control form-control-sm h-100" type="text" name="userEmail" placeholder="Email" value="@userEmail">
+                        </div>
+                        <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-md-0 pr-0 pr-md-3">
+                            @Html.DropDownList("userTypeId", userTypeList, "Tipo", new { @class = "custom-select custom-select-sm form-control", @Value = userTypeId })
+                        </div>
+                        <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-md-0 pr-0 pr-md-3">
+                            @Html.DropDownList("userStatusId", userStatusList, "Status", new { @class = "custom-select custom-select-sm form-control", @Value = userStatusId })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col col-md-1 h-auto">
+                    <button class="btn btn-sm btn-yellow w-100 h-100" role="button" type="submit">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+<!-- DATA TABLE -->
 <div class=" d-flex justify-content-center ">
     <table class="table c-info-table c-table-sm-responsive">
 
         <thead>
             <tr>
-                @* SACAR ID DESPUES *@
-                <th >Actions</th>
-                <th >@Html.DisplayNameFor(m => m.username)</th>
-                <th  class="cell-hidden-md">@Html.DisplayNameFor(m => m.fullName)</th>
-                <th >@Html.DisplayNameFor(m => m.email)</th>
-                <th >@Html.DisplayNameFor(m => m.user_type_id)</th>
-                <th >@Html.DisplayNameFor(m => m.status_id)</th>
+                <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.username)</th>
+                <th class="cell-hidden-lg">@Html.DisplayNameFor(m => m.fullName)</th>
+                <th>@Html.DisplayNameFor(m => m.email)</th>
+                <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
+                <th>@Html.DisplayNameFor(m => m.status_id)</th>
             </tr>
         </thead>
 
@@ -43,7 +99,8 @@
 
                 <tr data-user-id="@user.appuser_id" class="clickable-row">
 
-                    <td data-label="Actions" class="">
+                    <!-- USER ACTION DROPDOWN -->
+                    <td data-label="Actions" class="not-clickable">
                         <div class="dropdown">
 
                             <button class="btn btn-yellow btn-xsm dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -54,37 +111,38 @@
 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <div class="d-flex flex-column">
-                                    @*  class="btn btn-xsm btn-info" role="button" *@
                                     <a href="@DetailsUrl" class="dropdown-item small">
                                         <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
                                         Detalles
                                     </a>
 
-                                    <a href="#" class="dropdown-item small">
+                                    <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@user.appuser_id">
                                         <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i>
                                         Cambiar de Tipo
                                     </a>
 
                                     @if (user.status_id.Equals("Banneado"))
                                     {
-                                        <a href="#" class="dropdown-item small">
+                                        <a class="dropdown-item small"
+                                           data-toggle="modal" href="#user-state-modal" data-user-id="@user.appuser_id" data-new-state="ACT">
                                             <i class="fa fa-unlock-alt mr-1" aria-hidden="true"></i>
                                             Dar de Alta
                                         </a>
                                     }
                                     else
                                     {
-                                        <a href="#" class="dropdown-item small">
+                                        <a class="dropdown-item small"
+                                           data-toggle="modal" href="#user-state-modal" data-user-id="@user.appuser_id" data-new-state="BAN">
                                             <i class="fa fa-lock mr-1" aria-hidden="true"></i>
                                             Dar de Baja
                                         </a>
                                     }
 
-
                                     <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@user.appuser_id" href="#delete-modal">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                         Eliminar
                                     </a>
+
                                 </div>
 
                             </div>
@@ -94,13 +152,15 @@
 
                     <td data-label="@Html.DisplayNameFor(m => m.username)">
                         @{ var statClass = user.status_id.Equals("Banneado") ? "fa-user-lock text-danger" : "fa-user-check color-green"; }
-                        <i class="fa mr-1 @statClass" aria-hidden="true"></i>
-                        @Html.DisplayFor(m => user.username)
+                        <div>
+                            <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
+                            @Html.DisplayFor(m => user.username)
+                        </div>
                     </td>
-                    <td data-label="@Html.DisplayNameFor(m => m.fullName)" class="cell-hidden-md">
+                    <td data-label="@Html.DisplayNameFor(m => m.fullName)" class="cell-hidden-lg">
                         @Html.DisplayFor(m => user.fullName)
                     </td>
-                    <td data-label="@Html.DisplayNameFor(m => m.email)" class="">
+                    <td data-label="@Html.DisplayNameFor(m => m.email)">
                         @Html.ValueFor(m => user.email)
                     </td>
                     <td data-label="@Html.DisplayNameFor(m => m.user_type_id)">
@@ -119,20 +179,83 @@
 
 
 
-<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "FFF" })" class="btn btn-xsm btn-secondary mr-2" role="button">
+@*<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "FFF" })" class="btn btn-xsm btn-secondary mr-2" role="button">
     <i class="fa fa-bug mr-1" aria-hidden="true"></i>
     TRIGGER PARA ID NO INVÁLIDO
-</a>
+</a>*@
 
 @Html.Partial("Partial/_DeleteModalAndScript")
+@Html.Partial("Partial/_ChangeTypeModal")
+@Html.Partial("Partial/_BanUserModal")
 
 
 @section customScripts{
     <script>
-        $(document).on('click', '.clickable-row', function () {
-            let id = $(this).data('user-id');
+
+        /** When the user clicks on a cell inside a .clickable-row, it redirect them to the User Details view of that User.
+         * Use .not-clickable on a cell to exclude it from the event */
+        $(document).on('click', '.clickable-row td:not(.not-clickable)', function () {
+            // Get the Id from the row
+            let id = $(this).closest('.clickable-row').data('user-id');
+            // Assemble the URL
             let url = '@Url.Action("UserDetails", "Usuarios", new { userId = "user_id_replace" })'.replace('user_id_replace', id);
+            // Redirect the window
             window.location = url;
         });
+
+        // Check if the viewport is in a Bootstrap breakpoint
+        var isBreakpoint = function (viewport_size) {
+            //if (isBreakpoint('xs')) {
+            //    console.log('IS XS');
+            //}
+            //if (isBreakpoint('sm')) {
+            //    console.log('IS SM');
+            //}
+            //if (isBreakpoint('md')) {
+            //    console.log('IS MD');
+            //}
+            //if (isBreakpoint('lg')) {
+            //    console.log('IS LG');
+            //}
+
+            return $('.device-' + viewport_size).is(':visible')
+        }
+
+        // Set the system for isBreakpoint to work and initialize the Search Bar Visibility
+        $(document).ready(function () {
+            var test_divs = "<div class='device-xs d-none d-xs-block'></div>";
+            test_divs = test_divs + "<div class='device-sm d-none d-sm-block visible-sm'></div>";
+            test_divs = test_divs + "<div class='device-md d-none d-md-block visible-md'></div>";
+            test_divs = test_divs + "<div class='device-lg d-none d-lg-block visible-lg'></div>";
+            $("body").append(test_divs);
+
+            updateSearchVisibility()
+        })
+
+        // Update the Search bar visibility
+        function updateSearchVisibility() {
+            // If the the viewport is > md, show the bar
+            if (isBreakpoint('md')){
+                $('#search-collapse').addClass('show');
+            }
+            // If the the viewport is < md, hide the bar
+            else {
+                $('#search-collapse').removeClass('show');
+            }
+        }
+        
+        // Update the Search Bar Visibility on window rezise
+        $(window).on('resize', debounce(function(e){
+            updateSearchVisibility();
+        }));
+
+        function debounce(func){
+          var timer;
+          return function(event){
+            if(timer) clearTimeout(timer);
+            timer = setTimeout(func,100,event);
+          };
+        }
+
     </script>
 }
