@@ -2,17 +2,14 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Web;
 using initial_d.Common;
+using System.Net;
 
 namespace initial_d.APICallers
 {
     public class UsuariosRepository : RepositorieBase
     {
-        private readonly string prefix = "app_users";
+        private readonly string prefix = "user-adm";
 
         List<Usuario> mockData = new List<Usuario>
         {
@@ -54,7 +51,6 @@ namespace initial_d.APICallers
             },
         };
 
-
         /// <summary>
         /// API call to add an User
         /// </summary>
@@ -83,22 +79,26 @@ namespace initial_d.APICallers
         /// </summary>
         public IEnumerable<Usuario> GetAllUsers()
         {
-            //var request = new RestRequest($"{prefix}", Method.GET){ 
-            //    RequestFormat = DataFormat.Json
-            //};
-            //// For pagination
-            ////request.AddParameter("page", "1", ParameterType.UrlSegment);
-            ////request.AddParameter("size", "1", ParameterType.UrlSegment);
-
-            //var response = client.Execute<List<Usuario>>(request);
-
-            //if (response.Data == null)
-            //    throw new Exception(response.ErrorMessage);
-
-            //return response.Data;
             try
             {
-                return mockData;
+                var request = new RestRequest($"{prefix}/users", Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+                // For pagination
+                //request.AddParameter("page", "1", ParameterType.UrlSegment);
+                //request.AddParameter("size", "1", ParameterType.UrlSegment);
+
+                var response = client.Execute<List<Usuario>>(request);
+
+                if (response.Data == null)
+                    throw new Exception(response.ErrorMessage);
+
+                return response.Data;
+
+                #region MOCK
+                //return mockData;
+                #endregion
             }
             catch (Exception e)
             {
@@ -119,15 +119,32 @@ namespace initial_d.APICallers
                 return null;
             }
 
-            try
+            var request = new RestRequest($"{prefix}/users/{userId}", Method.GET)
             {
-                return mockData.SingleOrDefault(x => x.appuser_id.Equals(userId));
-            }
-            catch (Exception e)
+                RequestFormat = DataFormat.Json
+            };
+
+            var response = client.Execute<Usuario>(request);
+
+            switch (response.StatusCode)
             {
-                ErrorWriter.ExceptionError(e);
-                return null;
+                case HttpStatusCode.BadRequest:
+                    throw new Exception("La solicitud enviada es inválida");
+                case HttpStatusCode.Unauthorized:
+                    throw new Exception("No tiene permiso para llevar a cabo está acción");
+                case HttpStatusCode.NotFound:
+                    throw new Exception("El Usuario requerido no existe");
+                case HttpStatusCode.InternalServerError:
+                    throw new Exception("Hubo un error conectandose con la base de datos, por favor intente más tarde o contactese con un administrador");
+                case HttpStatusCode.OK:
+                    return response.Data;
+                default:
+                    return null;
             }
+
+            #region MOCK
+            //return mockData.SingleOrDefault(x => x.appuser_id.Equals(userId));
+            #endregion
         }
 
         /// <summary>
@@ -181,5 +198,50 @@ namespace initial_d.APICallers
             }
         }
     
+        public IEnumerable<UserType> GetAllTypes()
+        {
+            try
+            {
+                var request = new RestRequest($"{prefix}/user-type", Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                var response = client.Execute<List<UserType>>(request);
+
+                if (response.Data == null)
+                    throw new Exception(response.ErrorMessage);
+
+                return response.Data;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return null;
+            }
+        }
+
+        public IEnumerable<UserStatus> GetAllStatus()
+        {
+            try
+            {
+                var request = new RestRequest($"{prefix}/user-status", Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                var response = client.Execute<List<UserStatus>>(request);
+
+                if (response.Data == null)
+                    throw new Exception(response.ErrorMessage);
+
+                return response.Data;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return null;
+            }
+        }
     }
 }

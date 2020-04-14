@@ -105,7 +105,7 @@ namespace initial_d.Providers
             }
         }
 
-        public ClaimsIdentity CreateIdentity(bool isAuthenticated, string userName, dynamic payload)
+        public ClaimsIdentity CreateIdentity(bool isAuthenticated, string userName, dynamic payload, string token)
         {
             if (string.IsNullOrEmpty(userName) || payload == null)
                 return null;
@@ -124,6 +124,7 @@ namespace initial_d.Providers
                 // Add Claims NameIdentifier and Role
                 jwtIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId));
                 jwtIdentity.AddClaim(new Claim(ClaimTypes.Role, role));
+                jwtIdentity.AddClaim(new Claim(ClaimTypes.Authentication, token));
 
                 return jwtIdentity;
             }

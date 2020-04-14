@@ -13,6 +13,7 @@ using Microsoft.Owin.Security;
 using initial_d.Models;
 using System.Diagnostics;
 using System.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace initial_d
 {
@@ -117,28 +118,31 @@ namespace initial_d
          */
         public override async Task<SignInStatus> PasswordSignInAsync(string userName, string password, bool isPersistent, bool shouldLockout)
         {
-            // MAKE FAKE CREDENTIALS
-            var claims = new Providers.JwtProvider().CreateFakeIdentity();
-            // SIGN IN
-            HttpContext.Current.Request.GetOwinContext().Authentication.SignIn(claims);
-            // RETURN SUCCESS
-            return SignInStatus.Success;
+            //// MAKE FAKE CREDENTIALS
+            //var claims = new Providers.JwtProvider().CreateFakeIdentity();
+            //// SIGN IN
+            //HttpContext.Current.Request.GetOwinContext().Authentication.SignIn(claims);
+            //// RETURN SUCCESS
+            //return SignInStatus.Success;
 
-            /*
             // Authorization server end point
             string uri = ConfigurationManager.AppSettings["BuffetAPI.url"];
 
             var jwtProvider = Providers.JwtProvider.Create(uri);
 
-            string Response = await jwtProvider.GetTokenAsync(userName, password);
+            string response = await jwtProvider.GetTokenAsync(userName, password);
 
-            if (Response == null)
+            //dynamic resObj = JObject.Parse(response); //["JWT"]["chars"].ToString();
+            //dynamic jwt = resObj.jwt;
+            string token = (string)JObject.Parse(response)["JWT"]["string"];
+
+            if (response == null)
             {
                 return SignInStatus.Failure;
             }
-            else if (Response.StartsWith("ERR"))
+            else if (response.StartsWith("ERR"))
             {
-                switch (Response)
+                switch (response)
                 {
                     // Invalid Username
                     case "ERR-AUTH-001":
@@ -155,13 +159,13 @@ namespace initial_d
             else
             {
                 // Decode payload
-                dynamic payload = jwtProvider.DecodePayload(Response);
+                dynamic payload = jwtProvider.DecodePayload(response);
 
                 // ERROR: Malformed Token
-                if(payload == null) return SignInStatus.Failure;
+                if (payload == null) return SignInStatus.Failure;
 
                 // Create an Identity Claim
-                ClaimsIdentity claims = jwtProvider.CreateIdentity(true, userName, payload);
+                ClaimsIdentity claims = jwtProvider.CreateIdentity(true, userName, payload, token);
 
                 // ERROR: Malformed Token
                 if (claims == null) return SignInStatus.Failure;
@@ -173,7 +177,7 @@ namespace initial_d
 
                 return SignInStatus.Success;
             }
-            */
+
         }
     }
 }

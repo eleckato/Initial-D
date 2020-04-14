@@ -210,6 +210,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\APIModels\UserStatus.cs" />
+    <Compile Include="Models\APIModels\UserType.cs" />
     <Compile Include="Models\APIModels\Usuario.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -452,7 +454,7 @@
     <Content Include="Views\Usuarios\Partial\_DeleteModalAndScript.cshtml" />
     <Content Include="Views\Shared\Partial\_DatePickerBoilerplate.cshtml" />
     <Content Include="Views\Usuarios\Partial\_ChangeTypeModal.cshtml" />
-    <Content Include="Views\Usuarios\Partial\_BanUserModal.cshtml" />
+    <Content Include="Views\Usuarios\Partial\_ToggleUserStatusModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

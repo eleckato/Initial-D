@@ -96,6 +96,8 @@
             @foreach (var user in Model)
             {
                 string DetailsUrl = Url.Action("UserDetails", "Usuarios", new { userId = user.appuser_id });
+                string userStatus = user.status_id;
+                bool? isBanned = userStatus?.Equals("Banneado"); 
 
                 <tr data-user-id="@user.appuser_id" class="clickable-row">
 
@@ -111,38 +113,45 @@
 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <div class="d-flex flex-column">
-                                    <a href="@DetailsUrl" class="dropdown-item small">
-                                        <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
-                                        Detalles
-                                    </a>
-
-                                    <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@user.appuser_id">
-                                        <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i>
-                                        Cambiar de Tipo
-                                    </a>
-
-                                    @if (user.status_id.Equals("Banneado"))
+                                    @if (isBanned != null)
                                     {
-                                        <a class="dropdown-item small"
-                                           data-toggle="modal" href="#user-state-modal" data-user-id="@user.appuser_id" data-new-state="ACT">
-                                            <i class="fa fa-unlock-alt mr-1" aria-hidden="true"></i>
-                                            Dar de Alta
+
+                                        <a href="@DetailsUrl" class="dropdown-item small">
+                                            <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
+                                            Detalles
+                                        </a>
+
+                                        <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@user.appuser_id">
+                                            <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i>
+                                            Cambiar de Tipo
+                                        </a>
+
+                                        if (isBanned == true)
+                                        {
+                                            <a class="dropdown-item small"
+                                               data-toggle="modal" href="#user-state-modal" data-user-id="@user.appuser_id" data-new-state="ACT">
+                                                <i class="fa fa-unlock-alt mr-1" aria-hidden="true"></i>
+                                                Dar de Alta
+                                            </a>
+                                        }
+                                        else if (isBanned == false)
+                                        {
+                                            <a class="dropdown-item small"
+                                               data-toggle="modal" href="#user-state-modal" data-user-id="@user.appuser_id" data-new-state="BAN">
+                                                <i class="fa fa-lock mr-1" aria-hidden="true"></i>
+                                                Dar de Baja
+                                            </a>
+                                        }
+
+                                        <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@user.appuser_id" href="#delete-modal">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                            Eliminar
                                         </a>
                                     }
                                     else
                                     {
-                                        <a class="dropdown-item small"
-                                           data-toggle="modal" href="#user-state-modal" data-user-id="@user.appuser_id" data-new-state="BAN">
-                                            <i class="fa fa-lock mr-1" aria-hidden="true"></i>
-                                            Dar de Baja
-                                        </a>
+                                        <p class="dropdown-item small">Error al cargar el Usuario</p>
                                     }
-
-                                    <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@user.appuser_id" href="#delete-modal">
-                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                        Eliminar
-                                    </a>
-
                                 </div>
 
                             </div>
@@ -151,11 +160,14 @@
                     </td>
 
                     <td data-label="@Html.DisplayNameFor(m => m.username)">
-                        @{ var statClass = user.status_id.Equals("Banneado") ? "fa-user-lock text-danger" : "fa-user-check color-green"; }
-                        <div>
-                            <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
-                            @Html.DisplayFor(m => user.username)
-                        </div>
+                        @if (isBanned != null)
+                        {
+                            var statClass = isBanned == true ? "fa-user-lock text-danger" : "fa-user-check color-green";
+                            <div>
+                                <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
+                                @Html.DisplayFor(m => user.username)
+                            </div>
+                        }
                     </td>
                     <td data-label="@Html.DisplayNameFor(m => m.fullName)" class="cell-hidden-lg">
                         @Html.DisplayFor(m => user.fullName)
@@ -179,14 +191,14 @@
 
 
 
-@*<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "FFF" })" class="btn btn-xsm btn-secondary mr-2" role="button">
+<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "FFF" })" class="btn btn-xsm btn-secondary mr-2" role="button">
     <i class="fa fa-bug mr-1" aria-hidden="true"></i>
     TRIGGER PARA ID NO INVÁLIDO
-</a>*@
+</a>
 
 @Html.Partial("Partial/_DeleteModalAndScript")
 @Html.Partial("Partial/_ChangeTypeModal")
-@Html.Partial("Partial/_BanUserModal")
+@Html.Partial("Partial/_ToggleUserStatusModal")
 
 
 @section customScripts{

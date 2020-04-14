@@ -14,7 +14,15 @@ namespace initial_d.Controllers
     [RoutePrefix("user-admin")]
     public class UsuariosController : Controller
     {
-        UsuariosRepository UP = new UsuariosRepository();
+        readonly UsuariosRepository UP = new UsuariosRepository();
+
+        public UsuariosController()
+        {
+            var statusLst = UP.GetAllStatus();
+            var typeLst = UP.GetAllTypes();
+
+            SetNavbar();
+        }
 
         /* ---------------------------------------------------------------- */
         /* USER LIST */
@@ -30,7 +38,7 @@ namespace initial_d.Controllers
         {
             List<Usuario> Usuarios;
 
-            Usuarios = UP.GetAllUsers().ToList();
+            Usuarios = UP.GetAllUsers()?.ToList();
 
             if (Usuarios == null) return FailedRequest();
 
@@ -39,7 +47,6 @@ namespace initial_d.Controllers
             ViewBag.userTypeId = userTypeId;
             ViewBag.userStatusId = userStatusId;
 
-            SetNavbar();
             return View(Usuarios);
         }
 
@@ -56,13 +63,22 @@ namespace initial_d.Controllers
         [Route("{userId}")]
         public ActionResult UserDetails(string userId)
         {
-            if (string.IsNullOrEmpty(userId)) return URLInvalida();
+            if (string.IsNullOrEmpty(userId)) return InvalidUrl();
 
-            var usuario = UP.GetUser(userId);
+            Usuario usuario;
 
-            if(usuario == null) return FailedRequest();
+            try
+            {
+                usuario = UP.GetUser(userId);
 
-            SetNavbar();
+                if (usuario == null) return FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return CustomError(e.Message);
+            }
+
             return View(usuario);
         }
 
@@ -79,13 +95,12 @@ namespace initial_d.Controllers
         [Route("{userId}/actualizar")]
         public ActionResult UpdateUser(string userId)
         {
-            if (string.IsNullOrEmpty(userId)) return URLInvalida();
+            if (string.IsNullOrEmpty(userId)) return InvalidUrl();
 
             var usuario = UP.GetUser(userId);
 
             if (usuario == null) return FailedRequest();
 
-            SetNavbar();
             return View(usuario);
         }
 
@@ -97,7 +112,7 @@ namespace initial_d.Controllers
         [Route("{userId}/actualizar")]
         public ActionResult UpdateUser(Usuario newUser)
         {
-            if (newUser == null) return URLInvalida();
+            if (newUser == null) return InvalidUrl();
 
             var res = UP.UpdateUser(newUser);
 
@@ -107,7 +122,6 @@ namespace initial_d.Controllers
 
             string userId = newUser.appuser_id;
 
-            SetNavbar();
             return RedirectToAction("UserDetails", new { userId });
         }
 
@@ -128,7 +142,6 @@ namespace initial_d.Controllers
 
             if (userTemplate == null) return FailedRequest();
 
-            SetNavbar();
             return View(userTemplate);
         }
 
@@ -140,7 +153,7 @@ namespace initial_d.Controllers
         [Route("agregar")]
         public ActionResult AddUser(Usuario newUser)
         {
-            if (newUser == null) return URLInvalida();
+            if (newUser == null) return InvalidUrl();
 
             var res = UP.AddUser(newUser);
 
@@ -149,7 +162,6 @@ namespace initial_d.Controllers
             TempData["SuccessMessage"] = "El usuario fue agregado con Exito";
             string userId = "U2"; // newUser.appuser_id;
 
-            SetNavbar();
             return RedirectToAction("UserDetails", new { userId = userId });
         }
 
@@ -166,7 +178,7 @@ namespace initial_d.Controllers
         [Route("{userId}/delete")]
         public ActionResult DeleteUser(string userId)
         {
-            if (string.IsNullOrEmpty(userId)) return URLInvalida();
+            if (string.IsNullOrEmpty(userId)) return InvalidUrl();
 
             var res = UP.DeleteUser(userId);
 
@@ -176,15 +188,18 @@ namespace initial_d.Controllers
 
             Debug.WriteLine($"USER {userId} DELETED");
 
-            SetNavbar();
             return RedirectToAction("UserList");
         }
 
-
+        /// <summary>
+        /// POST  |  API call to update the type of an User
+        /// </summary>
+        /// <param name="userId"> Id of the User to update </param>
+        /// <param name="userTypeId"> Id of the new Type for the User </param>
         [HttpPost]
         public ActionResult ChangeUsertype(string userId, string userTypeId)
         {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId)) return FomularioInvalido();
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId)) return InvalidForm();
 
             var res = true; // UP.ChangeUserType(userId, userTypeId);
 
@@ -194,17 +209,20 @@ namespace initial_d.Controllers
 
             Debug.WriteLine($"USER TYPE UPDATED TO {userTypeId}");
 
-            string referer = GetReferer(Request);
+            string referer = GetRefererForError(Request);
 
-            SetNavbar();
             return Redirect(referer);
         }
 
-
+        /// <summary>
+        /// POST  |  API call to update the Status of an User
+        /// </summary>
+        /// <param name="userId"> Id of the User to update </param>
+        /// <param name="userStatusId"> Id of the new Status for the User </param>
         [HttpPost]
         public ActionResult ChangeUserStatus(string userId, string userStatusId)
         {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userStatusId)) return FomularioInvalido();
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userStatusId)) return InvalidForm();
 
             var res = true; // UP.ChangeUserStatus(userId, userStatusId);
 
@@ -213,16 +231,17 @@ namespace initial_d.Controllers
             string msg;
             if (userStatusId.Equals("BAN"))
                 msg = "El Usuario fue dado de baja con éxito.";
-            else
+            else if ((userStatusId.Equals("ACT")))
                 msg = "El Usuario fue dado de alta con éxito.";
+            else
+                msg = "El Status del Usuario fue actualizado con éxito";
 
             TempData["SuccessMessage"] = msg;
 
             Debug.WriteLine($"USER CHANGED TO {userStatusId}");
 
-            string referer = GetReferer(Request);
+            string referer = GetRefererForError(Request);
 
-            SetNavbar();
             return Redirect(referer);
         }
 
@@ -231,6 +250,9 @@ namespace initial_d.Controllers
         /* COMMON */
         /* ---------------------------------------------------------------- */
 
+        /// <summary>
+        /// Set and saves the dat for the navbar in a ViewBag
+        /// </summary>
         private void SetNavbar()
         {
             List<NavbarItems> InternalNavbar = new List<NavbarItems>()
@@ -243,35 +265,56 @@ namespace initial_d.Controllers
         }
 
         /// <summary>
-        /// Get the referer url of a Request
+        /// Get the referer url of a Request when an error araise to know where to redirect the User
         /// </summary>
-        private string GetReferer(HttpRequestBase request)
+        private string GetRefererForError(HttpRequestBase request)
         {
-            try
-            {
-                return request.UrlReferrer.AbsoluteUri;
-            }
-            catch
-            {
-                return Url.Action("Error", "Home");
-            }
+            // Try to get the referer URL
+            string refererUrl = request?.UrlReferrer?.AbsoluteUri;
 
+            // If is null, redirect to Error page
+            // Also, if the requested URL is the same as the referer, then redirect to Error page to avoid an infinite loop
+            if (refererUrl == null || request.Url.Equals(refererUrl)) return Url.Action("Error", "Home");
+
+            // If is safe to go back to the referer url, redirect there
+            return refererUrl;
         }
 
-        private RedirectResult URLInvalida()
+        /// <summary>
+        /// When a URL is malformed, lack arguments or have invalid arguments
+        /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
+        /// </summary>
+        private RedirectResult InvalidUrl()
         {
             TempData["ErrorMessage"] = Resources.Messages.Error_URLInvalida;
-            return Redirect(GetReferer(Request));
+            return Redirect(GetRefererForError(Request));
         }
-        private RedirectResult FomularioInvalido()
+        /// <summary>
+        /// When a recieved form isn't valid
+        /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
+        /// </summary>
+        private RedirectResult InvalidForm()
         {
             TempData["ErrorMessage"] = Resources.Messages.Error_FormInvalido;
-            return Redirect(GetReferer(Request));
+            return Redirect(GetRefererForError(Request));
         }
+        /// <summary>
+        /// When an unkow error with the request arises
+        /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
+        /// </summary>
         private RedirectResult FailedRequest()
         {
             TempData["ErrorMessage"] = Resources.Messages.Error_SolicitudFallida;
-            return Redirect(GetReferer(Request));
+            return Redirect(GetRefererForError(Request));
+        }
+        /// <summary>
+        /// For custom errors. It the the error message on TempData["ErrorMessage"] and return a safe place to redirect the User
+        /// </summary>
+        /// <param name="error"></param>
+        private RedirectResult CustomError(string error)
+        {
+            TempData["ErrorMessage"] = error;
+            return Redirect(GetRefererForError(Request));
         }
     }
 }

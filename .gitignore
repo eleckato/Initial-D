@@ -1,2 +1,10 @@
 
 initial-d/.vs/
+
+*.mdf
+
+*.ldf
+
+initial-d/initial-d/bin/
+
+initial-d/initial-d/obj/
