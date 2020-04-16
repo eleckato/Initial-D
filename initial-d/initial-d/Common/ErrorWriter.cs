@@ -37,5 +37,19 @@ namespace initial_d.Common
             Debug.WriteLine("----------------------------------------------------------------");
         }
 
+        /// <summary>
+        /// Print a custom message on the Debug Console, with the caller name and the file of it
+        /// <para> callerName and callerFilePath are filled automatically </para>
+        /// </summary>
+        /// <param name="message"> Error message to write </param>
+        public static void CustomError(string message, [CallerMemberName] string callerName = "", [CallerFilePath]string callerFilePath = null)
+        {
+            var callerFile = Path.GetFileName(callerFilePath);
+
+            Debug.WriteLine("----------------------------------------------------------------");
+            Debug.WriteLine($"ERROR in {callerName}()  :  {message}\non file  :  {callerFile}");
+            Debug.WriteLine("----------------------------------------------------------------");
+        }
+
     }
 }

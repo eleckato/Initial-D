@@ -1,26 +1,28 @@
-﻿using System;
+﻿using initial_d.APICallers;
+using initial_d.Common;
+using initial_d.Models.APIModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using initial_d.APICallers;
-using initial_d.Common;
-using initial_d.Models.APIModels;
 
 namespace initial_d.Controllers
 {
     [Authorize]
     [RoutePrefix("user-admin")]
-    public class UsuariosController : Controller
+    public class UsuariosController : BaseController
     {
         readonly UsuariosRepository UP = new UsuariosRepository();
 
+        private const string AddUserRoute = "agregar";
+        private const string UserDetailsRoute = "{userId}";
+        private const string UpdateUserRoute = "{userId}/actualizar";
+        private const string DeleteUserRoute = "{userId}/delete";
+
         public UsuariosController()
         {
-            var statusLst = UP.GetAllStatus();
-            var typeLst = UP.GetAllTypes();
-
             SetNavbar();
         }
 
@@ -28,6 +30,7 @@ namespace initial_d.Controllers
         /* USER LIST */
         /* ---------------------------------------------------------------- */
 
+        // TODO Search Filters
         /// <summary>
         /// GET | Show a list of Users
         /// <para> /user-admin </para>
@@ -37,15 +40,37 @@ namespace initial_d.Controllers
         public ActionResult UserList(string userName = null, string userEmail = null, string userTypeId = null, string userStatusId = null)
         {
             List<Usuario> Usuarios;
+            List<UserType> userTypeLst;
+            List<UserStatus> userStatusLst;
 
-            Usuarios = UP.GetAllUsers()?.ToList();
+            try
+            {
+                Usuarios = UP.GetAllUsers().ToList();
+                if (Usuarios == null) return FailedRequest();
 
-            if (Usuarios == null) return FailedRequest();
+                userTypeLst = UP.GetAllTypes().ToList();
+                if (userTypeLst == null) return FailedRequest();
 
+                userStatusLst = UP.GetAllStatus().ToList();
+                if (userStatusLst == null) return FailedRequest();
+
+                Usuarios.ForEach(user =>
+                {
+                    user = UP.ProcessUser(user, userTypeLst, userStatusLst);
+                });
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return CustomError(e.Message);
+            }
+
+            // To keep the state of the search filters when the user make a search
             ViewBag.userName = userName;
             ViewBag.userEmail = userEmail;
-            ViewBag.userTypeId = userTypeId;
-            ViewBag.userStatusId = userStatusId;
+
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", userTypeId);
+            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status", userStatusId);
 
             return View(Usuarios);
         }
@@ -60,24 +85,34 @@ namespace initial_d.Controllers
         /// <para> /user-admin/{id} </para>
         /// </summary>
         [HttpGet]
-        [Route("{userId}")]
+        [Route(UserDetailsRoute)]
         public ActionResult UserDetails(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return InvalidUrl();
 
             Usuario usuario;
+            List<UserType> userTypeLst;
 
             try
             {
                 usuario = UP.GetUser(userId);
-
                 if (usuario == null) return FailedRequest();
+
+                userTypeLst = UP.GetAllTypes().ToList();
+                if (userTypeLst == null) return FailedRequest();
+
+                var userStatusLst = UP.GetAllStatus().ToList();
+                if (userStatusLst == null) return FailedRequest();
+
+                usuario = UP.ProcessUser(usuario, userTypeLst, userStatusLst);
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
                 return CustomError(e.Message);
             }
+
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", usuario.user_type_id);
 
             return View(usuario);
         }
@@ -92,37 +127,65 @@ namespace initial_d.Controllers
         /// <para> /user-admin/{id}/update </para>
         /// </summary>
         [HttpGet]
-        [Route("{userId}/actualizar")]
+        [Route(UpdateUserRoute)]
         public ActionResult UpdateUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return InvalidUrl();
 
-            var usuario = UP.GetUser(userId);
+            Usuario usuario;
+            List<UserType> userTypeLst;
+            List<UserStatus> userStatusLst;
 
-            if (usuario == null) return FailedRequest();
+            try
+            {
+                usuario = UP.GetUser(userId);
+                if (usuario == null) return FailedRequest();
+
+                userTypeLst = UP.GetAllTypes().ToList();
+                if (userTypeLst == null) return FailedRequest();
+
+                userStatusLst = UP.GetAllStatus().ToList();
+                if (userStatusLst == null) return FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return CustomError(e.Message);
+            }
+
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", usuario.user_type_id);
+            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status", usuario.status_id);
 
             return View(usuario);
         }
 
+        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the data of an User
         /// <para> /user-admin/{id}/update </para>
         /// </summary>
         [HttpPost]
-        [Route("{userId}/actualizar")]
+        [Route(UpdateUserRoute)]
         public ActionResult UpdateUser(Usuario newUser)
         {
             if (newUser == null) return InvalidUrl();
 
-            var res = UP.UpdateUser(newUser);
+            try
+            {
+                var res = UP.UpdateUser(newUser);
 
-            if (!res) return FailedRequest();
+                if (!res) return FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return CustomError(e.Message);
+            }
 
-            TempData["SuccessMessage"] = "El usuario fue actualizado con Exito";
+            string successMsg = "El usuario fue actualizado con Exito";
+            SetSuccessMsg(successMsg);
 
-            string userId = newUser.appuser_id;
-
-            return RedirectToAction("UserDetails", new { userId });
+            return RedirectToAction("UserDetails", new { newUser.appuser_id });
         }
 
 
@@ -135,34 +198,69 @@ namespace initial_d.Controllers
         /// <para> /user-admin/agregar </para>
         /// </summary>
         [HttpGet]
-        [Route("agregar")]
+        [Route(AddUserRoute)]
         public ActionResult AddUser()
         {
-            var userTemplate = new Usuario(true);
+            List<UserType> userTypeLst;
+            List<UserStatus> userStatusLst;
 
-            if (userTemplate == null) return FailedRequest();
+            Usuario userTemplate;
+
+            try
+            {
+                userTemplate = new Usuario(true);
+
+                if (userTemplate == null) return FailedRequest();
+
+                userTypeLst = UP.GetAllTypes().ToList();
+                if (userTypeLst == null) return FailedRequest();
+
+                userStatusLst = UP.GetAllStatus().ToList();
+                if (userStatusLst == null) return FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return CustomError(e.Message);
+            }
+
+
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
+            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status");
 
             return View(userTemplate);
         }
 
+        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to add an User
         /// <para> /user-admin/agregar </para>
         /// </summary>
         [HttpPost]
-        [Route("agregar")]
+        [Route(AddUserRoute)]
         public ActionResult AddUser(Usuario newUser)
         {
             if (newUser == null) return InvalidUrl();
 
-            var res = UP.AddUser(newUser);
+            try
+            {
+                var res = UP.AddUser(newUser);
 
-            if (!res) return FailedRequest();
+                if (!res) return FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return CustomError(e.Message);
+            }
 
-            TempData["SuccessMessage"] = "El usuario fue agregado con Exito";
+            string successMsg = "El usuario fue agregado con Exito";
+            SetSuccessMsg(successMsg);
+
+            // TODO Put the actual appuser_id here when connection to API is implemented
             string userId = "U2"; // newUser.appuser_id;
 
-            return RedirectToAction("UserDetails", new { userId = userId });
+            return RedirectToAction("UserDetails", new { userId });
         }
 
 
@@ -170,27 +268,37 @@ namespace initial_d.Controllers
         /* ADD USER */
         /* ---------------------------------------------------------------- */
 
+        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to delete an User
         /// <para> /user-admin/{id}/delete </para>
         /// </summary>
         [HttpGet]
-        [Route("{userId}/delete")]
+        [Route(DeleteUserRoute)]
         public ActionResult DeleteUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return InvalidUrl();
 
-            var res = UP.DeleteUser(userId);
+            try
+            {
+                var res = UP.DeleteUser(userId);
 
-            if (!res) return FailedRequest();
+                if (!res) return FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return CustomError(e.Message);
+            }
 
-            TempData["SuccessMessage"] = "El usuario fue eliminado con Exito";
 
-            Debug.WriteLine($"USER {userId} DELETED");
+            string successMsg = "El usuario fue eliminado con Exito";
+            SetSuccessMsg(successMsg);
 
             return RedirectToAction("UserList");
         }
 
+        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the type of an User
         /// </summary>
@@ -201,19 +309,26 @@ namespace initial_d.Controllers
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId)) return InvalidForm();
 
-            var res = true; // UP.ChangeUserType(userId, userTypeId);
+            try
+            {
+                var res = true; // UP.ChangeUserType(userId, userTypeId);
 
-            if (!res) return FailedRequest();
+                if (!res) return FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return CustomError(e.Message);
+            }
 
-            TempData["SuccessMessage"] = "El tipo del usuario fue actualizado con con Exito";
-
-            Debug.WriteLine($"USER TYPE UPDATED TO {userTypeId}");
+            string successMsg = "El tipo del usuario fue actualizado con con Exito";
+            SetSuccessMsg(successMsg);
 
             string referer = GetRefererForError(Request);
-
             return Redirect(referer);
         }
 
+        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the Status of an User
         /// </summary>
@@ -224,24 +339,33 @@ namespace initial_d.Controllers
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userStatusId)) return InvalidForm();
 
-            var res = true; // UP.ChangeUserStatus(userId, userStatusId);
+            try
+            {
+                var res = true; // UP.ChangeUserStatus(userId, userStatusId);
 
-            if (!res) return FailedRequest();
+                if (!res) return FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return CustomError(e.Message);
+            }
+
+            string bannedMsg = "El Usuario fue dado de baja con éxito";
+            string unbannedMsg = "El Usuario fue dado de alta con éxito";
+            string genericMsg = "El Status del Usuario fue actualizado con éxito";
 
             string msg;
             if (userStatusId.Equals("BAN"))
-                msg = "El Usuario fue dado de baja con éxito.";
+                msg = bannedMsg;
             else if ((userStatusId.Equals("ACT")))
-                msg = "El Usuario fue dado de alta con éxito.";
+                msg = unbannedMsg;
             else
-                msg = "El Status del Usuario fue actualizado con éxito";
+                msg = genericMsg;
 
-            TempData["SuccessMessage"] = msg;
-
-            Debug.WriteLine($"USER CHANGED TO {userStatusId}");
+            SetSuccessMsg(msg);
 
             string referer = GetRefererForError(Request);
-
             return Redirect(referer);
         }
 
@@ -251,7 +375,7 @@ namespace initial_d.Controllers
         /* ---------------------------------------------------------------- */
 
         /// <summary>
-        /// Set and saves the dat for the navbar in a ViewBag
+        /// Set and saves the data for the navbar in a ViewBag
         /// </summary>
         private void SetNavbar()
         {
@@ -264,57 +388,5 @@ namespace initial_d.Controllers
             ViewBag.InternalNavbar = InternalNavbar;
         }
 
-        /// <summary>
-        /// Get the referer url of a Request when an error araise to know where to redirect the User
-        /// </summary>
-        private string GetRefererForError(HttpRequestBase request)
-        {
-            // Try to get the referer URL
-            string refererUrl = request?.UrlReferrer?.AbsoluteUri;
-
-            // If is null, redirect to Error page
-            // Also, if the requested URL is the same as the referer, then redirect to Error page to avoid an infinite loop
-            if (refererUrl == null || request.Url.Equals(refererUrl)) return Url.Action("Error", "Home");
-
-            // If is safe to go back to the referer url, redirect there
-            return refererUrl;
-        }
-
-        /// <summary>
-        /// When a URL is malformed, lack arguments or have invalid arguments
-        /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
-        /// </summary>
-        private RedirectResult InvalidUrl()
-        {
-            TempData["ErrorMessage"] = Resources.Messages.Error_URLInvalida;
-            return Redirect(GetRefererForError(Request));
-        }
-        /// <summary>
-        /// When a recieved form isn't valid
-        /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
-        /// </summary>
-        private RedirectResult InvalidForm()
-        {
-            TempData["ErrorMessage"] = Resources.Messages.Error_FormInvalido;
-            return Redirect(GetRefererForError(Request));
-        }
-        /// <summary>
-        /// When an unkow error with the request arises
-        /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
-        /// </summary>
-        private RedirectResult FailedRequest()
-        {
-            TempData["ErrorMessage"] = Resources.Messages.Error_SolicitudFallida;
-            return Redirect(GetRefererForError(Request));
-        }
-        /// <summary>
-        /// For custom errors. It the the error message on TempData["ErrorMessage"] and return a safe place to redirect the User
-        /// </summary>
-        /// <param name="error"></param>
-        private RedirectResult CustomError(string error)
-        {
-            TempData["ErrorMessage"] = error;
-            return Redirect(GetRefererForError(Request));
-        }
     }
 }

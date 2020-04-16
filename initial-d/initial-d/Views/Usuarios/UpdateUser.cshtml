@@ -3,6 +3,9 @@
 @{
     ViewBag.Title = $"{Model.name} | Actualizar Datos";
 
+    var userTypeList = (SelectList)ViewBag.userTypeLst;
+    var userStatusList = (SelectList)ViewBag.userStatusLst;
+
     string GoBack_Url = Url.Action("UserDetails", "Usuarios", new { userId = Model.appuser_id });
 }
 <div class="header">
@@ -22,8 +25,40 @@
 
     @* FORM CONTAINER *@
     <div class="row justify-content-around mb-4">
-        
-        <div class="col-12 col-ms-11 col-md-10 col-lg-6 pr-lg-3">
+
+        <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
+            <div class="c-jumbotron">
+                <h3 class="mb-4"> Información de Sistema </h3>
+
+                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive">
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
+                        <td>
+                            @Html.DropDownListFor(m => m.user_type_id, userTypeList, new { @class = "custom-select custom-select-sm form-control" })
+                            @Html.ValidationMessageFor(x => x.user_type_id)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.status_id)</th>
+                        <td>
+                            @Html.DropDownListFor(m => m.status_id, userStatusList, new { @class = "custom-select custom-select-sm form-control" })
+                            @Html.ValidationMessageFor(x => x.status_id)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" id="mail_confirmed_col">
+                            <div class="custom-control custom-checkbox">
+                                @Html.CheckBoxFor(m => m.mail_confirmed, new { @class = "custom-control-input" })
+                                @Html.LabelFor(m => m.mail_confirmed, new { @class = "custom-control-label" })
+                            </div>
+                        </th>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
             <div class="c-jumbotron">
                 <h3 class="mb-4"> Información Personal </h3>
 
@@ -70,38 +105,6 @@
                             @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker", @Value = Model.birthday.ToString("dd/MM/yyyy") })
                             @Html.ValidationMessageFor(x => x.birthday)
                         </td>
-                    </tr>
-                </table>
-
-            </div>
-        </div>
-
-        <div class="col-12 col-ms-11 col-md-10 col-lg-6 pr-lg-3">
-            <div class="c-jumbotron">
-                <h3 class="mb-4"> Información de Sistema </h3>
-
-                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive">
-                    <tr>
-                        <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
-                        <td>
-                            @Html.TextBoxFor(m => m.user_type_id, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(x => x.user_type_id)
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>@Html.DisplayNameFor(m => m.status_id)</th>
-                        <td>
-                            @Html.TextBoxFor(m => m.status_id, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(x => x.status_id)
-                        </td>
-                    </tr>
-                    <tr>
-                        <th colspan="2" id="mail_confirmed_col">
-                            <div class="custom-control custom-checkbox">
-                                @Html.CheckBoxFor(m => m.mail_confirmed, new { @class = "custom-control-input" })
-                                @Html.LabelFor(m => m.mail_confirmed, new { @class = "custom-control-label" })
-                            </div>
-                        </th>
                     </tr>
                 </table>
 

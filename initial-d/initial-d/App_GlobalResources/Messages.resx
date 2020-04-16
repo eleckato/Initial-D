@@ -117,6 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="APIError_InternalServerError" xml:space="preserve">
+    <value>Hubo un error conectandose con la base de datos, por favor intente más tarde o contactese con un administrador</value>
+    <comment>Message for  status code 500</comment>
+  </data>
+  <data name="APIError_Unauthorized" xml:space="preserve">
+    <value>No tiene permiso para llevar a cabo está acción</value>
+    <comment>Message for  status code 401</comment>
+  </data>
+  <data name="APIError_BadRequest" xml:space="preserve">
+    <value>La solicitud enviada es inválida</value>
+    <comment>Message for status code 400</comment>
+  </data>
+  <data name="APIError_NotFound" xml:space="preserve">
+    <value>El recurso requerido no existe</value>
+    <comment>Generic message for status code 404, try to use a specific one when possible</comment>
+  </data>
   <data name="Error_FormInvalido" xml:space="preserve">
     <value>El fomurlario enviado es invalido, intentelo de nuevo o contante a su administrador.</value>
     <comment>Error cuando algun formilario no tiene todos los valores necesarios o es invalido</comment>

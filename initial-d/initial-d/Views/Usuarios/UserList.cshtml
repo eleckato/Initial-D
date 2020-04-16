@@ -6,11 +6,9 @@
 
     string userName = ViewBag.userName ?? string.Empty;
     string userEmail = ViewBag.userEmail ?? string.Empty;
-    string userTypeId = ViewBag.userTypeId ?? string.Empty;
-    string userStatusId = ViewBag.userStatusId ?? string.Empty;
 
-    var userTypeList = new SelectList(new List<string> { "TP1", "TP2", "TP3" });
-    var userStatusList = new SelectList(new List<string> { "ST1", "ST2", "ST3" });
+    var userTypeList = (SelectList)ViewBag.userTypeLst;
+    var userStatusList = (SelectList)ViewBag.userStatusLst;
 
 }
 
@@ -33,10 +31,6 @@
 <!-- BUSCAR -->
 <div class="mb-4">
 
-    <div>
-        @*<h4>Buscar</h4>*@
-    </div>
-
     @using (Html.BeginForm("UserList", "Usuarios", FormMethod.Get, new { @class="" }))
     {
         <div class="form-row">
@@ -57,10 +51,10 @@
                             <input class="form-control form-control-sm h-100" type="text" name="userEmail" placeholder="Email" value="@userEmail">
                         </div>
                         <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-md-0 pr-0 pr-md-3">
-                            @Html.DropDownList("userTypeId", userTypeList, "Tipo", new { @class = "custom-select custom-select-sm form-control", @Value = userTypeId })
+                            @Html.DropDownList("userTypeId", userTypeList, "Tipo", new { @class = "custom-select custom-select-sm form-control" })
                         </div>
                         <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-md-0 pr-0 pr-md-3">
-                            @Html.DropDownList("userStatusId", userStatusList, "Status", new { @class = "custom-select custom-select-sm form-control", @Value = userStatusId })
+                            @Html.DropDownList("userStatusId", userStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" })
                         </div>
                     </div>
                 </div>
@@ -112,6 +106,7 @@
                             </button>
 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
                                 <div class="d-flex flex-column">
                                     @if (isBanned != null)
                                     {
@@ -121,7 +116,8 @@
                                             Detalles
                                         </a>
 
-                                        <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@user.appuser_id">
+                                        <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" 
+                                           data-user-id="@user.appuser_id" data-user-type-id="@user.user_type_id">
                                             <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i>
                                             Cambiar de Tipo
                                         </a>
@@ -176,10 +172,10 @@
                         @Html.ValueFor(m => user.email)
                     </td>
                     <td data-label="@Html.DisplayNameFor(m => m.user_type_id)">
-                        @Html.DisplayFor(m => user.user_type_id)
+                        @Html.DisplayFor(m => user.user_type_name)
                     </td>
                     <td data-label="@Html.DisplayNameFor(m => m.status_id)">
-                        @Html.DisplayFor(m => user.status_id)
+                        @Html.DisplayFor(m => user.status_name)
                     </td>
                 </tr>
             }

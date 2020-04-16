@@ -61,6 +61,42 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to La solicitud enviada es inválida.
+        /// </summary>
+        internal static string APIError_BadRequest {
+            get {
+                return ResourceManager.GetString("APIError_BadRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hubo un error conectandose con la base de datos, por favor intente más tarde o contactese con un administrador.
+        /// </summary>
+        internal static string APIError_InternalServerError {
+            get {
+                return ResourceManager.GetString("APIError_InternalServerError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El recurso requerido no existe.
+        /// </summary>
+        internal static string APIError_NotFound {
+            get {
+                return ResourceManager.GetString("APIError_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No tiene permiso para llevar a cabo está acción.
+        /// </summary>
+        internal static string APIError_Unauthorized {
+            get {
+                return ResourceManager.GetString("APIError_Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El fomurlario enviado es invalido, intentelo de nuevo o contante a su administrador..
         /// </summary>
         internal static string Error_FormInvalido {

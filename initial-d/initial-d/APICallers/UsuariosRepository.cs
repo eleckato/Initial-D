@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using initial_d.Common;
 using System.Net;
+using System.Linq;
 
 namespace initial_d.APICallers
 {
@@ -51,6 +52,7 @@ namespace initial_d.APICallers
             },
         };
 
+        // TODO Connection with API
         /// <summary>
         /// API call to add an User
         /// </summary>
@@ -74,6 +76,8 @@ namespace initial_d.APICallers
             }
         }
 
+
+        // TODO Search filters
         /// <summary>
         /// API call to list all Users
         /// </summary>
@@ -91,14 +95,11 @@ namespace initial_d.APICallers
 
                 var response = client.Execute<List<Usuario>>(request);
 
-                if (response.Data == null)
-                    throw new Exception(response.ErrorMessage);
+                CheckStatusCode(response);
 
                 return response.Data;
 
-                #region MOCK
-                //return mockData;
-                #endregion
+                //// return mockData;
             }
             catch (Exception e)
             {
@@ -119,34 +120,30 @@ namespace initial_d.APICallers
                 return null;
             }
 
-            var request = new RestRequest($"{prefix}/users/{userId}", Method.GET)
+            try
             {
-                RequestFormat = DataFormat.Json
-            };
+                var request = new RestRequest($"{prefix}/users/{userId}", Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
 
-            var response = client.Execute<Usuario>(request);
+                var response = client.Execute<Usuario>(request);
 
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.BadRequest:
-                    throw new Exception("La solicitud enviada es inválida");
-                case HttpStatusCode.Unauthorized:
-                    throw new Exception("No tiene permiso para llevar a cabo está acción");
-                case HttpStatusCode.NotFound:
-                    throw new Exception("El Usuario requerido no existe");
-                case HttpStatusCode.InternalServerError:
-                    throw new Exception("Hubo un error conectandose con la base de datos, por favor intente más tarde o contactese con un administrador");
-                case HttpStatusCode.OK:
-                    return response.Data;
-                default:
-                    return null;
+                string notFoundMsg = "El Usuario requerido no existe";
+                CheckStatusCode(response, notFoundMsg);
+
+                return response.Data;
+
+                //// return mockData.SingleOrDefault(x => x.appuser_id.Equals(userId));
             }
-
-            #region MOCK
-            //return mockData.SingleOrDefault(x => x.appuser_id.Equals(userId));
-            #endregion
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return null;
+            }
         }
 
+        // TODO Connection with API
         /// <summary>
         /// API call to delete an User
         /// </summary>
@@ -172,6 +169,7 @@ namespace initial_d.APICallers
             }
         }
 
+        // TODO Connection with API
         /// <summary>
         /// API call to update an User
         /// </summary>
@@ -198,6 +196,9 @@ namespace initial_d.APICallers
             }
         }
     
+        /// <summary>
+        /// API call to get all User Types, with name and ID
+        /// </summary>
         public IEnumerable<UserType> GetAllTypes()
         {
             try
@@ -209,8 +210,7 @@ namespace initial_d.APICallers
 
                 var response = client.Execute<List<UserType>>(request);
 
-                if (response.Data == null)
-                    throw new Exception(response.ErrorMessage);
+                CheckStatusCode(response);
 
                 return response.Data;
             }
@@ -221,6 +221,9 @@ namespace initial_d.APICallers
             }
         }
 
+        /// <summary>
+        /// API call to get all User Status, with name and ID
+        /// </summary>
         public IEnumerable<UserStatus> GetAllStatus()
         {
             try
@@ -232,8 +235,7 @@ namespace initial_d.APICallers
 
                 var response = client.Execute<List<UserStatus>>(request);
 
-                if (response.Data == null)
-                    throw new Exception(response.ErrorMessage);
+                CheckStatusCode(response);
 
                 return response.Data;
             }
@@ -243,5 +245,18 @@ namespace initial_d.APICallers
                 return null;
             }
         }
+    
+        public Usuario ProcessUser(Usuario user, List<UserType> userTypeLst, List<UserStatus> userStatusLst)
+        {
+            if (user == null || userTypeLst == null || userStatusLst == null) return null;
+
+            var thisUserType = userTypeLst.FirstOrDefault(type => type.user_type_id.Equals(user.user_type_id));
+            user.user_type_name = thisUserType?.name ?? string.Empty;
+            var thisUserStatus = userStatusLst.FirstOrDefault(status => status.status_id.Equals(user.status_id));
+            user.status_name = thisUserStatus?.status ?? string.Empty;
+
+            return user;
+        }
+        
     }
 }

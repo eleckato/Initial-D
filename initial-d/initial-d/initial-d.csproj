@@ -200,6 +200,7 @@
     <Compile Include="Common\FixedRequiredAttributeAdapter.cs" />
     <Compile Include="Common\NavbarItems.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MecanicosController.cs" />
@@ -460,6 +461,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\JS\Usuarios\" />
     <Folder Include="Models\Viewmodels\" />
+    <Folder Include="Views\Base\" />
     <Folder Include="Views\Mecanicos\Partial\" />
     <Folder Include="Views\Productos\Partial\" />
     <Folder Include="Views\Servicios\Partial\" />
@@ -479,6 +481,7 @@
     <Content Include="App_GlobalResources\Messages.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>

@@ -132,10 +132,6 @@ namespace initial_d
 
             string response = await jwtProvider.GetTokenAsync(userName, password);
 
-            //dynamic resObj = JObject.Parse(response); //["JWT"]["chars"].ToString();
-            //dynamic jwt = resObj.jwt;
-            string token = (string)JObject.Parse(response)["JWT"]["string"];
-
             if (response == null)
             {
                 return SignInStatus.Failure;
@@ -158,6 +154,9 @@ namespace initial_d
             }
             else
             {
+                // Get the token!
+                string token = (string)JObject.Parse(response)["JWT"]["string"];
+
                 // Decode payload
                 dynamic payload = jwtProvider.DecodePayload(response);
 

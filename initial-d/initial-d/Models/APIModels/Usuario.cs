@@ -56,10 +56,13 @@ namespace initial_d.Models.APIModels
         [Display(Name = "Tipo")]
         public string user_type_id { get; set; }
 
+        public string user_type_name { get; set; }
+
         [Required]
         [Display(Name = "Status")]
         public string status_id { get; set; }
 
+        public string status_name { get; set; }
 
         [Required]
         [Display(Name = "Ultima Actualización")]
@@ -98,7 +101,9 @@ namespace initial_d.Models.APIModels
             lastlogin = DateTime.Today;
             mail_confirmed = false;
             user_type_id = string.Empty;
+            user_type_name = string.Empty;
             status_id = string.Empty;
+            status_name = string.Empty;
             updated_at = DateTime.Today;
             created_at = DateTime.Today;
             deleted = false;

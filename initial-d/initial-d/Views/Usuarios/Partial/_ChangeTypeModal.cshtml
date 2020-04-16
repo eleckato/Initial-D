@@ -1,6 +1,10 @@
 ﻿@* Just make a button these attributes and done
-    data-toggle="modal" href="#change-type-modal" data-user-id="{userId}"
-*@
+    data-toggle="modal" href="#change-type-modal" data-user-id="{userId}" *@
+@{ 
+    var userTypeList = (SelectList)ViewBag.userTypeLst;
+    
+}
+
 
 <div id="change-type-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered " role="document">
@@ -20,7 +24,7 @@
 
                 <div class="modal-body px-5">
                     <p>Seleccione nuevo tipo de Usuario</p>
-                    @Html.DropDownList("userTypeId", new SelectList(new List<string> { "OPC1", "OPC2", "ETC" }) { }, new { @class = "custom-select custom-select-sm form-control" })
+                    @Html.DropDownList("userTypeId", userTypeList, new { @class = "custom-select custom-select-sm form-control", @Id = "userTypeIdChange" })
                 </div>
 
                 <div class="modal-footer">
@@ -48,6 +52,13 @@
             var userId = button.data('user-id')
             // Change the userId of the hidden input
             $('#userId').val(userId);
+
+            
+            var userTypeId = button.data('user-type-id');
+            console.log(userTypeId);
+            if (userTypeId) {
+                $('#userTypeIdChange').val(userTypeId);
+            }
         });
     }
     WaitForJquery(LoadChangeTypeScript);
