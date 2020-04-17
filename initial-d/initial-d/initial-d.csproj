@@ -179,6 +179,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APICallers\MecanicosRepository.cs" />
     <Compile Include="APICallers\RepositorieBase.cs" />
     <Compile Include="APICallers\UsuariosRepository.cs" />
     <Compile Include="App_GlobalResources\Messages.Designer.cs">
@@ -206,11 +207,13 @@
     <Compile Include="Controllers\MecanicosController.cs" />
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
+    <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\APIModels\Mecanico.cs" />
     <Compile Include="Models\APIModels\UserStatus.cs" />
     <Compile Include="Models\APIModels\UserType.cs" />
     <Compile Include="Models\APIModels\Usuario.cs" />
@@ -456,6 +459,9 @@
     <Content Include="Views\Shared\Partial\_DatePickerBoilerplate.cshtml" />
     <Content Include="Views\Usuarios\Partial\_ChangeTypeModal.cshtml" />
     <Content Include="Views\Usuarios\Partial\_ToggleUserStatusModal.cshtml" />
+    <Content Include="Views\Account\_LayoutAccount.cshtml" />
+    <Content Include="Views\UserProfile\Profile.cshtml" />
+    <Content Include="Views\UserProfile\UpdateProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

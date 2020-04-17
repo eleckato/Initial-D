@@ -21,7 +21,7 @@ namespace initial_d.APICallers
                 name = "nombres cl1",
                 last_names = "apellido cl1",
                 email = "cliente_1@mail.cl",
-                adress = "adress cl1",
+                adress = "address cl1",
                 lastlogin = new DateTime(2020, 02, 18),
                 phone = "+56911111111",
                 status_id = "Activo",
@@ -39,10 +39,10 @@ namespace initial_d.APICallers
                 name = "nombres cl2",
                 last_names = "apellido cl2",
                 email = "cliente_1@mail.cl",
-                adress = "adress cl2",
+                adress = "address cl2",
                 lastlogin = new DateTime(2019, 8, 12),
                 phone = "+56922222222",
-                status_id = "Banneado",
+                status_id = "Banned",
                 user_type_id = "Cliente",
                 birthday = new DateTime(2000, 04, 20),
                 mail_confirmed = true,
@@ -78,6 +78,7 @@ namespace initial_d.APICallers
 
 
         // TODO Search filters
+        // TODO Pagination
         /// <summary>
         /// API call to list all Users
         /// </summary>
@@ -246,6 +247,12 @@ namespace initial_d.APICallers
             }
         }
     
+        /// <summary>
+        /// Set all the secondary data ,like getting the status Name from the status Id
+        /// </summary>
+        /// <param name="user"> User to process </param>
+        /// <param name="userTypeLst"> List with all User Types </param>
+        /// <param name="userStatusLst"> List with all User Status </param>
         public Usuario ProcessUser(Usuario user, List<UserType> userTypeLst, List<UserStatus> userStatusLst)
         {
             if (user == null || userTypeLst == null || userStatusLst == null) return null;

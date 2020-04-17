@@ -1,0 +1,115 @@
+﻿@model initial_d.Models.APIModels.Usuario
+
+@{
+    ViewBag.Title = "Perfil de Usuario";
+
+    string UpdateUser_Url = Url.Action("UpdateProfile", "UserProfile");
+    string GoBack_Url = Url.Action("Index", "Home");
+
+    string userId = Model.appuser_id;
+    string userStatus = Model.status_id;
+}
+
+<div class="header">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-address-card" aria-hidden="true"></i>
+            @ViewBag.Title
+        </h2>
+    </div>
+
+    <div class="header-buttons">
+        <a href="@GoBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Home
+        </a>
+
+        <a href="@UpdateUser_Url" class="btn btn-sm btn-yellow mr-3" role="button">
+            <i class="fa fa-user-edit" aria-hidden="true"></i>
+            Actualizar Datos
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="row justify-content-around">
+
+    <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
+        <div class="c-jumbotron">
+            <h3 class="mb-4"> Información de Sistema </h3>
+
+            <table class="table table-borderless c-info-table">
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.username)</th>
+                    <td>@Html.DisplayFor(m => m.username)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.lastlogin)</th>
+                    <td>@Html.DisplayFor(m => m.lastlogin)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
+                    <td>@Html.DisplayFor(m => m.user_type_name)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.mail_confirmed)</th>
+                    @{
+                        var emailConfirmed = Model.mail_confirmed;
+                        var str = emailConfirmed ? "Si" : "No";
+                        var color = emailConfirmed ? "bg-green" : "bg-black";
+                    }
+                    <td>
+                        <div class="c-badge @color">@str</div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.updated_at)</th>
+                    <td>@Html.DisplayFor(m => m.updated_at)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.created_at)</th>
+                    <td>@Html.DisplayFor(m => m.created_at)</td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
+        <div class="c-jumbotron">
+            <h3 class="mb-4"> Información Personal </h3>
+
+            <table class="table table-borderless c-info-table">
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.name)</th>
+                    <td>@Html.DisplayFor(m => m.name)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.last_names)</th>
+                    <td>@Html.DisplayFor(m => m.last_names)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.email)</th>
+                    <td>@Html.DisplayFor(m => m.email)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.adress)</th>
+                    <td>@Html.DisplayFor(m => m.adress)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.phone)</th>
+                    <td>@Html.DisplayFor(m => m.phone)</td>
+                </tr>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.birthday)</th>
+                    <td>@Html.DisplayFor(m => m.birthday)</td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,46 @@
+﻿@{ 
+    // Automatic Alert System
+    string error = (string)TempData["ErrorMessage"] ?? "";
+    string success = (string)TempData["SuccessMessage"] ?? "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Initial-D</title>
+
+    @Styles.Render("~/ContentCSS")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/HeadScrips")
+    @Styles.Render("~/Content/CSS/login-view.css")
+
+</head>
+<body>
+    <!--! Automatic Alert System -->
+    <div id="alerts" class="fixed-top mx-3 mt-3"> </div>
+
+    <div class="main-wrap">
+
+        @RenderBody()
+
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/MainScripts")
+    <script>
+        {
+            //! Automatic Alert System: Get the error message and show an alert with it
+            let err = '@error';
+            if (err) ShowAlert(err, 'alert-danger')
+
+            let success = '@success'
+            if (success) ShowAlert(success, 'alert-success', 1)
+        }
+    </script>
+</body>
+
+</html>

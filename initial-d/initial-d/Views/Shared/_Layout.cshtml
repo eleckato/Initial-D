@@ -11,6 +11,7 @@
     var controller = ViewContext.RouteData.Values["controller"];
     var InternalNavbar = (List<initial_d.Common.NavbarItems>)ViewBag.InternalNavbar;
 
+    // Automatic Alert System
     string error = (string)TempData["ErrorMessage"] ?? "";
     string success = (string)TempData["SuccessMessage"] ?? "";
 
@@ -35,6 +36,7 @@
 </head>
 
 <body>
+    <!--! Automatic Alert System -->
     <div id="alerts" class="fixed-top mx-3 mt-3"> </div>
 
     <div class="wrapper">
@@ -147,7 +149,7 @@
 
     <script>
         {
-            // Get the error message and show an alert with it
+            //! Automatic Alert System: Get the error message and show an alert with it
             let err = '@error';
             if (err) ShowAlert(err, 'alert-danger')
 

@@ -45,7 +45,7 @@ namespace initial_d.Controllers
         /// When a URL is malformed, lack arguments or have invalid arguments
         /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
         /// </summary>
-        public RedirectResult InvalidUrl()
+        public RedirectResult Error_InvalidUrl()
         {
             SetErrorMsg(Resources.Messages.Error_URLInvalida);
             return Redirect(GetRefererForError(Request));
@@ -54,7 +54,7 @@ namespace initial_d.Controllers
         /// When a received form isn't valid
         /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
         /// </summary>
-        public RedirectResult InvalidForm()
+        public RedirectResult Error_InvalidForm()
         {
             SetErrorMsg(Resources.Messages.Error_FormInvalido);
             return Redirect(GetRefererForError(Request));
@@ -63,7 +63,7 @@ namespace initial_d.Controllers
         /// When an unknown error with the request arises
         /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
         /// </summary>
-        public RedirectResult FailedRequest()
+        public RedirectResult Error_FailedRequest()
         {
             SetErrorMsg(Resources.Messages.Error_SolicitudFallida);
             return Redirect(GetRefererForError(Request));
@@ -72,7 +72,7 @@ namespace initial_d.Controllers
         /// For custom errors. It the error message on TempData["ErrorMessage"] and return a safe place to redirect the User
         /// </summary>
         /// <param name="error"></param>
-        public RedirectResult CustomError(string error)
+        public RedirectResult Error_CustomError(string error)
         {
             SetErrorMsg(error);
             return Redirect(GetRefererForError(Request));

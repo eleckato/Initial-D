@@ -26,6 +26,7 @@ namespace initial_d.Controllers
             SetNavbar();
         }
 
+
         /* ---------------------------------------------------------------- */
         /* USER LIST */
         /* ---------------------------------------------------------------- */
@@ -46,13 +47,13 @@ namespace initial_d.Controllers
             try
             {
                 Usuarios = UP.GetAllUsers().ToList();
-                if (Usuarios == null) return FailedRequest();
+                if (Usuarios == null) return Error_FailedRequest();
 
                 userTypeLst = UP.GetAllTypes().ToList();
-                if (userTypeLst == null) return FailedRequest();
+                if (userTypeLst == null) return Error_FailedRequest();
 
                 userStatusLst = UP.GetAllStatus().ToList();
-                if (userStatusLst == null) return FailedRequest();
+                if (userStatusLst == null) return Error_FailedRequest();
 
                 Usuarios.ForEach(user =>
                 {
@@ -62,7 +63,7 @@ namespace initial_d.Controllers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return CustomError(e.Message);
+                return Error_CustomError(e.Message);
             }
 
             // To keep the state of the search filters when the user make a search
@@ -88,7 +89,7 @@ namespace initial_d.Controllers
         [Route(UserDetailsRoute)]
         public ActionResult UserDetails(string userId)
         {
-            if (string.IsNullOrEmpty(userId)) return InvalidUrl();
+            if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
 
             Usuario usuario;
             List<UserType> userTypeLst;
@@ -96,23 +97,23 @@ namespace initial_d.Controllers
             try
             {
                 usuario = UP.GetUser(userId);
-                if (usuario == null) return FailedRequest();
+                if (usuario == null) return Error_FailedRequest();
 
                 userTypeLst = UP.GetAllTypes().ToList();
-                if (userTypeLst == null) return FailedRequest();
+                if (userTypeLst == null) return Error_FailedRequest();
 
                 var userStatusLst = UP.GetAllStatus().ToList();
-                if (userStatusLst == null) return FailedRequest();
+                if (userStatusLst == null) return Error_FailedRequest();
 
                 usuario = UP.ProcessUser(usuario, userTypeLst, userStatusLst);
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return CustomError(e.Message);
+                return Error_CustomError(e.Message);
             }
 
-            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", usuario.user_type_id);
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
 
             return View(usuario);
         }
@@ -130,7 +131,7 @@ namespace initial_d.Controllers
         [Route(UpdateUserRoute)]
         public ActionResult UpdateUser(string userId)
         {
-            if (string.IsNullOrEmpty(userId)) return InvalidUrl();
+            if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
 
             Usuario usuario;
             List<UserType> userTypeLst;
@@ -139,18 +140,18 @@ namespace initial_d.Controllers
             try
             {
                 usuario = UP.GetUser(userId);
-                if (usuario == null) return FailedRequest();
+                if (usuario == null) return Error_FailedRequest();
 
                 userTypeLst = UP.GetAllTypes().ToList();
-                if (userTypeLst == null) return FailedRequest();
+                if (userTypeLst == null) return Error_FailedRequest();
 
                 userStatusLst = UP.GetAllStatus().ToList();
-                if (userStatusLst == null) return FailedRequest();
+                if (userStatusLst == null) return Error_FailedRequest();
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return CustomError(e.Message);
+                return Error_CustomError(e.Message);
             }
 
             ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", usuario.user_type_id);
@@ -168,21 +169,21 @@ namespace initial_d.Controllers
         [Route(UpdateUserRoute)]
         public ActionResult UpdateUser(Usuario newUser)
         {
-            if (newUser == null) return InvalidUrl();
+            if (newUser == null) return Error_InvalidUrl();
 
             try
             {
                 var res = UP.UpdateUser(newUser);
 
-                if (!res) return FailedRequest();
+                if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return CustomError(e.Message);
+                return Error_CustomError(e.Message);
             }
 
-            string successMsg = "El usuario fue actualizado con Exito";
+            string successMsg = "El usuario fue actualizado con éxito";
             SetSuccessMsg(successMsg);
 
             return RedirectToAction("UserDetails", new { newUser.appuser_id });
@@ -210,18 +211,18 @@ namespace initial_d.Controllers
             {
                 userTemplate = new Usuario(true);
 
-                if (userTemplate == null) return FailedRequest();
+                if (userTemplate == null) return Error_FailedRequest();
 
                 userTypeLst = UP.GetAllTypes().ToList();
-                if (userTypeLst == null) return FailedRequest();
+                if (userTypeLst == null) return Error_FailedRequest();
 
                 userStatusLst = UP.GetAllStatus().ToList();
-                if (userStatusLst == null) return FailedRequest();
+                if (userStatusLst == null) return Error_FailedRequest();
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return CustomError(e.Message);
+                return Error_CustomError(e.Message);
             }
 
 
@@ -240,21 +241,21 @@ namespace initial_d.Controllers
         [Route(AddUserRoute)]
         public ActionResult AddUser(Usuario newUser)
         {
-            if (newUser == null) return InvalidUrl();
+            if (newUser == null) return Error_InvalidUrl();
 
             try
             {
                 var res = UP.AddUser(newUser);
 
-                if (!res) return FailedRequest();
+                if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return CustomError(e.Message);
+                return Error_CustomError(e.Message);
             }
 
-            string successMsg = "El usuario fue agregado con Exito";
+            string successMsg = "El usuario fue agregado con éxito";
             SetSuccessMsg(successMsg);
 
             // TODO Put the actual appuser_id here when connection to API is implemented
@@ -277,22 +278,22 @@ namespace initial_d.Controllers
         [Route(DeleteUserRoute)]
         public ActionResult DeleteUser(string userId)
         {
-            if (string.IsNullOrEmpty(userId)) return InvalidUrl();
+            if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
 
             try
             {
                 var res = UP.DeleteUser(userId);
 
-                if (!res) return FailedRequest();
+                if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return CustomError(e.Message);
+                return Error_CustomError(e.Message);
             }
 
 
-            string successMsg = "El usuario fue eliminado con Exito";
+            string successMsg = "El usuario fue eliminado con éxito";
             SetSuccessMsg(successMsg);
 
             return RedirectToAction("UserList");
@@ -307,21 +308,21 @@ namespace initial_d.Controllers
         [HttpPost]
         public ActionResult ChangeUsertype(string userId, string userTypeId)
         {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId)) return InvalidForm();
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId)) return Error_InvalidForm();
 
             try
             {
                 var res = true; // UP.ChangeUserType(userId, userTypeId);
 
-                if (!res) return FailedRequest();
+                if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return CustomError(e.Message);
+                return Error_CustomError(e.Message);
             }
 
-            string successMsg = "El tipo del usuario fue actualizado con con Exito";
+            string successMsg = "El tipo del usuario fue actualizado con éxito";
             SetSuccessMsg(successMsg);
 
             string referer = GetRefererForError(Request);
@@ -337,18 +338,18 @@ namespace initial_d.Controllers
         [HttpPost]
         public ActionResult ChangeUserStatus(string userId, string userStatusId)
         {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userStatusId)) return InvalidForm();
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userStatusId)) return Error_InvalidForm();
 
             try
             {
                 var res = true; // UP.ChangeUserStatus(userId, userStatusId);
 
-                if (!res) return FailedRequest();
+                if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return CustomError(e.Message);
+                return Error_CustomError(e.Message);
             }
 
             string bannedMsg = "El Usuario fue dado de baja con éxito";
@@ -371,7 +372,7 @@ namespace initial_d.Controllers
 
 
         /* ---------------------------------------------------------------- */
-        /* COMMON */
+        /* HELPERS */
         /* ---------------------------------------------------------------- */
 
         /// <summary>

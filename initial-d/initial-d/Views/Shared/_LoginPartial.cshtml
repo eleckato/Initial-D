@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 
 @{ 
-    //@Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class="nav-link" })
+    string PerfilUrl = Url.Action("Profile", "UserProfile");
 }
 
 <link href="~/Content/CSS/partial-login.css" rel="stylesheet" />
@@ -19,7 +19,7 @@
 
 
             <div class="dropdown-menu login-dw-box" aria-labelledby="login-dw">
-                <a class="dropdown-item" href="#">Perfil</a>
+                <a class="dropdown-item" href="@PerfilUrl">Perfil</a>
                 <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesión</a>
             </div>
         </div>

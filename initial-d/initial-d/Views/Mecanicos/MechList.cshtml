@@ -1,5 +1,166 @@
-﻿@{
+﻿@model IEnumerable<initial_d.Models.APIModels.Mecanico>
+@{
     ViewBag.Title = "Admin. de Mecánicos";
+
+    string AddUrl = Url.Action("AddMechanic", "Mecanicos");
+
+    // Filters
+    string userName = ViewBag.userName ?? string.Empty;
+    string userEmail = ViewBag.userEmail ?? string.Empty;
+    // var hasDebt
+    // var hasPublicationPending
+    var userStatusList = (SelectList)ViewBag.userStatusLst;
 }
 
-<h2>Administrador de Mecánicos</h2>
+<!-- HEADER | GENERAL ACTION BUTTONS -->
+<div class="header ">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-wrench" aria-hidden="true"></i>
+            Administrador de Mecánicos
+        </h2>
+    </div>
+
+    <div class="header-buttons">
+        <a href="@AddUrl" class="btn btn-sm btn-green" role="button">
+            <i class="fa fa-user-plus"></i>
+            Agregar Usuario
+        </a>
+    </div>
+
+</div>
+
+
+
+<!-- DATA TABLE -->
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive">
+
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.username)</th>
+                <th class="cell-hidden-lg">@Html.DisplayNameFor(m => m.fullName)</th>
+                <th>@Html.DisplayNameFor(m => m.email)</th>
+                <th>@Html.DisplayNameFor(m => m.status_id)</th>
+                <th>@Html.DisplayNameFor(m => m.hasPendingPublication)</th>
+                <th>@Html.DisplayNameFor(m => m.hasDebt)</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @* Print one row by User *@
+            @foreach (var mech in Model)
+            {
+                string DetailsUrl = Url.Action("UserDetails", "Usuarios", new { userId = mech.appuser_id });
+                string userStatus = mech.status_id;
+                bool? isBanned = userStatus?.Equals("Banneado");
+
+                <tr data-user-id="@mech.appuser_id" class="clickable-row">
+
+                    <!-- USER ACTION DROPDOWN -->
+                    <td data-label="Actions" class="not-clickable">
+                        <div class="dropdown">
+
+                            <button class="btn btn-yellow btn-xsm dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
+                                Actions
+                            </button>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                <div class="d-flex flex-column">
+                                    @if (isBanned != null)
+                                    {
+
+                                        <a href="@DetailsUrl" class="dropdown-item small">
+                                            <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
+                                            Detalles
+                                        </a>
+
+                                        <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal"
+                                           data-user-id="@mech.appuser_id" data-user-type-id="@mech.user_type_id">
+                                            <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i>
+                                            Cambiar de Tipo
+                                        </a>
+
+                                        if (isBanned == true)
+                                        {
+                                            <a class="dropdown-item small"
+                                               data-toggle="modal" href="#user-state-modal" data-user-id="@mech.appuser_id" data-new-state="ACT">
+                                                <i class="fa fa-unlock-alt mr-1" aria-hidden="true"></i>
+                                                Dar de Alta
+                                            </a>
+                                        }
+                                        else if (isBanned == false)
+                                        {
+                                            <a class="dropdown-item small"
+                                               data-toggle="modal" href="#user-state-modal" data-user-id="@mech.appuser_id" data-new-state="BAN">
+                                                <i class="fa fa-lock mr-1" aria-hidden="true"></i>
+                                                Dar de Baja
+                                            </a>
+                                        }
+
+                                        <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@mech.appuser_id" href="#delete-modal">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                            Eliminar
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <p class="dropdown-item small">Error al cargar el Usuario</p>
+                                    }
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <td data-label="@Html.DisplayNameFor(m => m.username)">
+                        @if (isBanned != null)
+                        {
+                            var statClass = isBanned == true ? "fa-user-lock text-danger" : "fa-user-check color-green";
+                            <div>
+                                <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
+                                @Html.DisplayFor(m => mech.username)
+                            </div>
+                        }
+                    </td>
+                    <td data-label="@Html.DisplayNameFor(m => m.fullName)" class="cell-hidden-lg">
+                        @Html.DisplayFor(m => mech.fullName)
+                    </td>
+                    <td data-label="@Html.DisplayNameFor(m => m.email)">
+                        @Html.ValueFor(m => mech.email)
+                    </td>
+                    <td data-label="@Html.DisplayNameFor(m => m.status_id)">
+                        @Html.DisplayFor(m => mech.status_name)
+                    </td>
+
+                    <td data-label="@Html.DisplayNameFor(m => m.hasPendingPublication)">
+                        @{
+                            var hasPendingPublication = mech.hasPendingPublication;
+                            var str = hasPendingPublication ? "Si" : "No";
+                            var color = hasPendingPublication ? "bg-green" : "bg-black";
+                        }
+                        <div class="c-badge @color">@str</div>
+                    </td>
+
+                    <td data-label="@Html.DisplayNameFor(m => m.hasDebt)">
+                        @{
+                            var hasDebt = mech.hasDebt;
+                            str = hasDebt ? "Si" : "No";
+                            color = hasDebt ? "bg-green" : "bg-black";
+                        }
+                        <div class="c-badge @color">@str</div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>
+
