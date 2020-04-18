@@ -59,6 +59,30 @@ namespace initial_d.APICallers
 
 
         // TODO Connection with API
+        /// <summary>
+        /// API call to add an Mechanic
+        /// </summary>
+        /// <param name="newMech"> New Mechanic model with the data </param>
+        public bool AddMech(Usuario newMech)
+        {
+            if (newMech == null)
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return false;
+            }
+        }
+
+        // TODO Connection with API
         // TODO Search filters
         // TODO Pagination
         /// <summary>
@@ -91,7 +115,94 @@ namespace initial_d.APICallers
             }
         }
 
+        // TODO Connection with API
+        /// <summary>
+        /// API call to get a Mechanic
+        /// </summary>
+        /// <param name="mechId"> Mechanic Id </param>
+        public Mecanico GetMech(string mechId)
+        {
+            if (string.IsNullOrEmpty(mechId))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return null;
+            }
 
+            try
+            {
+                //var request = new RestRequest($"{prefix}/mechanics/{mechId}", Method.GET)
+                //{
+                //    RequestFormat = DataFormat.Json
+                //};
+
+                //var response = client.Execute<Mecanico>(request);
+
+                //string notFoundMsg = "El Mecánico requerido no existe";
+                //CheckStatusCode(response, notFoundMsg);
+
+                //return response.Data;
+
+                return mockData.SingleOrDefault(x => x.appuser_id.Equals(mechId));
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return null;
+            }
+        }
+
+        // TODO Connection with API
+        /// <summary>
+        /// API call to delete an Mechanic
+        /// </summary>
+        /// <param name="mechId"> Id of the Mechanic </param>
+        public bool DeleteMech(string mechId)
+        {
+            if (string.IsNullOrEmpty(mechId))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                // CALL THE API
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return false;
+            }
+        }
+
+        // TODO Connection with API
+        /// <summary>
+        /// API call to update an Mechanic
+        /// </summary>
+        /// <param name="newMech"> New Mechanic model with the data </param>
+        public bool UpdateMech(Usuario newMech)
+        {
+            if (newMech == null)
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                // CALL THE API
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return false;
+            }
+        }
 
     }
 }

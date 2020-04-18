@@ -76,7 +76,6 @@ namespace initial_d.APICallers
             }
         }
 
-
         // TODO Search filters
         // TODO Pagination
         /// <summary>
@@ -149,9 +148,9 @@ namespace initial_d.APICallers
         /// API call to delete an User
         /// </summary>
         /// <param name="userId"> Id of the User </param>
-        public bool DeleteUser(string UserId)
+        public bool DeleteUser(string userId)
         {
-            if (string.IsNullOrEmpty(UserId))
+            if (string.IsNullOrEmpty(userId))
             {
                 ErrorWriter.InvalidArgumentsError();
                 return false;

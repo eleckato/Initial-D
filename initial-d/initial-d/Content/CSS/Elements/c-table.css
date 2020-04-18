@@ -1,15 +1,27 @@
-﻿
-/* ---------------------------------------------------
+﻿/* ---------------------------------------------------
     INFO TABLE        |        c-info-table
 ----------------------------------------------------- */
 
 /* Make it small */
-.c-info-table td, .c-info-table th {
+.c-info-table td, 
+.c-info-table th {
 	padding: .4rem;
 }
+
+.c-info-table th div {
+    width: max-content;
+}
+
 .c-info-table thead{
     background: var(--yellow-1);
 }
+
+.c-info-table thead tr th{
+    /* text-align: center !important; */
+    padding-left: 1%;
+    vertical-align: middle;
+}
+
 /* Odd rows */
 .c-info-table tbody tr:nth-of-type(2n) {
     background-color: #ffee001a;
@@ -21,11 +33,40 @@
 /* Row Hover */
 .c-info-table tbody tr:hover {
     color: #212529;
-    background-color: #f7ff0070;
+    background-color: var(--yellow-0);
+}
+/* ---------------------------------------------------
+    Cutstom Bordered      |      .c-table-bordered
+----------------------------------------------------- */
+
+.c-table-bordered td, 
+.c-table-bordered th {
+    border: 0px !important;
+}
+/* SMALL TABLE */
+@media (max-width: 578px){
+    .c-table-bordered tbody tr {
+        border: 1px solid var(--yellow-2) !important;
+    }
+    .c-table-bordered tbody tr td {
+        border-bottom: 1px solid var(--yellow-1) !important;
+    }
 }
 
+/* NORMAL TABLE */
+@media (min-width: 579px) {
+    .c-table-bordered tbody tr td {
+        border: 1px solid var(--yellow-1) !important
+    }
+
+    .c-table-bordered thead tr th:not(:last-of-type) {
+        border-right: 1px solid var(--yellow-3) !important
+    }
+}
+
+
 /* ---------------------------------------------------
-    TO HIDE CELLS
+    TO HIDE CELLS      |      .cell-hidden-{size}
 ----------------------------------------------------- */
 .cell-hidden-sm , .cell-hidden-md , .cell-hidden-lg {
     display: none;
@@ -49,7 +90,7 @@
 
 
 /* ---------------------------------------------------
-    FOR CLICKABLES ROWS
+    FOR CLICKABLES ROWS      |      clickable-row
 ----------------------------------------------------- */
 
 /* Use .not-clickable on a cell to exclude it from the clickable row  */
@@ -191,8 +232,4 @@
     .c-table-lg-responsive td:last-child {
         border-bottom: 0;
     }
-}
-
-.c-table-left td {
-    /* text-align: left; */
 }

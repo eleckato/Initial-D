@@ -1,36 +1,40 @@
-﻿@model initial_d.Models.APIModels.Usuario
+﻿@model initial_d.Models.APIModels.Mecanico
 
 @{
-    ViewBag.Title = $"{Model.name} | Detalles de Usuario";
+    ViewBag.Title = $"{Model.name} | Detalles de Mecánico";
 
-    string update_Url = Url.Action("UpdateUser", "Usuarios", new { userId = Model.appuser_id });
-    string goBack_Url = Url.Action("UserList", "Usuarios");
+    string update_Url = Url.Action("UpdateMech", "Mecanicos", new { userId = Model.appuser_id });
+    string goBack_Url = Url.Action("MechList", "Mecanicos");
+    string publications_Url = "";
 
-    string userId = Model.appuser_id;
-    string userStatus = Model.status_id;
+    string mechId = Model.appuser_id;
+    string mechStatus = Model.status_id;
 
     string banId = "BAN";
     string actId = "ACT";
 }
 
-<!-- HEADER | ACTION BUTTONS -->
 <div class="header">
 
-    <!-- TITTLE -->
     <div class="header-title">
         <h2>
             <i class="fa fa-address-card" aria-hidden="true"></i>
-            Detalles de Usuario
+            Detalles de Mecánico
         </h2>
     </div>
-    
-    <!-- BUTTONS | ACTIONS DROPDOWN -->
+
     <div class="header-buttons">
         <a href="@goBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">
             <i class="fa fa-caret-left" aria-hidden="true"></i>
             Volver
         </a>
+        
+        <a href="@publications_Url" class="btn btn-sm btn-blue mr-3" role="button">
+            <i class="fa fa-newspaper" aria-hidden="true"></i>
+            Ver Publicaciones
+        </a>
 
+        <!-- ACTIONS DROPDOWN -->
         <div class="dropdown">
 
             <button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -38,7 +42,8 @@
                 <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
                 Actions
             </button>
-
+            
+            <!-- DROPDOWN -->
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                 <div class="d-flex flex-column">
 
@@ -47,15 +52,10 @@
                         Actualizar Datos
                     </a>
 
-                    <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@userId">
-                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
-                        Cambiar de Tipo
-                    </a>
-
-                    @if (userStatus.Equals(banId))
+                    @if (mechStatus.Equals(banId))
                     {
                         <a class="dropdown-item small"
-                           data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="ACT">
+                           data-toggle="modal" href="#user-state-modal" data-mech-id="@mechStatus" data-new-state="ACT">
                             <i class="fa fa-unlock-alt" aria-hidden="true"></i>
                             Dar de Alta
                         </a>
@@ -63,13 +63,13 @@
                     else
                     {
                         <a class="dropdown-item small"
-                           data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="BAN">
+                           data-toggle="modal" href="#user-state-modal" data-mech-id="@mechStatus" data-new-state="BAN">
                             <i class="fa fa-lock" aria-hidden="true"></i>
                             Dar de Baja
                         </a>
                     }
 
-                    <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
+                    <a class="dropdown-item small" role="button" data-toggle="modal" data-mech-id="@mechId" href="#delete-modal">
                         <i class="fa fa-trash" aria-hidden="true"></i>
                         Eliminar
                     </a>
@@ -91,23 +91,18 @@
             <h3 class="mb-4"> Información de Sistema </h3>
 
             <table class="table table-borderless c-info-table">
-                <!-- USERNAME -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.username)</th>
                     <td>@Html.DisplayFor(m => m.username)</td>
                 </tr>
-                <!-- LAST LOGIN -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.lastlogin)</th>
                     <td>@Html.DisplayFor(m => m.lastlogin)</td>
                 </tr>
-                <!-- USER TYPE -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
                     <td>@Html.DisplayFor(m => m.user_type_name)</td>
                 </tr>
-                
-                <!-- STATUS -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.status_id)</th>
                     <td>
@@ -118,7 +113,6 @@
                         @Html.DisplayFor(m => m.status_name)
                     </td>
                 </tr>
-                <!-- MAIL CONFIRMED -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.mail_confirmed)</th>
                     @{
@@ -130,15 +124,37 @@
                         <div class="c-badge @color">@str</div>
                     </td>
                 </tr>
-                <!-- UPDATED AT -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.updated_at)</th>
                     <td>@Html.DisplayFor(m => m.updated_at)</td>
                 </tr>
-                <!-- CREATED AT -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.created_at)</th>
                     <td>@Html.DisplayFor(m => m.created_at)</td>
+                </tr>
+                <!-- PUBLICACIÓN PENDIENTE -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.hasPendingPublication)</th>
+                    <td>
+                        @{
+                            var hasPendingPublication = Model.hasPendingPublication;
+                            str = hasPendingPublication ? "Si" : "No";
+                            color = hasPendingPublication ? "bg-green" : "bg-black";
+                        }
+                        <div class="c-badge  @color">@str</div>
+                    </td>
+                </tr>
+                <!-- TIENE DEUDA -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.hasDebt)</th>
+                    <td>
+                        @{
+                            var hasDebt = Model.hasDebt;
+                            str = hasDebt ? "Si" : "No";
+                            color = hasDebt ? "bg-green" : "bg-black";
+                        }
+                        <div class="c-badge  @color">@str</div>
+                    </td>
                 </tr>
             </table>
 
@@ -182,6 +198,5 @@
 </div>
 
 
-@Html.Partial("Partial/_DeleteModalAndScript")
-@Html.Partial("Partial/_ChangeTypeModal")
 @Html.Partial("Partial/_ToggleUserStatusModal")
+@Html.Partial("Partial/_DeleteModalAndScript")

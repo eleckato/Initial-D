@@ -7,6 +7,7 @@
     --black-2: #0b0e00;
     --white-1: #f5f5f5;
 
+    --yellow-0 : #ffee9b;
     --yellow-1 : #ffe87a;
     --yellow-2 : #ffe049;
     --yellow-3 : #ffd505;
@@ -75,13 +76,13 @@ p, li, a, td, input  {
     a, a:hover, a:focus {
         text-decoration: none;
         transition: all var(--transition-speed);
-        color: var(--yellow-0)
+        color: var(--yellow-5)
     }
 
         a:hover {
             text-decoration-line: underline;
             text-decoration-style: dotted;
-            color: var(--yellow-1)
+            color: var(--yellow-3)
         }
 
         a:focus {
@@ -137,9 +138,21 @@ input[type="password"]
     width: max-content;
 }
 
+
 .cursor-pointer{
     cursor: pointer;
 }
+
+
+
+/* SCREEN WIDTH > 579px */
+@media (min-width: 579px) {
+        
+    .w-max-content-sm {
+        width: max-content;
+    }
+}
+
 
 
 /* ---------------------------------------------------
@@ -154,7 +167,7 @@ input[type="password"]
     
     /* mt-3 mb-2rem*/
     margin-top: 1rem !important;
-    margin-bottom: 2rem !important;
+    margin-bottom: 0.5rem !important;
 }
     .header .header-title{
         /* d-flex */
@@ -210,9 +223,10 @@ input[type="password"]
 ----------------------------------------------------- */
 
 .c-badge {
-    width: min-content;
+    width: 2rem;
     padding: 1px 10px;
     border-radius: 5px;
+    text-align: center;
 }
 
 /* ---------------------------------------------------

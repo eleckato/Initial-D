@@ -11,7 +11,7 @@
         <div class="modal-content">
             @using (Html.BeginForm("ChangeUsertype", "Usuarios", FormMethod.Post))
             {
-                @Html.Hidden("userId", "", new { id="userId" })
+                @Html.Hidden("userId", "", new { @class="userId" })
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i> 
@@ -51,14 +51,15 @@
             // Extract the userId
             var userId = button.data('user-id')
             // Change the userId of the hidden input
-            $('#userId').val(userId);
+            $('#change-type-modal .userId').val(userId);
 
-            
             var userTypeId = button.data('user-type-id');
-            console.log(userTypeId);
+
             if (userTypeId) {
                 $('#userTypeIdChange').val(userTypeId);
             }
+
+            console.log(userId);
         });
     }
     WaitForJquery(LoadChangeTypeScript);

@@ -1,42 +1,54 @@
-﻿@model initial_d.Models.APIModels.Usuario
+﻿@model initial_d.Models.APIModels.Mecanico
 
 @{
-    ViewBag.Title = $"{Model.name} | Actualizar Datos";
-
+    ViewBag.Title = "Agregar Mecánico";
+    
     var userTypeList = (SelectList)ViewBag.userTypeLst;
     var userStatusList = (SelectList)ViewBag.userStatusLst;
 
-    string GoBack_Url = Url.Action("UserDetails", "Usuarios", new { userId = Model.appuser_id });
+    string mechId = "MECH";
+
+    string GoBack_Url = Url.Action("MechList", "Mecanicos");
 }
 
 <div class="header">
-    
+
     <div class="header-title">
         <h2>
-            <i class="fa fa-user-edit" aria-hidden="true"></i>
-            Actualizar Datos de Usuario
+            <i class="fa fa-user-plus" aria-hidden="true"></i>
+            Agregar Mecánico
         </h2>
     </div>
 
 </div>
 
-@using (Html.BeginForm("UpdateUser", "Usuarios"))
+
+@using (Html.BeginForm())
 {
     @Html.HiddenFor(m => m.appuser_id);
+    @Html.HiddenFor(m => m.user_type_id, new { @Value = mechId })
+    @Html.HiddenFor(m => m.hasDebt)
+    @Html.HiddenFor(m => m.hasPendingPublication)
 
-    @* FORM CONTAINER *@
     <div class="row justify-content-around mb-4">
 
         <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
             <div class="c-jumbotron">
                 <h3 class="mb-4"> Información de Sistema </h3>
 
-                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive">
+                <table class="table table-borderless c-info-table c-table-sm-responsive">
                     <tr>
-                        <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
+                        <th>@Html.DisplayNameFor(m => m.username)</th>
                         <td>
-                            @Html.DropDownListFor(m => m.user_type_id, userTypeList, new { @class = "custom-select custom-select-sm form-control" })
-                            @Html.ValidationMessageFor(x => x.user_type_id)
+                            @Html.TextBoxFor(m => m.username, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.username)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.hash)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.hash, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.hash)
                         </td>
                     </tr>
                     <tr>
@@ -63,7 +75,7 @@
             <div class="c-jumbotron">
                 <h3 class="mb-4"> Información Personal </h3>
 
-                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive">
+                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive ">
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.name)</th>
                         <td>
@@ -103,7 +115,7 @@
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.birthday)</th>
                         <td>
-                            @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker", @Value = Model.birthday.ToString("dd/MM/yyyy") })
+                            @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker", @Value = string.Empty })
                             @Html.ValidationMessageFor(x => x.birthday)
                         </td>
                     </tr>
@@ -111,17 +123,17 @@
 
             </div>
         </div>
+
     </div>
 
-    @* ACTION BUTTONS *@
     <div>
         <a href="@GoBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">
             <i class="fa fa-backspace" aria-hidden="true"></i>
             Cancelar
         </a>
         <button href="#" class="btn btn-sm btn-green mr-3" role="button">
-            <i class="fa fa-save" aria-hidden="true"></i>
-            Guardar
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            Agregar
         </button>
     </div>
 
@@ -139,4 +151,3 @@
         });
     </script>
 }
-

@@ -462,13 +462,17 @@
     <Content Include="Views\Account\_LayoutAccount.cshtml" />
     <Content Include="Views\UserProfile\Profile.cshtml" />
     <Content Include="Views\UserProfile\UpdateProfile.cshtml" />
+    <Content Include="Views\Mecanicos\Partial\_DeleteModalAndScript.cshtml" />
+    <Content Include="Views\Mecanicos\Partial\_ToggleUserStatusModal.cshtml" />
+    <Content Include="Views\Mecanicos\MechDetails.cshtml" />
+    <Content Include="Views\Mecanicos\UpdateMech.cshtml" />
+    <Content Include="Views\Mecanicos\AddMechanic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\JS\Usuarios\" />
     <Folder Include="Models\Viewmodels\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Mecanicos\Partial\" />
     <Folder Include="Views\Productos\Partial\" />
     <Folder Include="Views\Servicios\Partial\" />
   </ItemGroup>

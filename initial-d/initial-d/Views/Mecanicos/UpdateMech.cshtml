@@ -1,4 +1,4 @@
-﻿@model initial_d.Models.APIModels.Usuario
+﻿@model initial_d.Models.APIModels.Mecanico
 
 @{
     ViewBag.Title = $"{Model.name} | Actualizar Datos";
@@ -6,7 +6,7 @@
     var userTypeList = (SelectList)ViewBag.userTypeLst;
     var userStatusList = (SelectList)ViewBag.userStatusLst;
 
-    string GoBack_Url = Url.Action("UserDetails", "Usuarios", new { userId = Model.appuser_id });
+    string GoBack_Url = Url.Action("MechDetails", "Mecanicos", new { mechId = Model.appuser_id });
 }
 
 <div class="header">
@@ -14,13 +14,14 @@
     <div class="header-title">
         <h2>
             <i class="fa fa-user-edit" aria-hidden="true"></i>
-            Actualizar Datos de Usuario
+            Actualizar Datos de Mecánico
         </h2>
     </div>
 
 </div>
 
-@using (Html.BeginForm("UpdateUser", "Usuarios"))
+
+@using (Html.BeginForm())
 {
     @Html.HiddenFor(m => m.appuser_id);
 
@@ -139,4 +140,3 @@
         });
     </script>
 }
-

@@ -11,7 +11,7 @@ using System.Web.Mvc;
 namespace initial_d.Controllers
 {
     [Authorize]
-    [RoutePrefix("user-admin")]
+    [RoutePrefix("usuarios-adm")]
     public class UsuariosController : BaseController
     {
         readonly UsuariosRepository UP = new UsuariosRepository();
@@ -19,7 +19,7 @@ namespace initial_d.Controllers
         private const string AddUserRoute = "agregar";
         private const string UserDetailsRoute = "{userId}";
         private const string UpdateUserRoute = "{userId}/actualizar";
-        private const string DeleteUserRoute = "{userId}/delete";
+        private const string DeleteUserRoute = "{userId}/eliminar";
 
         public UsuariosController()
         {
@@ -34,7 +34,7 @@ namespace initial_d.Controllers
         // TODO Search Filters
         /// <summary>
         /// GET | Show a list of Users
-        /// <para> /user-admin </para>
+        /// <para> /usuarios </para>
         /// </summary>
         [HttpGet]
         [Route]
@@ -83,7 +83,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// GET  |  Show all the data of an User
-        /// <para> /user-admin/{id} </para>
+        /// <para> /usuarios/{id} </para>
         /// </summary>
         [HttpGet]
         [Route(UserDetailsRoute)]
@@ -125,7 +125,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// GET  |  Show a form to update an existing User
-        /// <para> /user-admin/{id}/update </para>
+        /// <para> /usuarios/{id}/actualizar </para>
         /// </summary>
         [HttpGet]
         [Route(UpdateUserRoute)]
@@ -163,7 +163,7 @@ namespace initial_d.Controllers
         // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the data of an User
-        /// <para> /user-admin/{id}/update </para>
+        /// <para> /usuarios/{id}/actualizar </para>
         /// </summary>
         [HttpPost]
         [Route(UpdateUserRoute)]
@@ -183,7 +183,7 @@ namespace initial_d.Controllers
                 return Error_CustomError(e.Message);
             }
 
-            string successMsg = "El usuario fue actualizado con éxito";
+            string successMsg = "El Usuario fue actualizado con éxito";
             SetSuccessMsg(successMsg);
 
             return RedirectToAction("UserDetails", new { newUser.appuser_id });
@@ -196,7 +196,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// GET  |  Show a form to add an User
-        /// <para> /user-admin/agregar </para>
+        /// <para> /usuarios/agregar </para>
         /// </summary>
         [HttpGet]
         [Route(AddUserRoute)]
@@ -235,7 +235,7 @@ namespace initial_d.Controllers
         // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to add an User
-        /// <para> /user-admin/agregar </para>
+        /// <para> /usuarios/agregar </para>
         /// </summary>
         [HttpPost]
         [Route(AddUserRoute)]
@@ -255,7 +255,7 @@ namespace initial_d.Controllers
                 return Error_CustomError(e.Message);
             }
 
-            string successMsg = "El usuario fue agregado con éxito";
+            string successMsg = "El Usuario fue agregado con éxito";
             SetSuccessMsg(successMsg);
 
             // TODO Put the actual appuser_id here when connection to API is implemented
@@ -266,13 +266,13 @@ namespace initial_d.Controllers
 
 
         /* ---------------------------------------------------------------- */
-        /* ADD USER */
+        /* DELETE USER */
         /* ---------------------------------------------------------------- */
 
         // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to delete an User
-        /// <para> /user-admin/{id}/delete </para>
+        /// <para> /usuarios/{id}/eliminar </para>
         /// </summary>
         [HttpGet]
         [Route(DeleteUserRoute)]
@@ -293,11 +293,16 @@ namespace initial_d.Controllers
             }
 
 
-            string successMsg = "El usuario fue eliminado con éxito";
+            string successMsg = "El Usuario fue eliminado con éxito";
             SetSuccessMsg(successMsg);
 
             return RedirectToAction("UserList");
         }
+
+
+        /* ---------------------------------------------------------------- */
+        /* OTHER ACTIONS */
+        /* ---------------------------------------------------------------- */
 
         // TODO Connection with Repository
         /// <summary>
@@ -305,7 +310,6 @@ namespace initial_d.Controllers
         /// </summary>
         /// <param name="userId"> Id of the User to update </param>
         /// <param name="userTypeId"> Id of the new Type for the User </param>
-        [HttpPost]
         public ActionResult ChangeUsertype(string userId, string userTypeId)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId)) return Error_InvalidForm();

@@ -2,17 +2,22 @@
 @{
     ViewBag.Title = "Admin. de Mecánicos";
 
-    string AddUrl = Url.Action("AddMechanic", "Mecanicos");
-
     // Filters
+    // TODO Esto depende de que filtros se deciden poner
     string userName = ViewBag.userName ?? string.Empty;
     string userEmail = ViewBag.userEmail ?? string.Empty;
     // var hasDebt
     // var hasPublicationPending
     var userStatusList = (SelectList)ViewBag.userStatusLst;
+
+    string banId = "BAN";
+
+    // Action URL
+    string addUrl = Url.Action("AddMechanic", "Mecanicos");
+    // detailsUrl on Document
 }
 
-<!-- HEADER | GENERAL ACTION BUTTONS -->
+<!-- HEADER | ACTION BUTTONS -->
 <div class="header ">
 
     <div class="header-title">
@@ -23,7 +28,7 @@
     </div>
 
     <div class="header-buttons">
-        <a href="@AddUrl" class="btn btn-sm btn-green" role="button">
+        <a href="@addUrl" class="btn btn-sm btn-green" role="button">
             <i class="fa fa-user-plus"></i>
             Agregar Usuario
         </a>
@@ -32,10 +37,12 @@
 </div>
 
 
+<!-- BUSCAR -->
+
 
 <!-- DATA TABLE -->
 <div class=" d-flex justify-content-center ">
-    <table class="table c-info-table c-table-sm-responsive">
+    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
 
         <thead>
             <tr>
@@ -53,13 +60,13 @@
             @* Print one row by User *@
             @foreach (var mech in Model)
             {
-                string DetailsUrl = Url.Action("UserDetails", "Usuarios", new { userId = mech.appuser_id });
+                string detailsUrl = Url.Action("MechDetails", "Mecanicos", new { mechId = mech.appuser_id });
                 string userStatus = mech.status_id;
-                bool? isBanned = userStatus?.Equals("Banneado");
+                bool? isBanned = userStatus?.Equals(banId);
 
-                <tr data-user-id="@mech.appuser_id" class="clickable-row">
+                <tr class="clickable-row" data-url="@detailsUrl">
 
-                    <!-- USER ACTION DROPDOWN -->
+                    <!-- ACTION DROPDOWN -->
                     <td data-label="Actions" class="not-clickable">
                         <div class="dropdown">
 
@@ -69,27 +76,22 @@
                                 Actions
                             </button>
 
+                            <!-- DROPDOWN -->
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                                 <div class="d-flex flex-column">
                                     @if (isBanned != null)
                                     {
 
-                                        <a href="@DetailsUrl" class="dropdown-item small">
+                                        <a href="@detailsUrl" class="dropdown-item small">
                                             <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
                                             Detalles
-                                        </a>
-
-                                        <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal"
-                                           data-user-id="@mech.appuser_id" data-user-type-id="@mech.user_type_id">
-                                            <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i>
-                                            Cambiar de Tipo
                                         </a>
 
                                         if (isBanned == true)
                                         {
                                             <a class="dropdown-item small"
-                                               data-toggle="modal" href="#user-state-modal" data-user-id="@mech.appuser_id" data-new-state="ACT">
+                                               data-toggle="modal" href="#user-state-modal" data-mech-id="@mech.appuser_id" data-new-state="ACT">
                                                 <i class="fa fa-unlock-alt mr-1" aria-hidden="true"></i>
                                                 Dar de Alta
                                             </a>
@@ -97,13 +99,13 @@
                                         else if (isBanned == false)
                                         {
                                             <a class="dropdown-item small"
-                                               data-toggle="modal" href="#user-state-modal" data-user-id="@mech.appuser_id" data-new-state="BAN">
+                                               data-toggle="modal" href="#user-state-modal" data-mech-id="@mech.appuser_id" data-new-state="BAN">
                                                 <i class="fa fa-lock mr-1" aria-hidden="true"></i>
                                                 Dar de Baja
                                             </a>
                                         }
 
-                                        <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@mech.appuser_id" href="#delete-modal">
+                                        <a class="dropdown-item small" role="button" data-toggle="modal" data-mech-id="@mech.appuser_id" href="#delete-modal">
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                             Eliminar
                                         </a>
@@ -119,42 +121,51 @@
                         </div>
                     </td>
 
+                    <!-- USERNAME -->
                     <td data-label="@Html.DisplayNameFor(m => m.username)">
                         @if (isBanned != null)
                         {
                             var statClass = isBanned == true ? "fa-user-lock text-danger" : "fa-user-check color-green";
-                            <div>
+                            <div class="w-max-content-sm">
                                 <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
                                 @Html.DisplayFor(m => mech.username)
                             </div>
                         }
                     </td>
+
+                    <!-- NOMBRE -->
                     <td data-label="@Html.DisplayNameFor(m => m.fullName)" class="cell-hidden-lg">
                         @Html.DisplayFor(m => mech.fullName)
                     </td>
+
+                    <!-- EMAIL -->
                     <td data-label="@Html.DisplayNameFor(m => m.email)">
                         @Html.ValueFor(m => mech.email)
                     </td>
+
+                    <!-- STATUS -->
                     <td data-label="@Html.DisplayNameFor(m => m.status_id)">
                         @Html.DisplayFor(m => mech.status_name)
                     </td>
 
+                    <!-- PUBLICACIÓN PENIENTE -->
                     <td data-label="@Html.DisplayNameFor(m => m.hasPendingPublication)">
                         @{
                             var hasPendingPublication = mech.hasPendingPublication;
                             var str = hasPendingPublication ? "Si" : "No";
                             var color = hasPendingPublication ? "bg-green" : "bg-black";
                         }
-                        <div class="c-badge @color">@str</div>
+                        <div class="c-badge ml-auto mx-sm-auto  @color">@str</div>
                     </td>
 
+                    <!-- TIENE DEUDA -->
                     <td data-label="@Html.DisplayNameFor(m => m.hasDebt)">
                         @{
                             var hasDebt = mech.hasDebt;
                             str = hasDebt ? "Si" : "No";
                             color = hasDebt ? "bg-green" : "bg-black";
                         }
-                        <div class="c-badge @color">@str</div>
+                        <div class="c-badge ml-auto mx-sm-auto  @color">@str</div>
                     </td>
                 </tr>
             }
@@ -164,3 +175,22 @@
 
 </div>
 
+
+@Html.Partial("Partial/_ToggleUserStatusModal")
+@Html.Partial("Partial/_DeleteModalAndScript")
+
+
+@section customScripts{
+    <script>
+        /** When the user clicks on a cell inside a .clickable-row, it redirect them to the User Details view of that User.
+         * Use .not-clickable on a cell to exclude it from the event */
+        $(document).on('click', '.clickable-row td:not(.not-clickable)', function () {
+            // Get the row
+            let row = $(this).closest('.clickable-row');
+            // Assemble the URL
+            let url = row.data('url');
+            // Redirect the window
+            window.location = url;
+        });
+    </script>
+}

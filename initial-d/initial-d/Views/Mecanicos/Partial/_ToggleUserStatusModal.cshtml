@@ -1,14 +1,14 @@
 ﻿@* Just make a button these attributes and done
-    data-toggle="modal" href="#user-state-modal" data-user-id="{userId}" data-new-state="{userState}"
+    data-toggle="modal" href="#user-state-modal" data-mech-id="{mechId}" data-new-state="{userState}"
 *@
 
 <div id="user-state-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content">
-            @using (Html.BeginForm("ChangeUserStatus", "Usuarios", FormMethod.Post))
+            @using (Html.BeginForm("ChangeMechStatus", "Mecanicos", FormMethod.Post))
             {
                 @* Update with JS *@
-                @Html.Hidden("userId", "", new { @class = "userId" })
+                @Html.Hidden("mechId", "", new { @class = "mechId" })
                 @Html.Hidden("userStatusId", "", new { id = "userStatusId" })
                 <div class="modal-header">
                     <h5 class="modal-title">
@@ -50,15 +50,15 @@
                 var button = $(event.relatedTarget)
                 var modal = $(this);
 
-                // Extract the userId
-                var userId = button.data('user-id')
-                // Change the userId of the hidden input
-                $('#user-state-modal .userId').val(userId);
+                // Extract the mechId
+                var mechId = button.data('mech-id')
+                // Change the mechId of the hidden input
+                $('#user-state-modal .mechId').val(mechId);
             
-                // Extract the userId
+                // Extract the mechId
                 var userState = button.data('new-state')
                 console.log(userState);
-                // Change the userId of the hidden input
+                // Change the mechId of the hidden input
                 modal.find('#userStatusId').val(userState);
 
                 var main_msg = modal.find('.modal-body p');
@@ -67,7 +67,7 @@
                 var submit_span = btn_submit.find('span');
 
                 if (userState == 'BAN') {
-                    main_msg.text('¿Seguro/a que desea dar de baja a este usuario?');
+                    main_msg.text('¿Seguro/a que desea dar de baja a este Mecánico?');
 
                     submit_icon.removeClass('fa-unlock-alt fa-lock');
                     submit_icon.addClass('fa-lock');
@@ -78,7 +78,7 @@
                     btn_submit.addClass('btn-red');
                 }
                 else if (userState == 'ACT') {
-                    main_msg.text('¿Seguro/a que desea dar de alta a este usuario?');
+                    main_msg.text('¿Seguro/a que desea dar de alta a este Mecánico?');
 
                     submit_icon.removeClass('fa-unlock-alt fa-lock');
                     submit_icon.addClass('i.fa').addClass('fa-unlock-alt');
