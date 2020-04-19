@@ -180,7 +180,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APICallers\MecanicosRepository.cs" />
-    <Compile Include="APICallers\RepositorieBase.cs" />
+    <Compile Include="APICallers\PublicacionesMecRepository.cs" />
+    <Compile Include="APICallers\RepositoryBase.cs" />
     <Compile Include="APICallers\UsuariosRepository.cs" />
     <Compile Include="App_GlobalResources\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -206,6 +207,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MecanicosController.cs" />
     <Compile Include="Controllers\ProductosController.cs" />
+    <Compile Include="Controllers\PublicacionesMecController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
@@ -214,6 +216,8 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\APIModels\Mecanico.cs" />
+    <Compile Include="Models\APIModels\PublicacionMec.cs" />
+    <Compile Include="Models\APIModels\PublicStatus.cs" />
     <Compile Include="Models\APIModels\UserStatus.cs" />
     <Compile Include="Models\APIModels\UserType.cs" />
     <Compile Include="Models\APIModels\Usuario.cs" />
@@ -231,6 +235,7 @@
     <Content Include="Content\Bootstrap\bootstrap.css" />
     <Content Include="Content\Bootstrap\bootstrap.min.css" />
     <Content Include="Content\CSS\Elements\c-table.css" />
+    <Content Include="Content\CSS\mecanicos-general.css" />
     <Content Include="Content\FontAwesome\brands.css" />
     <Content Include="Content\FontAwesome\brands.min.css" />
     <Content Include="Content\CSS\Elements\buttons.css" />
@@ -466,7 +471,10 @@
     <Content Include="Views\Mecanicos\Partial\_ToggleUserStatusModal.cshtml" />
     <Content Include="Views\Mecanicos\MechDetails.cshtml" />
     <Content Include="Views\Mecanicos\UpdateMech.cshtml" />
-    <Content Include="Views\Mecanicos\AddMechanic.cshtml" />
+    <Content Include="Views\Mecanicos\AddMech.cshtml" />
+    <Content Include="Views\PublicacionesMec\PubList.cshtml" />
+    <Content Include="Views\Usuarios\DeletedUserList.cshtml" />
+    <Content Include="Views\PublicacionesMec\PubDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -474,6 +482,7 @@
     <Folder Include="Models\Viewmodels\" />
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Productos\Partial\" />
+    <Folder Include="Views\PublicacionMec\" />
     <Folder Include="Views\Servicios\Partial\" />
   </ItemGroup>
   <ItemGroup>

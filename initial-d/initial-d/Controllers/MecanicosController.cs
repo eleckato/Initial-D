@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using initial_d.APICallers;
 using initial_d.Common;
@@ -35,7 +34,7 @@ namespace initial_d.Controllers
         // TODO Connection with Repository
         /// <summary>
         /// GET | Show a list of Mechanics
-        /// <para> /mecanicos </para>
+        /// <para> /mecanicos-adm </para>
         /// </summary>
         [HttpGet]
         [Route]
@@ -76,7 +75,7 @@ namespace initial_d.Controllers
         // TODO Connection with Repository
         /// <summary>
         /// GET  |  Show all the data of an User
-        /// <para> /mecanicos/{id} </para>
+        /// <para> /mecanicos-adm/{id} </para>
         /// </summary>
         [HttpGet]
         [Route(detailsRoute)]
@@ -119,7 +118,7 @@ namespace initial_d.Controllers
         // TODO Connection with Repository
         /// <summary>
         /// GET  |  Show a form to update an existing Mechanic
-        /// <para> /mecanicos/{id}/actualizar </para>
+        /// <para> /mecanicos-adm/{id}/actualizar </para>
         /// </summary>
         [HttpGet]
         [Route(updateRoute)]
@@ -157,7 +156,7 @@ namespace initial_d.Controllers
         // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the data of a Mechanic
-        /// <para> /mecanicos/{id}/actualizar </para>
+        /// <para> /mecanicos-adm/{id}/actualizar </para>
         /// </summary>
         [HttpPost]
         [Route(updateRoute)]
@@ -191,11 +190,11 @@ namespace initial_d.Controllers
         // TODO Connection with Repository
         /// <summary>
         /// GET  |  Show a form to add a Mechanic
-        /// <para> /mecanicos/agregar </para>
+        /// <para> /mecanicos-adm/agregar </para>
         /// </summary>
         [HttpGet]
         [Route(addRoute)]
-        public ActionResult AddMechanic()
+        public ActionResult AddMech()
         {
             List<UserType> userTypeLst;
             List<UserStatus> userStatusLst;
@@ -229,11 +228,11 @@ namespace initial_d.Controllers
         // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to add a Mechanic
-        /// <para> /mecanicos/agregar </para>
+        /// <para> /mecanicos-adm/agregar </para>
         /// </summary>
         [HttpPost]
         [Route(addRoute)]
-        public ActionResult AddMechanic(Mecanico newMech)
+        public ActionResult AddMech(Mecanico newMech)
         {
             if (newMech == null) return Error_InvalidUrl();
 
@@ -266,7 +265,7 @@ namespace initial_d.Controllers
         // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to delete a Mechanic
-        /// <para> /mecanicos/{id}/eliminar </para>
+        /// <para> /mecanicos-adm/{id}/eliminar </para>
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
@@ -342,11 +341,13 @@ namespace initial_d.Controllers
         /* HELPERS */
         /* ---------------------------------------------------------------- */
 
-        private void SetNavbar()
+        public void SetNavbar()
         {
             List<NavbarItems> InternalNavbar = new List<NavbarItems>()
             {
                 new NavbarItems("Mecanicos", "MechList", "Listado de Mecánicos"),
+                new NavbarItems("Mecanicos", "AddMech", "Agregar de Mecánico"),
+                new NavbarItems("PublicacionesMec", "PubList", "Publicaciones"),
             };
 
             ViewBag.InternalNavbar = InternalNavbar;

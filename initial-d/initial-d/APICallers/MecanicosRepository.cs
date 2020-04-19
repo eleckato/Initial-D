@@ -1,14 +1,12 @@
 ﻿using initial_d.Common;
 using initial_d.Models.APIModels;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace initial_d.APICallers
 {
-    public class MecanicosRepository : RepositorieBase
+    public class MecanicosRepository : RepositoryBase
     {
         private readonly string prefix = "mech-adm";
 
@@ -17,7 +15,7 @@ namespace initial_d.APICallers
         {
             new Mecanico()
             {
-                appuser_id = "U1",
+                appuser_id = "MEC1",
                 username = "cliente_1",
                 name = "nombres cl1",
                 last_names = "apellido cl1",
@@ -37,7 +35,7 @@ namespace initial_d.APICallers
             },
             new Mecanico()
             {
-                appuser_id = "U2",
+                appuser_id = "MEC2",
                 username = "cliente_2",
                 name = "nombres cl2",
                 last_names = "apellido cl2",
@@ -153,9 +151,9 @@ namespace initial_d.APICallers
 
         // TODO Connection with API
         /// <summary>
-        /// API call to delete an Mechanic
+        /// API call to delete a Mechanic
         /// </summary>
-        /// <param name="mechId"> Id of the Mechanic </param>
+        /// <param name="mechId"> Mechanic Id </param>
         public bool DeleteMech(string mechId)
         {
             if (string.IsNullOrEmpty(mechId))

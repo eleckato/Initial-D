@@ -57,7 +57,7 @@
             </a>
 
             <ul class="list-unstyled components">
-                @* Active or deactive the button depending on the controller *@
+                @* Active or deactivate the button depending on the controller *@
                 <li class="@(controller.Equals("Productos") ? "active" : "")">
                     <a href="@ProdUrl">
                         <i class="fas fa-boxes"></i>
@@ -70,7 +70,7 @@
                         <span>Servicios</span>
                     </a>
                 </li>
-                <li class="@(controller.Equals("Mecanicos") ? "active" : "")">
+                <li class="@(controller.Equals("Mecanicos") || controller.Equals("PublicacionesMec") ? "active" : "")">
                     <a href="@MechUrl">
                         <i class="fas fa-wrench"></i>
                         <span>Mecánicos</span>
@@ -127,7 +127,7 @@
 
                 <footer class="mt-auto">
                     <hr />
-                    <p>&copy; @DateTime.Now.Year  -  Initia-D | Sistema de Administración para Jaramillo</p>
+                    <p>&copy; @DateTime.Now.Year  -  Initial-D | Sistema de Administración para Jaramillo</p>
                 </footer>
 
             </div>

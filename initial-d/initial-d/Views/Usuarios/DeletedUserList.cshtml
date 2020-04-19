@@ -1,0 +1,141 @@
+﻿@model IEnumerable<initial_d.Models.APIModels.Usuario>
+@{
+    ViewBag.Title = "Clientes Eliminados";
+
+    // To Keep an State on the Search Filters
+    //string userName = ViewBag.userName ?? string.Empty;
+    //string userEmail = ViewBag.userEmail ?? string.Empty;
+    //var userTypeList = (SelectList)ViewBag.userTypeLst;
+    //var userStatusList = (SelectList)ViewBag.userStatusLst;
+
+    string banId = "BAN";
+
+    // Action Url
+    // detailsUrl on Document
+}
+
+<!-- HEADER | ACTION BUTTONS -->
+<div class="header ">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-user-slash" aria-hidden="true"></i>
+            Clientes Eliminados
+        </h2>
+    </div>
+
+</div>
+
+
+<!-- DATA TABLE -->
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.username)</th>
+                <th class="cell-hidden-lg">@Html.DisplayNameFor(m => m.fullName)</th>
+                <th>@Html.DisplayNameFor(m => m.email)</th>
+                <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
+                <th>@Html.DisplayNameFor(m => m.status_id)</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @* Print one row by User *@
+            @foreach (var user in Model)
+            {
+                string detailsUrl = Url.Action("UserDetails", "Usuarios", new { userId = user.appuser_id });
+                string userStatus = user.status_id;
+                bool? isBanned = userStatus?.Equals(banId);
+
+                <tr class="clickable-row" data-url="@detailsUrl">
+
+                    <!-- ACTION DROPDOWN -->
+                    <td data-label="Actions" class="not-clickable">
+                        <div class="dropdown">
+
+                            <button class="btn btn-yellow btn-xsm dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
+                                Actions
+                            </button>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                <div class="d-flex flex-column">
+                                    <!-- DETALLES -->
+                                    <a href="@detailsUrl" class="dropdown-item small">
+                                        <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
+                                        Detalles
+                                    </a>
+
+                                    <!-- RESTAURAR -->
+                                    <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@user.appuser_id" href="#delete-modal">
+                                        <i class="fa fa-trash-restore" aria-hidden="true"></i>
+                                        Restaurar
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <!-- USERNAME -->
+                    <td data-label="@Html.DisplayNameFor(m => m.username)">
+                        @if (isBanned != null)
+                        {
+                            var statClass = isBanned == true ? "fa-user-lock text-danger" : "fa-user-check color-green";
+                            <div class="w-max-content-sm">
+                                <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
+                                @Html.DisplayFor(m => user.username)
+                            </div>
+                        }
+                    </td>
+
+                    <!-- FULL NAME -->
+                    <td data-label="@Html.DisplayNameFor(m => m.fullName)" class="cell-hidden-lg">
+                        @Html.DisplayFor(m => user.fullName)
+                    </td>
+
+                    <!-- EMAIL -->
+                    <td data-label="@Html.DisplayNameFor(m => m.email)">
+                        @Html.ValueFor(m => user.email)
+                    </td>
+
+                    <!-- USER TYPE -->
+                    <td data-label="@Html.DisplayNameFor(m => m.user_type_id)">
+                        @Html.DisplayFor(m => user.user_type_name)
+                    </td>
+
+                    <!-- STATUS -->
+                    <td data-label="@Html.DisplayNameFor(m => m.status_id)">
+                        @Html.DisplayFor(m => user.status_name)
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>
+
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", true } })
+
+@section customScripts{
+    <script>
+
+        /** When the user clicks on a cell inside a .clickable-row, it redirect them to the User Details view of that User.
+         * Use .not-clickable on a cell to exclude it from the event */
+        $(document).on('click', '.clickable-row td:not(.not-clickable)', function () {
+            // Get the row
+            let row = $(this).closest('.clickable-row');
+            // Assemble the URL
+            let url = row.data('url');
+            // Redirect the window
+            window.location = url;
+        });
+    </script>
+}

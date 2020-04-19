@@ -8,6 +8,7 @@
 
     string userId = Model.appuser_id;
     string userStatus = Model.status_id;
+    bool isDeleted = Model.deleted;
 
     string banId = "BAN";
     string actId = "ACT";
@@ -22,6 +23,7 @@
             <i class="fa fa-address-card" aria-hidden="true"></i>
             Detalles de Usuario
         </h2>
+        
     </div>
     
     <!-- BUTTONS | ACTIONS DROPDOWN -->
@@ -42,37 +44,50 @@
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                 <div class="d-flex flex-column">
 
-                    <a href="@update_Url" class="dropdown-item small">
-                        <i class="fa fa-user-edit" aria-hidden="true"></i>
-                        Actualizar Datos
-                    </a>
-
-                    <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@userId">
-                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
-                        Cambiar de Tipo
-                    </a>
-
-                    @if (userStatus.Equals(banId))
+                    @if (!isDeleted)
                     {
-                        <a class="dropdown-item small"
-                           data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="ACT">
-                            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
-                            Dar de Alta
+                        
+                        <a href="@update_Url" class="dropdown-item small">
+                            <i class="fa fa-user-edit" aria-hidden="true"></i>
+                            Actualizar Datos
                         </a>
+
+                        <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@userId">
+                            <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                            Cambiar de Tipo
+                        </a>
+
+                        if (userStatus.Equals(banId))
+                        {
+                            <a class="dropdown-item small"
+                               data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="ACT">
+                                <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                Dar de Alta
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="dropdown-item small"
+                               data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="BAN">
+                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                Dar de Baja
+                            </a>
+                        }
+
+                        <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            Eliminar
+                        </a>
+
                     }
                     else
                     {
-                        <a class="dropdown-item small"
-                           data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="BAN">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-                            Dar de Baja
+                        <!-- RESTAURAR -->
+                        <a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
+                            <i class="fa fa-trash-restore" aria-hidden="true"></i>
+                            Restaurar
                         </a>
                     }
-
-                    <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                        Eliminar
-                    </a>
 
                 </div>
 
@@ -88,7 +103,18 @@
 
     <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
         <div class="c-jumbotron">
-            <h3 class="mb-4"> Información de Sistema </h3>
+            <h3 class="@(isDeleted ? "" : "mb-4")"> Información de Sistema </h3>
+            
+            @* Mensaje de Usuario Eliminado *@
+            @if (isDeleted)
+            {
+                <div>
+                    <p>
+                        <i class="fa fa-trash-alt" aria-hidden="true" style="color:var(--red)"></i>
+                        Usuario Eliminado
+                    </p>
+                </div>
+            }
 
             <table class="table table-borderless c-info-table">
                 <!-- USERNAME -->
@@ -182,6 +208,6 @@
 </div>
 
 
-@Html.Partial("Partial/_DeleteModalAndScript")
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })
 @Html.Partial("Partial/_ChangeTypeModal")
 @Html.Partial("Partial/_ToggleUserStatusModal")

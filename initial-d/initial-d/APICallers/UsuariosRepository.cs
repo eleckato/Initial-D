@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace initial_d.APICallers
 {
-    public class UsuariosRepository : RepositorieBase
+    public class UsuariosRepository : RepositoryBase
     {
         private readonly string prefix = "user-adm";
 
@@ -108,10 +108,40 @@ namespace initial_d.APICallers
             }
         }
 
+        // TODO Search filters
+        // TODO Pagination
+        /// <summary>
+        /// API call to list all Deleted Users
+        /// </summary>
+        public IEnumerable<Usuario> GetDeletedUsers()
+        {
+            try
+            {
+                var request = new RestRequest($"{prefix}/users/Deleted", Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+                // For pagination
+                //request.AddParameter("page", "1", ParameterType.UrlSegment);
+                //request.AddParameter("size", "1", ParameterType.UrlSegment);
+
+                var response = client.Execute<List<Usuario>>(request);
+
+                CheckStatusCode(response);
+
+                return response.Data;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return null;
+            }
+        }
+
         /// <summary>
         /// API call to get an User
         /// </summary>
-        /// <param name="userId"> Id of the User </param>
+        /// <param name="userId"> User Id </param>
         public Usuario GetUser(string userId)
         {
             if (string.IsNullOrEmpty(userId))
@@ -145,32 +175,6 @@ namespace initial_d.APICallers
 
         // TODO Connection with API
         /// <summary>
-        /// API call to delete an User
-        /// </summary>
-        /// <param name="userId"> Id of the User </param>
-        public bool DeleteUser(string userId)
-        {
-            if (string.IsNullOrEmpty(userId))
-            {
-                ErrorWriter.InvalidArgumentsError();
-                return false;
-            }
-
-            try
-            {
-                // CALL THE API
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                return false;
-            }
-        }
-
-        // TODO Connection with API
-        /// <summary>
         /// API call to update an User
         /// </summary>
         /// <param name="newUser"> New User </param>
@@ -195,7 +199,68 @@ namespace initial_d.APICallers
                 return false;
             }
         }
-    
+
+        /// <summary>
+        /// API call to delete an User
+        /// </summary>
+        /// <param name="userId"> User Id </param>
+        public bool DeleteUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                var request = new RestRequest($"{prefix}/users/{userId}", Method.DELETE);
+
+                var response = client.Execute(request);
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return false;
+            }
+        }
+
+        // TODO Connection with API
+        /// <summary>
+        /// API call to restore an User
+        /// </summary>
+        /// <param name="userId"> User Id </param>
+        public bool RestoreUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                //var request = new RestRequest($"{prefix}/users/{userId}", Method.DELETE);
+
+                //var response = client.Execute(request);
+
+                //// Throw an exception if the StatusCode is different from 200
+                //CheckStatusCode(response);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return false;
+            }
+        }
+
         /// <summary>
         /// API call to get all User Types, with name and ID
         /// </summary>
@@ -245,6 +310,39 @@ namespace initial_d.APICallers
                 return null;
             }
         }
+
+        /// <summary>
+        /// API call to change the Type of an User
+        /// </summary>
+        /// <param name="userId"> User Id </param>
+        /// <param name="userTypeId"> User Type Id </param>
+        public bool ChangeUserType(string userId, string userTypeId)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                var request = new RestRequest($"{prefix}/users/{userId}/change-type?user_type={userTypeId}", Method.POST);
+
+                var response = client.Execute(request);
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return false;
+            }
+        }
+
+
     
         /// <summary>
         /// Set all the secondary data ,like getting the status Name from the status Id

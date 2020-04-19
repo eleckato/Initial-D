@@ -6,15 +6,16 @@ using System.Linq;
 using System.Web;
 using System.Security.Claims;
 using System.Net;
+using initial_d.Common;
 
 namespace initial_d.APICallers
 {
-    public class RepositorieBase
+    public class RepositoryBase
     {
         public readonly RestClient client;
         private readonly string _url = ConfigurationManager.AppSettings["BuffetAPI.url"];
 
-        public RepositorieBase()
+        public RepositoryBase()
         {
             client = new RestClient(_url);
             // Get user claims    
@@ -27,6 +28,9 @@ namespace initial_d.APICallers
 
         public bool? CheckStatusCode(IRestResponse response, string notFoundMsg = null, string badRequestMsg = null, string unauthorizedMsg = null, string internalServerErrorMsg = null, string genericMgs = null)
         {
+            if (response.StatusCode != HttpStatusCode.OK)
+                ErrorWriter.CustomError(response.Content);
+
             switch (response.StatusCode)
             {
                 case HttpStatusCode.BadRequest:

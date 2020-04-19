@@ -1,6 +1,9 @@
 ﻿@* Just make a button these attributes and done      
    data-toggle="modal" href="#delete-modal" data-user-id="{userId}" 
 *@
+@{ 
+    bool isDeleted = (bool?)ViewData["isDeleted"] ?? false;
+}
 
 <div id="delete-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -9,7 +12,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                    Adertencia
+                    Advertencia
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -17,7 +20,14 @@
             </div>
 
             <div class="modal-body">
-                <p>¿Estas seguro/a que quieres eliminar a este Usuario?</p>
+                @if (!isDeleted)
+                {
+                    <p>¿Estas seguro/a que quieres eliminar a este Usuario?</p>
+                }
+                else
+                {
+                    <p>¿Estas seguro/a que quieres restaurar a este Usuario?</p>
+                }
             </div>
 
             <div class="modal-footer">
@@ -25,9 +35,9 @@
                     <i class="fa fa-backspace" aria-hidden="true"></i>
                     Cancelar
                 </button>
-                <a id="modal-delete-btn" href="#" role="button" class="btn btn-sm btn-danger">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                    Eliminar
+                <a id="modal-delete-btn" href="#" role="button" class="btn btn-sm @(isDeleted ? "btn-green" : "btn-red")">
+                    <i class="fa @(isDeleted ? "fa-trash-restore" : "fa-trash")" aria-hidden="true"></i>
+                    @(isDeleted ? "Restaurar" : "Eliminar")
                 </a>
             </div>
 
@@ -47,8 +57,7 @@
             // Get the actual delete button from the modal
             var delbtn = $(this).find('#modal-delete-btn');
 
-            // Change the href. Maybe this shouldn't be so hardcoded.
-            let url = '@Url.Action("DeleteUser", "Usuarios", new { userId = "replace_this_id" })'.replace('replace_this_id', userId);
+            let url = '@Url.Action(isDeleted ? "RestoreUser" : "DeleteUser", "Usuarios", new { userId = "replace_this_id" })'.replace('replace_this_id', userId);
 
             delbtn.attr('href', value = url);
         });

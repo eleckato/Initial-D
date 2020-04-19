@@ -13,9 +13,11 @@
     string banId = "BAN";
 
     // Action URL
-    string addUrl = Url.Action("AddMechanic", "Mecanicos");
+    string addUrl = Url.Action("AddMech", "Mecanicos");
     // detailsUrl on Document
 }
+
+@Styles.Render("~/Content/CSS/mecanicos-general.css")
 
 <!-- HEADER | ACTION BUTTONS -->
 <div class="header ">
@@ -29,8 +31,8 @@
 
     <div class="header-buttons">
         <a href="@addUrl" class="btn btn-sm btn-green" role="button">
-            <i class="fa fa-user-plus"></i>
-            Agregar Usuario
+            <i class="fa fa-plus"></i>
+            Agregar Mecánico
         </a>
     </div>
 
@@ -57,7 +59,7 @@
         </thead>
 
         <tbody>
-            @* Print one row by User *@
+            @* Print one row by Mechanic *@
             @foreach (var mech in Model)
             {
                 string detailsUrl = Url.Action("MechDetails", "Mecanicos", new { mechId = mech.appuser_id });

@@ -5,7 +5,7 @@
 
     string update_Url = Url.Action("UpdateMech", "Mecanicos", new { userId = Model.appuser_id });
     string goBack_Url = Url.Action("MechList", "Mecanicos");
-    string publications_Url = "";
+    string publications_Url = Url.Action("PubList", "PublicacionesMec");
 
     string mechId = Model.appuser_id;
     string mechStatus = Model.status_id;
@@ -14,11 +14,12 @@
     string actId = "ACT";
 }
 
+<!-- TITULO  |  BUTTONS -->
 <div class="header">
 
     <div class="header-title">
         <h2>
-            <i class="fa fa-address-card" aria-hidden="true"></i>
+            <i class="fa fa-wrench" aria-hidden="true"></i>
             Detalles de Mecánico
         </h2>
     </div>

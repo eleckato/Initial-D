@@ -134,20 +134,25 @@ input[type="password"]
     font-weight: bold;
 }
 
-.w-max-content {
-    width: max-content;
-}
-
 
 .cursor-pointer{
     cursor: pointer;
 }
 
+h5.modal-title .fa {
+    margin-right: .5rem;
+    /* align-self-center */
+    -ms-flex-item-align: center !important;
+    align-self: center !important;
+}
 
+
+.w-max-content {
+    width: max-content;
+}
 
 /* SCREEN WIDTH > 579px */
 @media (min-width: 579px) {
-        
     .w-max-content-sm {
         width: max-content;
     }
@@ -183,7 +188,7 @@ input[type="password"]
     .header .header-title .fa{
         font-size:1.75rem;
         /* mt-2 */
-        margin-right: .75rem !important;
+        margin-right: .75rem;
         /* align-self-center */
         -ms-flex-item-align: center !important;
         align-self: center !important;
@@ -223,7 +228,7 @@ input[type="password"]
 ----------------------------------------------------- */
 
 .c-badge {
-    width: 2rem;
+    width: 2.5rem;
     padding: 1px 10px;
     border-radius: 5px;
     text-align: center;

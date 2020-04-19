@@ -1,0 +1,127 @@
+﻿@model IEnumerable<initial_d.Models.APIModels.PublicacionMec>
+@{
+    ViewBag.Title = "Publicaciones de Mecánicos";
+
+    // Filters
+    // TODO Esto depende de que filtros se deciden poner
+    string userName = ViewBag.userName ?? string.Empty;
+
+    // Action URL
+}
+
+<!-- HEADER | ACTION BUTTONS -->
+<div class="header ">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-newspaper" aria-hidden="true"></i>
+            Publicaciones de Mecánicos
+        </h2>
+    </div>
+
+</div>
+
+
+<!-- DATA TABLE -->
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.appuser_id)</th>
+                <th>@Html.DisplayNameFor(m => m.created_at)</th>
+                <th>@Html.DisplayNameFor(m => m.title)</th>
+                <th>@Html.DisplayNameFor(m => m.comuna)</th>
+                <th>@Html.DisplayNameFor(m => m.mobile_number)</th>
+                <th>@Html.DisplayNameFor(m => m.views)</th>
+                <th>@Html.DisplayNameFor(m => m.public_status_id)</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @* Print one row by Publication *@
+            @foreach (var pub in Model)
+            {
+                string detailsUrl = Url.Action("PubDetails", "PublicacionesMec", new { mechId = pub.public_id });
+                string userStatus = pub.public_status_id;
+
+                <tr class="clickable-row" data-url="@detailsUrl">
+
+                    <!-- ACTION DROPDOWN -->
+                    <td data-label="Actions" class="not-clickable">
+                        <div class="dropdown">
+
+                            <button class="btn btn-yellow btn-xsm dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
+                                Actions
+                            </button>
+
+                            <!-- DROPDOWN -->
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                <div class="d-flex flex-column">
+                                    
+                                    <a href="@detailsUrl" class="dropdown-item small">
+                                        <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
+                                        Detalles
+                                    </a>
+                                    <a class="dropdown-item small" role="button" data-toggle="modal" 
+                                       data-mech-id="@pub.public_id" href="#delete-modal">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        Eliminar
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </td>
+                    
+                    <!-- ID MECANICO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.appuser_id)">
+                        @Html.DisplayFor(m => pub.appuser_id)
+                    </td>
+                    
+                    <!-- FECHA PULICACIÓN -->
+                    <td data-label="@Html.DisplayNameFor(m => m.created_at)">
+                        @Html.DisplayFor(m => pub.created_at)
+                    </td>
+                    
+                    <!-- TITULO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.title)">
+                        @Html.DisplayFor(m => pub.title)
+                    </td>
+
+                    <!-- COMUNA -->
+                    <td data-label="@Html.DisplayNameFor(m => m.comuna)">
+                        @Html.DisplayFor(m => pub.comuna)
+                    </td>
+
+                    <!-- TELEFONO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.mobile_number)">
+                        @Html.DisplayFor(m => pub.mobile_number)
+                    </td>
+
+                    <!-- VISITAS -->
+                    <td data-label="@Html.DisplayNameFor(m => m.views)">
+                        @Html.DisplayFor(m => pub.views)
+                    </td>
+
+                    <!-- STATUS -->
+                    <td data-label="@Html.DisplayNameFor(m => m.public_status_id)">
+                        @Html.DisplayFor(m => pub.public_status_id)
+                    </td>
+
+
+                </tr>
+
+            }
+
+        </tbody>
+
+    </table>
+</div>

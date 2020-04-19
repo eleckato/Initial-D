@@ -16,10 +16,11 @@ namespace initial_d.Controllers
     {
         readonly UsuariosRepository UP = new UsuariosRepository();
 
-        private const string AddUserRoute = "agregar";
-        private const string UserDetailsRoute = "{userId}";
-        private const string UpdateUserRoute = "{userId}/actualizar";
-        private const string DeleteUserRoute = "{userId}/eliminar";
+        private const string addRoute = "agregar";
+        private const string detailsRoute = "{userId}";
+        private const string updateRoute = "{userId}/actualizar";
+        private const string deleteRoute = "{userId}/eliminar";
+        private const string deteledList = "eliminados";
 
         public UsuariosController()
         {
@@ -86,7 +87,7 @@ namespace initial_d.Controllers
         /// <para> /usuarios/{id} </para>
         /// </summary>
         [HttpGet]
-        [Route(UserDetailsRoute)]
+        [Route(detailsRoute)]
         public ActionResult UserDetails(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
@@ -128,7 +129,7 @@ namespace initial_d.Controllers
         /// <para> /usuarios/{id}/actualizar </para>
         /// </summary>
         [HttpGet]
-        [Route(UpdateUserRoute)]
+        [Route(updateRoute)]
         public ActionResult UpdateUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
@@ -166,7 +167,7 @@ namespace initial_d.Controllers
         /// <para> /usuarios/{id}/actualizar </para>
         /// </summary>
         [HttpPost]
-        [Route(UpdateUserRoute)]
+        [Route(updateRoute)]
         public ActionResult UpdateUser(Usuario newUser)
         {
             if (newUser == null) return Error_InvalidUrl();
@@ -199,7 +200,7 @@ namespace initial_d.Controllers
         /// <para> /usuarios/agregar </para>
         /// </summary>
         [HttpGet]
-        [Route(AddUserRoute)]
+        [Route(addRoute)]
         public ActionResult AddUser()
         {
             List<UserType> userTypeLst;
@@ -238,7 +239,7 @@ namespace initial_d.Controllers
         /// <para> /usuarios/agregar </para>
         /// </summary>
         [HttpPost]
-        [Route(AddUserRoute)]
+        [Route(addRoute)]
         public ActionResult AddUser(Usuario newUser)
         {
             if (newUser == null) return Error_InvalidUrl();
@@ -269,13 +270,12 @@ namespace initial_d.Controllers
         /* DELETE USER */
         /* ---------------------------------------------------------------- */
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to delete an User
         /// <para> /usuarios/{id}/eliminar </para>
         /// </summary>
         [HttpGet]
-        [Route(DeleteUserRoute)]
+        [Route(deleteRoute)]
         public ActionResult DeleteUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
@@ -283,7 +283,6 @@ namespace initial_d.Controllers
             try
             {
                 var res = UP.DeleteUser(userId);
-
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -299,12 +298,81 @@ namespace initial_d.Controllers
             return RedirectToAction("UserList");
         }
 
+        // TODO Connection with Repository
+        /// <summary>
+        /// POST  |  API call to restore an User
+        /// <para> /Usuarios/RestoreUser </para>
+        /// </summary>
+        [HttpGet]
+        public ActionResult RestoreUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
+
+            try
+            {
+                var res = UP.RestoreUser(userId);
+                if (!res) return Error_FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+
+            string successMsg = "El Usuario fue restaurado con éxito";
+            SetSuccessMsg(successMsg);
+
+            return RedirectToAction("DeletedUserList");
+        }
+
+        // TODO Search Filters
+        /// <summary>
+        /// GET | Show a list of all deleted Users
+        /// <para> /usuarios/eliminados </para>
+        [HttpGet]
+        [Route(deteledList)]
+        public ActionResult DeletedUserList()
+        {
+            List<Usuario> usuarios;
+            List<UserType> userTypeLst;
+            List<UserStatus> userStatusLst;
+
+            try
+            {
+                usuarios = UP.GetDeletedUsers().ToList();
+                if (usuarios == null) return Error_FailedRequest();
+
+                userTypeLst = UP.GetAllTypes().ToList();
+                if (userTypeLst == null) return Error_FailedRequest();
+
+                userStatusLst = UP.GetAllStatus().ToList();
+                if (userStatusLst == null) return Error_FailedRequest();
+
+                usuarios.ForEach(user =>
+                {
+                    user = UP.ProcessUser(user, userTypeLst, userStatusLst);
+                });
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+            // To keep the state of the search filters when the user make a search
+            //ViewBag.userName = userName;
+            //ViewBag.userEmail = userEmail;
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name"/*, userTypeId*/);
+            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status"/*, userStatusId*/);
+
+            return View(usuarios);
+        }
 
         /* ---------------------------------------------------------------- */
         /* OTHER ACTIONS */
         /* ---------------------------------------------------------------- */
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the type of an User
         /// </summary>
@@ -316,8 +384,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = true; // UP.ChangeUserType(userId, userTypeId);
-
+                var res = UP.ChangeUserType(userId, userTypeId);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -326,7 +393,7 @@ namespace initial_d.Controllers
                 return Error_CustomError(e.Message);
             }
 
-            string successMsg = "El tipo del usuario fue actualizado con éxito";
+            string successMsg = "El tipo del Usuario fue actualizado con éxito";
             SetSuccessMsg(successMsg);
 
             string referer = GetRefererForError(Request);
@@ -388,6 +455,7 @@ namespace initial_d.Controllers
             {
                 new NavbarItems("Usuarios", "UserList", "Listado de Usuarios"),
                 new NavbarItems("Usuarios", "AddUser", "Agregar Usuario"),
+                new NavbarItems("Usuarios", "DeletedUserList", "Usuarios Eliminados"),
             };
 
             ViewBag.InternalNavbar = InternalNavbar;
