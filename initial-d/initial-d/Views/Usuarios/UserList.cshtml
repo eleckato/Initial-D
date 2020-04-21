@@ -12,6 +12,7 @@
 
     // Action Url
     string addUrl = Url.Action("AddUser", "Usuarios");
+    string delList = Url.Action("DeletedUserList", "Usuarios");
     // detailsUrl on Document
 }
 
@@ -24,8 +25,13 @@
             Administrador de Usuarios
         </h2>
     </div>
-
+    
+    <!-- BUTTONS -->
     <div class="header-buttons">
+        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            Usuarios Eliminados
+        </a>
         <a href="@addUrl" class="btn btn-sm btn-green" role="button">
             <i class="fa fa-user-plus"></i>
             Agregar Usuario
@@ -110,65 +116,7 @@
 
                     <!-- ACTION DROPDOWN -->
                     <td data-label="Actions" class="not-clickable">
-                        <div class="dropdown">
-
-                            <button class="btn btn-yellow btn-xsm dropdown-toggle" type="button" id="dropdownMenuButton"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
-                                Actions
-                            </button>
-
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-                                <div class="d-flex flex-column">
-                                    @if (isBanned != null)
-                                    {
-                                        <!-- DETALLES -->
-                                        <a href="@detailsUrl" class="dropdown-item small">
-                                            <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
-                                            Detalles
-                                        </a>
-
-                                        <!-- CAMBIAR DE TIPO -->
-                                        <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal"
-                                           data-user-id="@user.appuser_id" data-user-type-id="@user.user_type_id">
-                                            <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i>
-                                            Cambiar de Tipo
-                                        </a>
-
-                                        <!-- DART DE ALTA/BAJA -->
-                                        if (isBanned == true)
-                                        {
-                                            <a class="dropdown-item small"
-                                               data-toggle="modal" href="#user-state-modal" data-user-id="@user.appuser_id" data-new-state="ACT">
-                                                <i class="fa fa-unlock-alt mr-1" aria-hidden="true"></i>
-                                                Dar de Alta
-                                            </a>
-                                        }
-                                        else if (isBanned == false)
-                                        {
-                                            <a class="dropdown-item small"
-                                               data-toggle="modal" href="#user-state-modal" data-user-id="@user.appuser_id" data-new-state="BAN">
-                                                <i class="fa fa-lock mr-1" aria-hidden="true"></i>
-                                                Dar de Baja
-                                            </a>
-                                        }
-
-                                        <!-- ELIMINAR -->
-                                        <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@user.appuser_id" href="#delete-modal">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
-                                            Eliminar
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <p class="dropdown-item small">Error al cargar el Usuario</p>
-                                    }
-                                </div>
-
-                            </div>
-
-                        </div>
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(user) { { "context", "list" } } )
                     </td>
 
                     <!-- USERNAME -->

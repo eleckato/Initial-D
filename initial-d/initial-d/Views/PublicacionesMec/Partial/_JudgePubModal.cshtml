@@ -1,0 +1,72 @@
+﻿@* Just make a button these attributes and done
+    data-toggle="modal" href="#judge-pub-modal" data-pub-id="{pubId}" *@
+
+
+<div id="judge-pub-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i> 
+                    Aceptar o Rechazar Publicación
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Desea rechazar o aceptar esta publicación?</p>
+            </div>
+
+            <div class="modal-footer justify-content-start">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <a id="reject-pub-btn" href="#" role="button" class="btn btn-sm btn-red ml-auto">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Rechazar
+                </a>
+                <a id="accept-pub-btn" href="#" role="button" class="btn btn-sm btn-green">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    Aceptar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function LoadJudgeScript() {
+        // Change the pubId and newStatusId of the links in the buttons
+        $(document).on('show.bs.modal', '#judge-pub-modal', function (event) {
+            // Button that triggered the modal
+            var button = $(event.relatedTarget)
+
+            // Extract the userId, inactId, debtId 
+            var pubId = button.data('pub-id')
+            var debtId = button.data('debt-id')
+            var rejectId = button.data('reject-id')
+
+            // Get the accept or reject buttons
+            var acceptBtn = $(this).find('#accept-pub-btn');
+            var rejectBtn = $(this).find('#reject-pub-btn');
+
+            // Set the url with the user Id
+            let url_base = '@Url.Action("ChangePubState", "PublicacionesMec", new { pubId = "replace_pub_id", newStatusId = "replace_status_id" })'.replace('&amp;', '&');
+            console.log({ url_base });
+            url_base = url_base.replace('replace_pub_id', pubId);
+
+            // Define the URL for accept (new_status = DEBT) or reject (new_state = REJECTED)
+            let urlAccept = url_base.replace('replace_status_id', debtId);
+            let urlReject = url_base.replace('replace_status_id', rejectId);
+
+            // Set the href attribute in the buttons
+            acceptBtn.attr('href', value = urlAccept);
+            rejectBtn.attr('href', value = urlReject);
+        });
+    }
+    WaitForJquery(LoadJudgeScript);
+</script>

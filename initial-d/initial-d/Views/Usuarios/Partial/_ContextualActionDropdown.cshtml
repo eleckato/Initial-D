@@ -1,0 +1,96 @@
+﻿@model initial_d.Models.APIModels.Usuario
+@{ 
+	// User data needed to perform the Actions or make decicions about the menu
+	string userId = Model.appuser_id;
+	string userStatus = Model.status_id;
+    bool isDeleted = Model.deleted;
+	
+	// Context to decide what to show
+    string ctx = (string)ViewData["context"] ?? string.Empty;
+    bool isList = ctx.Equals("list");
+    bool isDetails = ctx.Equals("details");
+    bool isdeleteList = ctx.Equals("deleteList");
+	
+	// Ids to keep an eye on
+    string banId = "BAN";
+
+	// Action URLs
+    string detailsUrl = Url.Action("UserDetails", "Usuarios", new { userId });
+    string update_Url = Url.Action("UpdateUser", "Usuarios", new { userId });
+}
+
+<div class="dropdown">
+
+	<button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<i class="fa fa-cog mr-1 " aria-hidden="true"></i>
+		Actions
+	</button>
+
+	<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+		<div class="d-flex flex-column">
+			@if(isList || isdeleteList)
+            {
+                <!-- DETALLES -->
+                <a href="@detailsUrl" class="dropdown-item small">
+                    <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
+                    Detalles
+                </a>            
+			}
+
+            @if (isDetails)
+            {
+				<a href="@update_Url" class="dropdown-item small">
+					<i class="fa fa-user-edit" aria-hidden="true"></i>
+					Actualizar Datos
+				</a>
+            }
+
+			@if (isDetails || (isList && !isDeleted))
+            {
+				<!-- CAMBIAR DE TIPO -->
+				<a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@userId">
+					<i class="fa fa-exchange-alt" aria-hidden="true"></i>
+					Cambiar de Tipo
+				</a>
+
+				<!-- DART DE ALTA/BAJA -->
+				if (userStatus.Equals(banId))
+				{
+					<a class="dropdown-item small"
+					   data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="ACT">
+						<i class="fa fa-unlock-alt" aria-hidden="true"></i>
+						Dar de Alta
+					</a>
+				}
+				else
+				{
+					<a class="dropdown-item small"
+					   data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="BAN">
+						<i class="fa fa-lock" aria-hidden="true"></i>
+						Dar de Baja
+					</a>
+				}
+
+				<!-- ELIMINAR -->
+				<a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
+					<i class="fa fa-trash" aria-hidden="true"></i>
+					Eliminar
+				</a>
+
+			}
+
+			@if(isdeleteList || (isDetails && isDeleted))
+			{
+				<!-- RESTAURAR -->
+				<a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
+					<i class="fa fa-trash-restore" aria-hidden="true"></i>
+					Restaurar
+				</a>
+			}
+
+		</div>
+
+	</div>
+
+</div>

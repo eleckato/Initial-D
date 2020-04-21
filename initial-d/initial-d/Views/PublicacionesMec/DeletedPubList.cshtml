@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<initial_d.Models.APIModels.PublicacionMec>
 @{
-    ViewBag.Title = "Publicaciones de Mecánicos";
+    ViewBag.Title = "Publicaciones Eliminadas";
 
     // Filters
     // TODO Esto depende de que filtros se deciden poner
@@ -8,7 +8,7 @@
     string statusId = ViewBag.statusId ?? string.Empty;
 
     // Action URL
-    string delList = Url.Action("DeletedPubList", "PublicacionesMec");
+    string goBackUrl = Url.Action("PubList", "PublicacionesMec");
     
     string pendingId = "PEN";
     string rejectId = "REJ";
@@ -22,18 +22,19 @@
 
     <div class="header-title">
         <h2>
-            <i class="fa fa-newspaper" aria-hidden="true"></i>
-            Publicaciones de Mecánicos
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            Publicaciones Eliminadas
         </h2>
     </div>
     
     <!-- BUTTONS -->
     <div class="header-buttons">
-        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-            Publicaciones Eliminadas
+        <a href="@goBackUrl" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Publicaciones
         </a>
     </div>
+
 </div>
 
 
@@ -49,7 +50,7 @@
                 <th>@Html.DisplayNameFor(m => m.comuna)</th>
                 <th>@Html.DisplayNameFor(m => m.mobile_number)</th>
                 <th class="cell-hidden-xl">@Html.DisplayNameFor(m => m.views)</th>
-                <th>@Html.DisplayNameFor(m => m.public_status_id)</th>
+                <th>Old Status</th>
             </tr>
         </thead>
 
@@ -61,10 +62,12 @@
                 string detailsUrl = Url.Action("PubDetails", "PublicacionesMec", new { pubId = pub.public_id });
 
                 <tr class="clickable-row" data-url="@detailsUrl">
-                    
+
                     <!-- ACTION DROPDOWN -->
                     <td data-label="Actions" class="not-clickable">
-                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(pub) { { "context", "list" } } )
+                        
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(pub) { { "context", "deleteList" } } )
+
                     </td>
                     
                     <!-- ID MECANICO -->
@@ -123,7 +126,4 @@
     </script>
 }
 
-
-@Html.Partial("Partial/_JudgePubModal")
-@Html.Partial("Partial/_TogglePubModal")
-@Html.Partial("Partial/_DeletePubModal", new ViewDataDictionary(ViewData) { { "isDeleted", false } })
+@Html.Partial("Partial/_DeletePubModal", new ViewDataDictionary(ViewData) { { "isDeleted", true } })

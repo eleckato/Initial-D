@@ -1,0 +1,68 @@
+﻿@* Just make a button these attributes and done      
+   data-toggle="modal" href="#delete-pub-modal" data-pub-id="{pubId}" 
+*@
+@{ 
+    bool isDeleted = (bool?)ViewData["isDeleted"] ?? false;
+}
+
+<div id="delete-pub-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    Advertencia
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @if (!isDeleted)
+                {
+                    <p>¿Estas seguro/a que quieres eliminar esta Publicación?</p>
+                }
+                else
+                {
+                    <p>¿Estas seguro/a que quieres restaurar esta Publicación?</p>
+                }
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <a id="delete-pub-modal-btn" href="#" role="button" class="btn btn-sm @(isDeleted ? "btn-green" : "btn-red")">
+                    <i class="fa @(isDeleted ? "fa-trash-restore" : "fa-trash")" aria-hidden="true"></i>
+                    @(isDeleted ? "Restaurar" : "Eliminar")
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function LoadDeleteScript() {
+        $(document).on('show.bs.modal', '#delete-pub-modal', function (event) {
+            // Button that triggered the modal
+            var button = $(event.relatedTarget)
+
+            // Extract the userId
+            var pubId = button.data('pub-id')
+
+            // Get the actual delete button from the modal
+            var delbtn = $(this).find('#delete-pub-modal-btn');
+
+            let url = '@Url.Action(isDeleted ? "RestorePub" : "DeletePub", "PublicacionesMec", new { pubId = "replace_pubId" })'.replace('replace_pubId', pubId);
+
+            delbtn.attr('href', value = url);
+        });
+    }
+    WaitForJquery(LoadDeleteScript);
+</script>

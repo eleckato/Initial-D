@@ -117,7 +117,7 @@ namespace initial_d.APICallers
         {
             try
             {
-                var request = new RestRequest($"{prefix}/users/Deleted", Method.GET)
+                var request = new RestRequest($"{prefix}/users/deleted", Method.GET)
                 {
                     RequestFormat = DataFormat.Json
                 };
@@ -245,12 +245,7 @@ namespace initial_d.APICallers
 
             try
             {
-                //var request = new RestRequest($"{prefix}/users/{userId}", Method.DELETE);
-
-                //var response = client.Execute(request);
-
-                //// Throw an exception if the StatusCode is different from 200
-                //CheckStatusCode(response);
+                // API CALL
 
                 return true;
             }
@@ -260,6 +255,38 @@ namespace initial_d.APICallers
                 return false;
             }
         }
+
+        /// <summary>
+        /// API call to change the Type of an User
+        /// </summary>
+        /// <param name="userId"> User Id </param>
+        /// <param name="userTypeId"> User Type Id </param>
+        public bool ChangeUserType(string userId, string userTypeId)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                var request = new RestRequest($"{prefix}/users/{userId}/change-type?user_type={userTypeId}", Method.POST);
+
+                var response = client.Execute(request);
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return false;
+            }
+        }
+
 
         /// <summary>
         /// API call to get all User Types, with name and ID
@@ -311,39 +338,7 @@ namespace initial_d.APICallers
             }
         }
 
-        /// <summary>
-        /// API call to change the Type of an User
-        /// </summary>
-        /// <param name="userId"> User Id </param>
-        /// <param name="userTypeId"> User Type Id </param>
-        public bool ChangeUserType(string userId, string userTypeId)
-        {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId))
-            {
-                ErrorWriter.InvalidArgumentsError();
-                return false;
-            }
 
-            try
-            {
-                var request = new RestRequest($"{prefix}/users/{userId}/change-type?user_type={userTypeId}", Method.POST);
-
-                var response = client.Execute(request);
-
-                // Throw an exception if the StatusCode is different from 200
-                CheckStatusCode(response);
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                return false;
-            }
-        }
-
-
-    
         /// <summary>
         /// Set all the secondary data ,like getting the status Name from the status Id
         /// </summary>

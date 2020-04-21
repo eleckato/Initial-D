@@ -1,0 +1,88 @@
+﻿@model initial_d.Models.APIModels.PublicacionMec
+@{ 
+    bool isDeleted = Model.deleted;
+    string pubStatus = Model.public_status_id;
+    string pubId = Model.public_id;
+
+    string ctx = (string)ViewData["context"] ?? string.Empty;
+    bool isList = ctx.Equals("list");
+    bool isDetails = ctx.Equals("details");
+    bool isdeleteList = ctx.Equals("deleteList");
+
+    string pendingId = "PEN";
+    string rejectId = "REJ";
+    string actId = "ACT";
+    string inactId = "INA";
+    string debtId = "DEB";
+    
+    string detailsUrl = Url.Action("PubDetails", "PublicacionesMec", new { pubId = pubId });
+}
+
+<div class="dropdown">
+
+    <button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
+        Actions
+    </button>
+    <div class="dropdown-menu @(isDetails ? "dropdown-menu-right" : "")">
+        <div class="d-flex flex-column">
+
+            @if (isList || isdeleteList)
+            {
+                <a href="@detailsUrl" class="dropdown-item small">
+                    <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
+                    Detalles
+                </a>
+            }
+
+            @if (!isDeleted)
+            {
+
+                if (pubStatus.Equals(pendingId))
+                {
+                <!-- JUDGE PUBLICACTION -->
+                <a class="dropdown-item small"
+                    data-toggle="modal" href="#judge-pub-modal" data-reject-id="@rejectId" data-debt-id="@debtId" data-pub-id="@pubId">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                    Acepar/Rechazar
+                </a>
+                }
+                else if (pubStatus.Equals(inactId))
+                {
+                <!-- ACTIVE PUBLICACTION -->
+                <a class="dropdown-item small"
+                    data-toggle="modal" href="#toggle-pub-modal" data-pub-id="@pubId" data-new-state="@actId">
+                    <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                    Activar
+                </a>
+                }
+                else if (pubStatus.Equals(actId))
+                {
+                <!-- DEACTIVATE PUBLICACTION -->
+                <a class="dropdown-item small"
+                    data-toggle="modal" href="#toggle-pub-modal" data-pub-id="@pubId" data-new-state="@inactId">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                    Desactivar
+                </a>
+                }
+                
+                <!-- ELIMINAR -->
+                <a class="dropdown-item small" role="button" data-toggle="modal" data-pub-id="@pubId" href="#delete-pub-modal">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    Eliminar
+                </a>
+            }
+            else
+            {
+                <!-- RESTAURAR -->
+                <a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-pub-id="@pubId" href="#delete-pub-modal">
+                    <i class="fa fa-trash-restore" aria-hidden="true"></i>
+                    Restaurar
+                </a>
+            }
+
+        </div>
+
+    </div>
+</div>

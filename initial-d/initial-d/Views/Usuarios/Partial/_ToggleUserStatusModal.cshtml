@@ -55,17 +55,18 @@
                 // Change the userId of the hidden input
                 $('#user-state-modal .userId').val(userId);
             
-                // Extract the userId
+                // Extract the userState
                 var userState = button.data('new-state')
-                console.log(userState);
                 // Change the userId of the hidden input
                 modal.find('#userStatusId').val(userState);
 
+                // Get all the elements that need to be changed in the Modal
                 var main_msg = modal.find('.modal-body p');
                 var btn_submit = modal.find(':submit');
                 var submit_icon = btn_submit.find('i.fa');
                 var submit_span = btn_submit.find('span');
-
+                
+                // Change the content of the Modal
                 if (userState == 'BAN') {
                     main_msg.text('¿Seguro/a que desea dar de baja a este usuario?');
 
@@ -90,6 +91,7 @@
                 }
                 else {
                     // an error or something
+                    console.log('an error or something');
                 }
             });
         }

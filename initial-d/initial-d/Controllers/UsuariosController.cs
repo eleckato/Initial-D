@@ -300,7 +300,7 @@ namespace initial_d.Controllers
 
         // TODO Connection with Repository
         /// <summary>
-        /// POST  |  API call to restore an User
+        /// POST  |  API call to restore a deleted User
         /// <para> /Usuarios/RestoreUser </para>
         /// </summary>
         [HttpGet]
@@ -340,7 +340,7 @@ namespace initial_d.Controllers
 
             try
             {
-                usuarios = UP.GetDeletedUsers().ToList();
+                usuarios = UP.GetDeletedUsers()?.ToList();
                 if (usuarios == null) return Error_FailedRequest();
 
                 userTypeLst = UP.GetAllTypes().ToList();
@@ -356,7 +356,6 @@ namespace initial_d.Controllers
             }
             catch (Exception e)
             {
-                ErrorWriter.ExceptionError(e);
                 return Error_CustomError(e.Message);
             }
 
@@ -455,7 +454,6 @@ namespace initial_d.Controllers
             {
                 new NavbarItems("Usuarios", "UserList", "Listado de Usuarios"),
                 new NavbarItems("Usuarios", "AddUser", "Agregar Usuario"),
-                new NavbarItems("Usuarios", "DeletedUserList", "Usuarios Eliminados"),
             };
 
             ViewBag.InternalNavbar = InternalNavbar;

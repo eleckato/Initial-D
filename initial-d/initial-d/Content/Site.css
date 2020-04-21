@@ -274,7 +274,8 @@ h5.modal-title .fa {
     }
 
     span {
-        font-size: 85% !important;
+        /* font-size: 85% !important; */
+        font-size: inherit;
     }
 
     button, a:not(.small), td, input[type="text"] {

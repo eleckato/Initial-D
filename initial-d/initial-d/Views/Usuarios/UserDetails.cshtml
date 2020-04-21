@@ -32,68 +32,9 @@
             <i class="fa fa-caret-left" aria-hidden="true"></i>
             Volver
         </a>
-
-        <div class="dropdown">
-
-            <button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
-                Actions
-            </button>
-
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <div class="d-flex flex-column">
-
-                    @if (!isDeleted)
-                    {
-                        
-                        <a href="@update_Url" class="dropdown-item small">
-                            <i class="fa fa-user-edit" aria-hidden="true"></i>
-                            Actualizar Datos
-                        </a>
-
-                        <a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@userId">
-                            <i class="fa fa-exchange-alt" aria-hidden="true"></i>
-                            Cambiar de Tipo
-                        </a>
-
-                        if (userStatus.Equals(banId))
-                        {
-                            <a class="dropdown-item small"
-                               data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="ACT">
-                                <i class="fa fa-unlock-alt" aria-hidden="true"></i>
-                                Dar de Alta
-                            </a>
-                        }
-                        else
-                        {
-                            <a class="dropdown-item small"
-                               data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="BAN">
-                                <i class="fa fa-lock" aria-hidden="true"></i>
-                                Dar de Baja
-                            </a>
-                        }
-
-                        <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                            Eliminar
-                        </a>
-
-                    }
-                    else
-                    {
-                        <!-- RESTAURAR -->
-                        <a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
-                            <i class="fa fa-trash-restore" aria-hidden="true"></i>
-                            Restaurar
-                        </a>
-                    }
-
-                </div>
-
-            </div>
-
-        </div>
+        
+        <!-- ACTION DROPDOWN -->
+        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } } )
     </div>
 
 </div>
@@ -108,7 +49,7 @@
             @* Mensaje de Usuario Eliminado *@
             @if (isDeleted)
             {
-                <div>
+                <div class="mt-4">
                     <p>
                         <i class="fa fa-trash-alt" aria-hidden="true" style="color:var(--red)"></i>
                         Usuario Eliminado

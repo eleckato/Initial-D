@@ -1,17 +1,16 @@
 ﻿@model initial_d.Models.APIModels.PublicacionMec
+@using initial_d.Common.Extensions
 
 @{
     ViewBag.Title = $"{Model.title} | Detalles";
 
     string goBack_Url = Url.Action("PubList", "PublicacionesMec");
 
+    string pubId = Model.public_id;
+    string pubStatus = Model.public_status_id;
+    bool isDeleted = Model.deleted;
+    bool thereIsLandline = !string.IsNullOrEmpty(Model.landline);
     string mechId = Model.appuser_id;
-    string mechStatus = Model.public_status_id;
-
-    string pendingId = "PEN";
-    string actId = "ACT";
-    string inactId = "INA";
-    string debtId = "DEB";
 }
 
 
@@ -32,56 +31,155 @@
         </a>
 
         <!-- ACTIONS DROPDOWN -->
-        <div class="dropdown">
-
-            <button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
-                Actions
-            </button>
-            
-            <!-- DROPDOWN -->
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <div class="d-flex flex-column">
-                    
-                    <!-- TODO Implementar el Modal para ACTIVAR/DESACTIVAR PUBLICACIÓN -->
-                    @if (mechStatus.Equals(pendingId))
-                    {
-                        <a class="dropdown-item small"
-                           data-toggle="modal" href="#" data-new-state="@inactId">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-                            Acepar/Rechazar Publicación
-                        </a>
-                    } else if (mechStatus.Equals(inactId))
-                    {
-                        <a class="dropdown-item small"
-                           data-toggle="modal" href="#" data-mech-id="@mechStatus" data-new-state="@actId">
-                            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
-                            Activar
-                        </a>
-                    }
-                    else if(mechStatus.Equals(actId))
-                    {
-                        <a class="dropdown-item small"
-                           data-toggle="modal" href="#" data-mech-id="@mechStatus" data-new-state="@inactId">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-                            Desactivar
-                        </a>
-                    }
-
-                    <a class="dropdown-item small" role="button" data-toggle="modal" data-mech-id="@mechId" href="#delete-modal">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                        Eliminar
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
+        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } } )
     </div>
 
 </div>
 
+<!-- INFORMACIÓN GENERAL -->
+<div class="c-jumbotron row mb-3">
+    
+    <div class="col-12 col-md-6 pr-md-3">
+        <table class="table c-info-table c-data-table-bordered mb-0">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.appuser_id)</th>
+                <td>@Html.DisplayFor(m => m.appuser_id)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.public_status_id)</th>
+                <td>@Html.DisplayFor(m => m.public_status_id)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.views)</th>
+                <td>@Html.DisplayFor(m => m.views)</td>
+            </tr>
+            @* Responsive Hell *@
+            @* This is dumb, but this is a copy of the second column so it can integrate into this table in responsive *@
+            <tr class="d-table-row d-md-none">
+                <th>@Html.DisplayNameFor(m => m.created_at)</th>
+                <td>@Html.DisplayFor(m => m.created_at)</td>
+            </tr>
+            <tr class="d-table-row d-md-none">
+                <th>@Html.DisplayNameFor(m => m.updated_at)</th>
+                <td>@Html.DisplayFor(m => m.updated_at)</td>
+            </tr>
+            @* PUBLICACIÓN ELIMINADA *@
+            @if (isDeleted)
+            {
+                <tr class="d-table-row d-md-none">
+                    <td colspan="2" class="text-center">
+                        <i class="fa fa-trash-alt mr-2" aria-hidden="true" style="color:var(--red)"></i>
+                        Publicación Eliminada
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    
+    <div class="col-12 col-md-6 d-none d-md-block"> 
+        <table class="table c-info-table c-data-table-bordered mb-0">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.created_at)</th>
+                <td>@Html.DisplayFor(m => m.created_at)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.updated_at)</th>
+                <td>@Html.DisplayFor(m => m.updated_at)</td>
+            </tr>
+            @* PUBLICACIÓN ELIMINADA *@
+            @if (isDeleted)
+            {
+                <tr>
+                    <td colspan="2" class="text-center">
+                        <i class="fa fa-trash-alt mr-2" aria-hidden="true" style="color:var(--red)"></i>
+                        Publicación Eliminada
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+</div>
+
+<!-- ALL THE INFO -->
+<div class="c-jumbotron">
+    <div class="mb-3">
+        <h3 class="font-weight-bold mb-2">@Html.DisplayFor(m => m.title)</h3>
+        <h5>@Html.DisplayFor(m => m.bussiness_name)</h5>
+    </div>
+
+    <div class="row">
+
+        <div class="col-12 col-lg-7 px-3">
+            <h5 class="font-weight-bold mb-2">Descripción</h5>
+            
+            <table class="table c-info-table c-data-table-bordered mb-3">
+                <tr>
+                    <td>
+                        <div class="text-justify p-1">
+                        @Html.DisplayWithBreaksFor(m => m.public_desc)
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <h5 class="font-weight-bold mb-2">Servicios</h5>
+            
+            <table class="table c-info-table c-data-table-bordered mb-3">
+                <tr>
+                    <td>
+                        <div class="text-justify p-1">
+                            @Html.DisplayWithBreaksFor(m => m.services)
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="col-12 col-lg-5 px-3">
+
+            <h5 class="font-weight-bold mb-2">Contacto</h5>
+            
+            <table class="table c-info-table c-data-table-bordered mb-3">
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.mobile_number)</th>
+                    <td>@Model.mobile_number</td>
+                </tr>
+                @if (thereIsLandline)
+                {
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.landline)</th>
+                        <td>@Model.landline</td>
+                    </tr>
+                }
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.email)</th>
+                    <td>@Model.email</td>
+                </tr>
+            </table>
+
+            <h5 class="font-weight-bold my-2">Dirección</h5>
+            
+            <table class="table c-info-table c-data-table-bordered mb-3">
+                <tr>
+                    <td>@Model.address, @Model.comuna, @Model.region</td>
+                </tr>
+            </table>
+
+            <h5 class="font-weight-bold my-2">Horario</h5>
+            
+            <table class="table c-info-table c-data-table-bordered mb-3">
+                <tr>
+                    <td>@Model.schedule</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</div>
 
 
+@Html.Partial("Partial/_JudgePubModal")
+@Html.Partial("Partial/_TogglePubModal")
+@Html.Partial("Partial/_DeletePubModal", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })

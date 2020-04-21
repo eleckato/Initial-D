@@ -5,10 +5,22 @@ using System.Web;
 
 namespace initial_d.Common
 {
+    /// <summary>
+    /// Object that model the Links of the Top Navbar
+    /// </summary>
     public class NavbarItems
     {
+        /// <summary>
+        /// Controller name of the Link
+        /// </summary>
         public string ControllerName { get; set; }
+        /// <summary>
+        /// Action of the Link
+        /// </summary>
         public string ActionName { get; set; }
+        /// <summary>
+        /// Name to display in the View
+        /// </summary>
         public string ViewName { get; set; }
 
         public NavbarItems()

@@ -11,6 +11,7 @@
     string banId = "BAN";
 
     // Action Url
+    string goBackUrl = Url.Action("UserList", "Usuarios");
     // detailsUrl on Document
 }
 
@@ -22,6 +23,14 @@
             <i class="fa fa-user-slash" aria-hidden="true"></i>
             Clientes Eliminados
         </h2>
+    </div>
+    
+    <!-- BUTTONS -->
+    <div class="header-buttons">
+        <a href="@goBackUrl" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Usuarios
+        </a>
     </div>
 
 </div>
@@ -51,36 +60,10 @@
                 bool? isBanned = userStatus?.Equals(banId);
 
                 <tr class="clickable-row" data-url="@detailsUrl">
-
+                    
                     <!-- ACTION DROPDOWN -->
                     <td data-label="Actions" class="not-clickable">
-                        <div class="dropdown">
-
-                            <button class="btn btn-yellow btn-xsm dropdown-toggle" type="button" id="dropdownMenuButton"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
-                                Actions
-                            </button>
-
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-                                <div class="d-flex flex-column">
-                                    <!-- DETALLES -->
-                                    <a href="@detailsUrl" class="dropdown-item small">
-                                        <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
-                                        Detalles
-                                    </a>
-
-                                    <!-- RESTAURAR -->
-                                    <a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@user.appuser_id" href="#delete-modal">
-                                        <i class="fa fa-trash-restore" aria-hidden="true"></i>
-                                        Restaurar
-                                    </a>
-                                </div>
-
-                            </div>
-
-                        </div>
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(user) { { "context", "deleteList" } } )
                     </td>
 
                     <!-- USERNAME -->

@@ -199,6 +199,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Common\ErrorWriter.cs" />
+    <Compile Include="Common\Extensions\HtmlExtensions.cs" />
     <Compile Include="Common\FixedRequiredAttributeAdapter.cs" />
     <Compile Include="Common\NavbarItems.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -475,6 +476,12 @@
     <Content Include="Views\PublicacionesMec\PubList.cshtml" />
     <Content Include="Views\Usuarios\DeletedUserList.cshtml" />
     <Content Include="Views\PublicacionesMec\PubDetails.cshtml" />
+    <Content Include="Views\PublicacionesMec\Partial\_JudgePubModal.cshtml" />
+    <Content Include="Views\PublicacionesMec\Partial\_TogglePubModal.cshtml" />
+    <Content Include="Views\PublicacionesMec\Partial\_DeletePubModal.cshtml" />
+    <Content Include="Views\PublicacionesMec\DeletedPubList.cshtml" />
+    <Content Include="Views\PublicacionesMec\Partial\_ContextualActionDropdown.cshtml" />
+    <Content Include="Views\Usuarios\Partial\_ContextualActionDropdown.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -482,7 +489,6 @@
     <Folder Include="Models\Viewmodels\" />
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Productos\Partial\" />
-    <Folder Include="Views\PublicacionMec\" />
     <Folder Include="Views\Servicios\Partial\" />
   </ItemGroup>
   <ItemGroup>

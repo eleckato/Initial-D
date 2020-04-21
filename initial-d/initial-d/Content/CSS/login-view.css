@@ -29,3 +29,13 @@
     background-color: var(--yellow-1);
     border-color: var(--yellow-0);
 }
+
+a {
+    color: #a7800e;
+    text-decoration: underline;
+}
+a:hover {
+    color: #daa60a;
+    text-decoration: underline;
+}
+

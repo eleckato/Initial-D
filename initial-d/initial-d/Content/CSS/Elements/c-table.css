@@ -64,11 +64,25 @@
     }
 }
 
+/* ---------------------------------------------------
+    Cutstom Bordered for DataResume      |      .c-data-table-bordered
+----------------------------------------------------- */
+/* Clean the boostrap style */
+.c-data-table-bordered td, 
+.c-data-table-bordered th {
+    border: 0px !important;
+}
+
+/* Define the new one, only border in the rows */
+.c-data-table-bordered tr{
+    border: 1px solid var(--yellow-1) !important
+}
+
 
 /* ---------------------------------------------------
     TO HIDE CELLS      |      .cell-hidden-{size}
 ----------------------------------------------------- */
-.cell-hidden-sm , .cell-hidden-md , .cell-hidden-lg {
+.cell-hidden-sm , .cell-hidden-md , .cell-hidden-lg, .cell-hidden-xl {
     display: none;
 }
 
@@ -87,7 +101,11 @@
         display: table-cell;
     }
 }
-
+@media (min-width: 1140px){
+    .cell-hidden-xl{
+        display: table-cell;
+    }
+}
 
 /* ---------------------------------------------------
     FOR CLICKABLES ROWS      |      clickable-row

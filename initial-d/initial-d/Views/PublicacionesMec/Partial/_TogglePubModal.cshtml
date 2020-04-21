@@ -1,0 +1,103 @@
+﻿@* Just make a button these attributes and done
+    data-toggle="modal" href="#toggle-pub-modal" data-pub-id="{pubId}" *@
+
+
+<div id="toggle-pub-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("ChangePubState", "PublicacionesMec", FormMethod.Post))
+            {
+                @* Update with JS *@
+                @Html.Hidden("pubId", "", new { Id = "pubId-toggle-pub" })
+                @Html.Hidden("newStatusId", "", new { id = "newStatusId-toggle-pub" })
+
+                <div class="modal-header">
+                    @* Update with JS *@
+                    <h5 class="modal-title">
+                        <i class="fa fa-exchange-alt mr-1 " aria-hidden="true"></i> 
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    @* Update with JS *@
+                    <p></p>
+                </div>
+
+                <div class="modal-footer justify-content-end">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-backspace" aria-hidden="true"></i>
+                        Cancelar
+                    </button>
+                    @* Update with JS *@
+                    <button type="submit" role="button" class="btn btn-sm btn-green">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        <span></span>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    {
+        function LoadChangeTypeScript() {
+            $(document).on('show.bs.modal', '#toggle-pub-modal', function (event) {
+                // Button that triggered the modal
+                var button = $(event.relatedTarget)
+                var modal = $(this);
+
+                // Extract the pubId and newStateUd
+                var pubId = button.data('pub-id')
+                var newStatusId = button.data('new-state');
+                // Change the pubId and newStateUd of the hidden inputs
+                $('#pubId-toggle-pub').val(pubId);
+                $('#newStatusId-toggle-pub').val(newStatusId);
+                
+                // Get all the elements that need to be changed in the Modal
+                var title = modal.find('.modal-header h5');
+                var body_msg = modal.find('.modal-body p');
+                var btn_submit = modal.find(':submit');
+                var submit_icon = btn_submit.find('i.fa');
+                var submit_span = btn_submit.find('span');
+
+                // Change the content of the Modal
+                if (newStatusId == 'ACT') {
+                    title.text('Activar Publicación')
+
+                    body_msg.text('¿Desea Activar esta publicación?');
+
+                    submit_icon.removeClass('fa-check fa-times');
+                    submit_icon.addClass('fa-check');
+
+                    submit_span.text("Activar");
+
+                    btn_submit.removeClass('btn-red btn-green');
+                    btn_submit.addClass('btn-green');
+                }
+                else if (newStatusId == 'INA') {
+                    title.text('Desactivar Publicación')
+
+                    body_msg.text('¿Desea Desactivar esta publicación?');
+
+                    submit_icon.removeClass('fa-check fa-times');
+                    submit_icon.addClass('fa-times');
+
+                    submit_span.text("Desactivar");
+
+                    btn_submit.removeClass('btn-red btn-green');
+                    btn_submit.addClass('btn-red');
+                }
+                else {
+                    // an error or something
+                    console.log('an error or something');
+                }
+            });
+        }
+
+        WaitForJquery(LoadChangeTypeScript);
+    }
+</script>

@@ -8,6 +8,9 @@ using System.IO;
 
 namespace initial_d.Common
 {
+    /// <summary>
+    /// Write error on console referencing the method caller and the file
+    /// </summary>
     public class ErrorWriter
     {
         /// <summary>

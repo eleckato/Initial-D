@@ -10,6 +10,7 @@ namespace initial_d.Common
 {
     public class FixedRequiredAttributeAdapter : RequiredAttributeAdapter
     {
+        /* This is part of the insane boilerplate code to localize the form validation messages */
         public FixedRequiredAttributeAdapter(ModelMetadata metadata, ControllerContext context, RequiredAttribute attribute)
             : base(metadata, context, attribute)
         {
