@@ -38,7 +38,7 @@
                 </a>            
 			}
 
-            @if (isDetails)
+            @if (isDetails && !isDeleted)
             {
 				<a href="@update_Url" class="dropdown-item small">
 					<i class="fa fa-user-edit" aria-hidden="true"></i>
@@ -46,7 +46,7 @@
 				</a>
             }
 
-			@if (isDetails || (isList && !isDeleted))
+			@if ((isDetails || isList) && !isDeleted)
             {
 				<!-- CAMBIAR DE TIPO -->
 				<a class="dropdown-item small" data-toggle="modal" href="#change-type-modal" data-user-id="@userId">
@@ -58,7 +58,7 @@
 				if (userStatus.Equals(banId))
 				{
 					<a class="dropdown-item small"
-					   data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="ACT">
+					   data-toggle="modal" href="#user-state-modal" data-user-id="@userId" data-new-state="ACT">
 						<i class="fa fa-unlock-alt" aria-hidden="true"></i>
 						Dar de Alta
 					</a>
@@ -66,7 +66,7 @@
 				else
 				{
 					<a class="dropdown-item small"
-					   data-toggle="modal" href="#user-state-modal" data-user-id="@userStatus" data-new-state="BAN">
+					   data-toggle="modal" href="#user-state-modal" data-user-id="@userId" data-new-state="BAN">
 						<i class="fa fa-lock" aria-hidden="true"></i>
 						Dar de Baja
 					</a>

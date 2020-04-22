@@ -1,6 +1,7 @@
 ﻿using initial_d.APICallers;
 using initial_d.Common;
 using initial_d.Models.APIModels;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,6 +16,7 @@ namespace initial_d.Controllers
     public class UsuariosController : BaseController
     {
         readonly UsuariosRepository UP = new UsuariosRepository();
+        public string currentUserId = "";
 
         private const string addRoute = "agregar";
         private const string detailsRoute = "{userId}";
@@ -25,6 +27,7 @@ namespace initial_d.Controllers
         public UsuariosController()
         {
             SetNavbar();
+            currentUserId = User?.Identity?.GetUserId();
         }
 
 
@@ -33,6 +36,7 @@ namespace initial_d.Controllers
         /* ---------------------------------------------------------------- */
 
         // TODO Search Filters
+        // TODO Pagination
         /// <summary>
         /// GET | Show a list of Users
         /// <para> /usuarios </para>
@@ -41,14 +45,19 @@ namespace initial_d.Controllers
         [Route]
         public ActionResult UserList(string userName = null, string userEmail = null, string userTypeId = null, string userStatusId = null)
         {
-            List<Usuario> Usuarios;
+            List<Usuario> usuarios;
             List<UserType> userTypeLst;
             List<UserStatus> userStatusLst;
 
             try
             {
-                Usuarios = UP.GetAllUsers().ToList();
-                if (Usuarios == null) return Error_FailedRequest();
+                usuarios = UP.GetAllUsers().ToList();
+                if (usuarios == null) return Error_FailedRequest();
+
+                // Remove Current User from the list
+                string currentUserId = User.Identity.GetUserId();
+                var cUser = usuarios.SingleOrDefault(x => x.appuser_id.Equals(currentUserId));
+                if (cUser != null) usuarios.Remove(cUser);
 
                 userTypeLst = UP.GetAllTypes().ToList();
                 if (userTypeLst == null) return Error_FailedRequest();
@@ -56,7 +65,7 @@ namespace initial_d.Controllers
                 userStatusLst = UP.GetAllStatus().ToList();
                 if (userStatusLst == null) return Error_FailedRequest();
 
-                Usuarios.ForEach(user =>
+                usuarios.ForEach(user =>
                 {
                     user = UP.ProcessUser(user, userTypeLst, userStatusLst);
                 });
@@ -74,7 +83,7 @@ namespace initial_d.Controllers
             ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", userTypeId);
             ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status", userStatusId);
 
-            return View(Usuarios);
+            return View(usuarios);
         }
 
 
@@ -91,6 +100,7 @@ namespace initial_d.Controllers
         public ActionResult UserDetails(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
+            if (userId.Equals(currentUserId)) return Error_FailedRequest();
 
             Usuario usuario;
             List<UserType> userTypeLst;
@@ -114,7 +124,7 @@ namespace initial_d.Controllers
                 return Error_CustomError(e.Message);
             }
 
-            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", usuario.user_type_id);
 
             return View(usuario);
         }
@@ -133,6 +143,7 @@ namespace initial_d.Controllers
         public ActionResult UpdateUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
+            if (userId.Equals(currentUserId)) return Error_FailedRequest();
 
             Usuario usuario;
             List<UserType> userTypeLst;
@@ -161,7 +172,6 @@ namespace initial_d.Controllers
             return View(usuario);
         }
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the data of an User
         /// <para> /usuarios/{id}/actualizar </para>
@@ -171,17 +181,23 @@ namespace initial_d.Controllers
         public ActionResult UpdateUser(Usuario newUser)
         {
             if (newUser == null) return Error_InvalidUrl();
+            if (newUser.appuser_id.Equals(currentUserId)) return Error_FailedRequest();
 
             try
             {
                 var res = UP.UpdateUser(newUser);
 
-                if (!res) return Error_FailedRequest();
+                if (!res)
+                {
+                    Error_FailedRequest();
+                    return RedirectToAction("UpdateUser", new { userId = newUser.appuser_id });
+                }
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return Error_CustomError(e.Message);
+                Error_CustomError(e.Message);
+                return RedirectToAction("UpdateUser", new { userId = newUser.appuser_id });
             }
 
             string successMsg = "El Usuario fue actualizado con éxito";
@@ -228,12 +244,11 @@ namespace initial_d.Controllers
 
 
             ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
-            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status");
+            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status", "ACT");
 
             return View(userTemplate);
         }
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to add an User
         /// <para> /usuarios/agregar </para>
@@ -244,23 +259,26 @@ namespace initial_d.Controllers
         {
             if (newUser == null) return Error_InvalidUrl();
 
+            string userId;
+
             try
             {
-                var res = UP.AddUser(newUser);
+                userId = UP.AddUser(newUser);
 
-                if (!res) return Error_FailedRequest();
+                if (userId == null) return Error_FailedRequest();
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return Error_CustomError(e.Message);
+                Error_CustomError(e.Message);
+                return RedirectToAction("AddUser");
             }
 
             string successMsg = "El Usuario fue agregado con éxito";
             SetSuccessMsg(successMsg);
 
             // TODO Put the actual appuser_id here when connection to API is implemented
-            string userId = "U2"; // newUser.appuser_id;
+            //string userId = "U2"; // newUser.appuser_id;
 
             return RedirectToAction("UserDetails", new { userId });
         }
@@ -279,6 +297,7 @@ namespace initial_d.Controllers
         public ActionResult DeleteUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
+            if (userId.Equals(currentUserId)) return Error_FailedRequest();
 
             try
             {
@@ -298,7 +317,6 @@ namespace initial_d.Controllers
             return RedirectToAction("UserList");
         }
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to restore a deleted User
         /// <para> /Usuarios/RestoreUser </para>
@@ -307,6 +325,7 @@ namespace initial_d.Controllers
         public ActionResult RestoreUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
+            if (userId.Equals(currentUserId)) return Error_FailedRequest();
 
             try
             {
@@ -327,6 +346,7 @@ namespace initial_d.Controllers
         }
 
         // TODO Search Filters
+        // TODO Pagination
         /// <summary>
         /// GET | Show a list of all deleted Users
         /// <para> /usuarios/eliminados </para>
@@ -342,6 +362,11 @@ namespace initial_d.Controllers
             {
                 usuarios = UP.GetDeletedUsers()?.ToList();
                 if (usuarios == null) return Error_FailedRequest();
+
+                // Remove Current User from the list
+                string currentUserId = User.Identity.GetUserId();
+                var cUser = usuarios.SingleOrDefault(x => x.appuser_id.Equals(currentUserId));
+                if (cUser != null) usuarios.Remove(cUser);
 
                 userTypeLst = UP.GetAllTypes().ToList();
                 if (userTypeLst == null) return Error_FailedRequest();
@@ -380,6 +405,7 @@ namespace initial_d.Controllers
         public ActionResult ChangeUsertype(string userId, string userTypeId)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userTypeId)) return Error_InvalidForm();
+            if (userId.Equals(currentUserId)) return Error_FailedRequest();
 
             try
             {
@@ -399,7 +425,6 @@ namespace initial_d.Controllers
             return Redirect(referer);
         }
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the Status of an User
         /// </summary>
@@ -409,10 +434,11 @@ namespace initial_d.Controllers
         public ActionResult ChangeUserStatus(string userId, string userStatusId)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userStatusId)) return Error_InvalidForm();
+            if (userId.Equals(currentUserId)) return Error_FailedRequest();
 
             try
             {
-                var res = true; // UP.ChangeUserStatus(userId, userStatusId);
+                var res = UP.ChangeUserStatus(userId, userStatusId);
 
                 if (!res) return Error_FailedRequest();
             }

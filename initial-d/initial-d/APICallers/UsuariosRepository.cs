@@ -52,27 +52,42 @@ namespace initial_d.APICallers
             },
         };
 
-        // TODO Connection with API
         /// <summary>
         /// API call to add an User
         /// </summary>
         /// <param name="newUser"> New User </param>
-        public bool AddUser(Usuario newUser)
+        public String AddUser(Usuario newUser)
         {
             if (newUser == null)
             {
                 ErrorWriter.InvalidArgumentsError();
-                return false;
+                return null;
             }
 
             try
             {
-                return true;
+                var userId = newUser.appuser_id;
+
+                var request = new RestRequest("user-auth/register", Method.POST)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                request.AddJsonBody(newUser);
+
+                var response = client.Execute(request);
+
+                if(response.StatusCode == HttpStatusCode.Conflict)
+                    throw new Exception("El Nombre de Usuario o Mail ya existe");
+
+                CheckStatusCode(response);
+
+                return response.Content;
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return false;
+                throw e;
             }
         }
 
@@ -104,7 +119,7 @@ namespace initial_d.APICallers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return null;
+                throw e;
             }
         }
 
@@ -134,7 +149,7 @@ namespace initial_d.APICallers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return null;
+                throw e;
             }
         }
 
@@ -169,11 +184,10 @@ namespace initial_d.APICallers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return null;
+                throw e;
             }
         }
 
-        // TODO Connection with API
         /// <summary>
         /// API call to update an User
         /// </summary>
@@ -188,15 +202,26 @@ namespace initial_d.APICallers
 
             try
             {
-                // CALL THE API
+                var userId = newUser.appuser_id;
+
+                var request = new RestRequest($"{prefix}/users/{userId}", Method.POST)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                request.AddJsonBody(newUser);
+
+                var response = client.Execute(request);
+
+                string notFoundMsg = "El Usuario requerido no existe";
+                CheckStatusCode(response, notFoundMsg);
 
                 return true;
-
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return false;
+                throw e;
             }
         }
 
@@ -226,11 +251,10 @@ namespace initial_d.APICallers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return false;
+                throw e;
             }
         }
 
-        // TODO Connection with API
         /// <summary>
         /// API call to restore an User
         /// </summary>
@@ -245,14 +269,19 @@ namespace initial_d.APICallers
 
             try
             {
-                // API CALL
+                var request = new RestRequest($"{prefix}/users/{userId}/restore", Method.PUT);
+
+                var response = client.Execute(request);
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
 
                 return true;
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return false;
+                throw e;
             }
         }
 
@@ -283,7 +312,40 @@ namespace initial_d.APICallers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// API call to change the Status of an User
+        /// </summary>
+        /// <param name="userId"> User Id </param>
+        /// <param name="userStatusId"> User Status Id </param>
+        public bool ChangeUserStatus(string userId, string userStatusId)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userStatusId))
+            {
+                ErrorWriter.InvalidArgumentsError();
                 return false;
+            }
+
+            try
+            {
+                string url = $"{prefix}/users/{userId}/change-status?status={userStatusId}";
+
+                var request = new RestRequest(url, Method.POST);
+
+                var response = client.Execute(request);
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
             }
         }
 
@@ -309,7 +371,7 @@ namespace initial_d.APICallers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return null;
+                throw e;
             }
         }
 
@@ -334,7 +396,7 @@ namespace initial_d.APICallers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return null;
+                throw e;
             }
         }
 

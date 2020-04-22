@@ -108,7 +108,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(UpdateProfileUrl)]
-        public ActionResult UpdateUser(Usuario newUser)
+        public ActionResult UpdateProfile(Usuario newUser)
         {
             if (newUser == null) return Error_InvalidUrl();
 
@@ -119,7 +119,8 @@ namespace initial_d.Controllers
                 
                 oldUser.name = newUser.name;
                 oldUser.last_names = newUser.last_names;
-                oldUser.email = newUser.adress;
+                oldUser.adress = newUser.adress;
+                oldUser.email = newUser.email;
                 oldUser.phone = newUser.phone;
                 oldUser.birthday = newUser.birthday;
 

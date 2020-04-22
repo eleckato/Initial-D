@@ -42,7 +42,7 @@
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.hash)</th>
                         <td>
-                            @Html.TextBoxFor(m => m.hash, new { @class = "form-control" })
+                            @Html.PasswordFor(m => m.hash, new { @class = "form-control" })
                             @Html.ValidationMessageFor(x => x.hash)
                         </td>
                     </tr>
@@ -59,14 +59,6 @@
                             @Html.DropDownListFor(m => m.status_id, userStatusList, new { @class = "custom-select custom-select-sm form-control" })
                             @Html.ValidationMessageFor(x => x.status_id)
                         </td>
-                    </tr>
-                    <tr>
-                        <th colspan="2" id="mail_confirmed_col">
-                            <div class="custom-control custom-checkbox">
-                                @Html.CheckBoxFor(m => m.mail_confirmed, new { @class = "custom-control-input" })
-                                @Html.LabelFor(m => m.mail_confirmed, new { @class = "custom-control-label" })
-                            </div>
-                        </th>
                     </tr>
                 </table>
 

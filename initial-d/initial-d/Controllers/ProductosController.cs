@@ -20,6 +20,7 @@ namespace initial_d.Controllers
             return View();
         }
 
+
         // GET: Productos
         [HttpGet]
         [Route("agregar")]
