@@ -40,42 +40,69 @@ namespace initial_d.Controllers
             // If is safe to go back to the referrer URL, redirect there
             return refererUrl;
         }
+        
+        /// <summary>
+        /// Get the referrer URL of a Request 
+        /// </summary>
+        public string GetReferer(HttpRequestBase request)
+        {
+            // Try to get the referrer URL
+            string refererUrl = request?.UrlReferrer?.AbsoluteUri;
+
+            // If is null, redirect to Error page
+            if (refererUrl == null) return Url.Action("Error", "Home");
+
+            // If is safe to go back to the referrer URL, redirect there
+            return refererUrl;
+        }
 
         /// <summary>
         /// When a URL is malformed, lack arguments or have invalid arguments
         /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
         /// </summary>
-        public RedirectResult Error_InvalidUrl()
+        public RedirectResult Error_InvalidUrl(bool errorReferer = true)
         {
             SetErrorMsg(Resources.Messages.Error_URLInvalida);
-            return Redirect(GetRefererForError(Request));
+
+            string referer = errorReferer ? GetRefererForError(Request) : GetReferer(Request);
+
+            return Redirect(referer);
         }
         /// <summary>
         /// When a received form isn't valid
         /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
         /// </summary>
-        public RedirectResult Error_InvalidForm()
+        public RedirectResult Error_InvalidForm(bool errorReferer = true)
         {
             SetErrorMsg(Resources.Messages.Error_FormInvalido);
-            return Redirect(GetRefererForError(Request));
+
+            string referer = errorReferer ? GetRefererForError(Request) : GetReferer(Request);
+
+            return Redirect(referer);
         }
         /// <summary>
         /// When an unknown error with the request arises
         /// <para>Set the correct error message in TempData["ErrorMessage"] and return a safe place to redirect the User</para>
         /// </summary>
-        public RedirectResult Error_FailedRequest()
+        public RedirectResult Error_FailedRequest(bool errorReferer = true)
         {
             SetErrorMsg(Resources.Messages.Error_SolicitudFallida);
-            return Redirect(GetRefererForError(Request));
+
+            string referer = errorReferer ? GetRefererForError(Request) : GetReferer(Request);
+
+            return Redirect(referer);
         }
         /// <summary>
         /// For custom errors. It the error message on TempData["ErrorMessage"] and return a safe place to redirect the User
         /// </summary>
         /// <param name="error"></param>
-        public RedirectResult Error_CustomError(string error)
+        public RedirectResult Error_CustomError(string error, bool errorReferer = true)
         {
             SetErrorMsg(error);
-            return Redirect(GetRefererForError(Request));
+
+            string referer = errorReferer ? GetRefererForError(Request) : GetReferer(Request);
+
+            return Redirect(referer);
         }
     }
 }

@@ -32,3 +32,18 @@ function ShowAlert(message, palette_class, duration) {
         });
     }
 }
+
+
+
+/**
+ * Aplaza ejecutar una función hasta que pasen 100ms sin que está sea llamada
+ * Es para que una función no sea llamada demasiadas veces en muy poco tiempo
+  * @param {any} func Función a aplazar
+ */
+function debounce(func) {
+    var timer;
+    return function (event) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(func, 100, event);
+    };
+}

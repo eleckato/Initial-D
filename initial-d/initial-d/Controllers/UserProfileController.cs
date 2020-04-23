@@ -17,7 +17,8 @@ namespace initial_d.Controllers
         readonly UsuariosRepository UP = new UsuariosRepository();
 
         private const string ProfileUrl = "";
-        private const string UpdateProfileUrl = "update";
+        private const string UpdateProfileUrl = "actualizar-datos";
+        private const string ChangePasswordUrl = "cambiar-contraseña";
 
         public UserProfileController()
         {
@@ -70,7 +71,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// GET  |  Show a form to update the current logged User
-        /// <para> /perfil </para>
+        /// <para> /perfil/actualizar-datos </para>
         /// </summary>
         [HttpGet]
         [Route(UpdateProfileUrl)]
@@ -101,10 +102,9 @@ namespace initial_d.Controllers
             return View(usuario);
         }
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the data of the current logged User
-        /// <para> /update </para>
+        /// <para> /perfil/actualizar-datos </para>
         /// </summary>
         [HttpPost]
         [Route(UpdateProfileUrl)]
@@ -138,6 +138,57 @@ namespace initial_d.Controllers
 
             return RedirectToAction("Profile");
         }
+
+
+        /* ---------------------------------------------------------------- */
+        /* CHANGE PASSWORD */
+        /* ---------------------------------------------------------------- */
+
+        /// <summary>
+        /// GET  |  Show a form to change the logged User Password
+        /// <para> /perfil/cambiar-contraseña </para>
+        /// </summary>
+        [HttpGet]
+        [Route(ChangePasswordUrl)]
+        public ActionResult ChangePassword()
+        {
+            // Get current userId
+            var userId = User.Identity.GetUserId();
+            if (userId == null) return Error_FailedRequest();
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// POST  |  API call to update the Password of the current logged User
+        /// <para> /perfil/cambiar-contraseña </para>
+        /// </summary>
+        [HttpPost]
+        [Route(ChangePasswordUrl)]
+        public ActionResult ChangePassword(string newPassword, string oldPassword1, string oldPassword2)
+        {
+            if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(oldPassword1) || string.IsNullOrEmpty(oldPassword2)) return Error_InvalidForm(false);
+
+            if (!oldPassword1.Equals(oldPassword2)) return Error_CustomError("Las contraseñas ingresadas no coinciden");
+
+            try
+            {
+                var res = UP.UpdatePassword(newPassword, oldPassword1);
+                if (!res) return Error_FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message, false);
+            }
+
+            string successMsg = "Su contraseña fue cambiada";
+            SetSuccessMsg(successMsg);
+
+            return RedirectToAction("Profile");
+        }
+
 
 
         /* ---------------------------------------------------------------- */

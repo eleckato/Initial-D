@@ -35,7 +35,6 @@ namespace initial_d.Controllers
         /* USER LIST */
         /* ---------------------------------------------------------------- */
 
-        // TODO Search Filters
         // TODO Pagination
         /// <summary>
         /// GET | Show a list of Users
@@ -51,7 +50,7 @@ namespace initial_d.Controllers
 
             try
             {
-                usuarios = UP.GetAllUsers().ToList();
+                usuarios = UP.GetAllUsers(userName, userEmail, userTypeId, userStatusId).ToList();
                 if (usuarios == null) return Error_FailedRequest();
 
                 // Remove Current User from the list

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using initial_d.Common;
 using System.Net;
 using System.Linq;
+using initial_d.Providers;
 
 namespace initial_d.APICallers
 {
@@ -73,6 +74,7 @@ namespace initial_d.APICallers
                     RequestFormat = DataFormat.Json
                 };
 
+                newUser.hash = JwtProvider.EncryptHMAC(newUser.hash);
                 request.AddJsonBody(newUser);
 
                 var response = client.Execute(request);
@@ -91,16 +93,17 @@ namespace initial_d.APICallers
             }
         }
 
-        // TODO Search filters
         // TODO Pagination
         /// <summary>
         /// API call to list all Users
         /// </summary>
-        public IEnumerable<Usuario> GetAllUsers()
+        public IEnumerable<Usuario> GetAllUsers(string userName, string userEmail, string userTypeId, string userStatusId)
         {
             try
             {
-                var request = new RestRequest($"{prefix}/users", Method.GET)
+                var url = $"{prefix}/users?username={userName}&email={userEmail}&user_type_id={userTypeId}&status_id={userStatusId}";
+
+                var request = new RestRequest(url, Method.GET)
                 {
                     RequestFormat = DataFormat.Json
                 };
@@ -349,6 +352,71 @@ namespace initial_d.APICallers
             }
         }
 
+        /// <summary>
+        /// API call to change the Password of an User
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="oldPassword"></param>
+        /// <returns></returns>
+        public bool UpdatePassword(string password, string oldPassword)
+        {
+            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(oldPassword))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                var request = new RestRequest($"user-auth/change-password", Method.POST);
+
+                password = JwtProvider.EncryptHMAC(password);
+                oldPassword = JwtProvider.EncryptHMAC(oldPassword);
+                request.AddJsonBody(new { psw = password, old_psw = oldPassword });
+
+                var response = client.Execute(request);
+
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                    throw new Exception("La contraseña ingresada es incorrecta");
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+        }
+
+
+        public bool ResetPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                var request = new RestRequest($"user-auth/Recover-pass?email={email}", Method.POST);
+
+                var response = client.Execute(request);
+                
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+        }
 
         /// <summary>
         /// API call to get all User Types, with name and ID

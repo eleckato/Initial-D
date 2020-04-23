@@ -29,7 +29,10 @@ namespace initial_d.APICallers
         public bool? CheckStatusCode(IRestResponse response, string notFoundMsg = null, string badRequestMsg = null, string unauthorizedMsg = null, string internalServerErrorMsg = null, string genericMgs = null)
         {
             if (response.StatusCode != HttpStatusCode.OK)
-                ErrorWriter.CustomError(response.Content);
+            {
+                ErrorWriter.CustomError($"RES CONTENT : {response.Content} \nSTATUS ID : {response.StatusCode}");
+            }
+
 
             switch (response.StatusCode)
             {

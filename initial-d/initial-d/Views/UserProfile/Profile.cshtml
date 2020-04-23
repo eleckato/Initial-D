@@ -4,6 +4,7 @@
     ViewBag.Title = "Perfil de Usuario";
 
     string UpdateUser_Url = Url.Action("UpdateProfile", "UserProfile");
+    string ChangePsw_Url = Url.Action("ChangePassword", "UserProfile");
     string GoBack_Url = Url.Action("Index", "Home");
 
     string userId = Model.appuser_id;
@@ -28,6 +29,10 @@
         <a href="@UpdateUser_Url" class="btn btn-sm btn-yellow mr-3" role="button">
             <i class="fa fa-user-edit" aria-hidden="true"></i>
             Actualizar Datos
+        </a>
+        <a href="@ChangePsw_Url" class="btn btn-sm btn-yellow mr-3" role="button">
+            <i class="fa fa-key" aria-hidden="true"></i>
+            Cambiar Contraseña
         </a>
 
     </div>

@@ -111,7 +111,6 @@ namespace initial_d.Controllers
             return View();
         }
 
-        // TODO Call the API and stuff
         // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
@@ -124,12 +123,20 @@ namespace initial_d.Controllers
                 return RedirectToAction("Login");
             }
 
-            var res = true; // TODO Call the API and stuff
+            if (string.IsNullOrEmpty(model.Email))
+                return Error_InvalidForm(false);
 
-            if (!res)
+            try
             {
-                Error_FailedRequest();
-                return View(model);
+
+                var res = new APICallers.UsuariosRepository().ResetPassword(model.Email); // TODO Call the API and stuff
+
+                if (!res) return Error_FailedRequest(false);
+
+            }
+            catch (Exception e)
+            {
+                return Error_CustomError(e.Message, false);
             }
 
             return View("ForgotPasswordConfirmation");            
