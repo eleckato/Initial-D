@@ -24,6 +24,11 @@
 @using (Html.BeginForm())
 {
     @Html.HiddenFor(m => m.appuser_id);
+    @Html.HiddenFor(m => m.username);
+    @Html.HiddenFor(m => m.updated_at);
+    @Html.HiddenFor(m => m.created_at);
+    @Html.HiddenFor(m => m.deleted);
+    @Html.HiddenFor(m => m.user_type_id);
 
     @* FORM CONTAINER *@
     <div class="row justify-content-around mb-4">
@@ -33,13 +38,6 @@
                 <h3 class="mb-4"> Información de Sistema </h3>
 
                 <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive">
-                    <tr>
-                        <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
-                        <td>
-                            @Html.DropDownListFor(m => m.user_type_id, userTypeList, new { @class = "custom-select custom-select-sm form-control" })
-                            @Html.ValidationMessageFor(x => x.user_type_id)
-                        </td>
-                    </tr>
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.status_id)</th>
                         <td>

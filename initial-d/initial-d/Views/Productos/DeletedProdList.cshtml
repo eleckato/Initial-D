@@ -2,7 +2,7 @@
 @using initial_d.Common.FilterBar;
 
 @{
-    ViewBag.Title = "Productos";
+    ViewBag.Title = "Productos Eliminados";
 
     // Filters
     string brand = ViewBag.brand ?? string.Empty;
@@ -12,8 +12,7 @@
     string actId = "ACT";
 
     // Action URL
-    string delList = Url.Action("DeletedProdList", "Productos");
-    string addUrl = Url.Action("AddProd", "Productos");
+    string goBackUrl = Url.Action("ProdList", "Productos");
 }
 
 <!-- HEADER | ACTION BUTTONS -->
@@ -28,13 +27,9 @@
     
     <!-- BUTTONS -->
     <div class="header-buttons">
-        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-            Productos Eliminados
-        </a>
-        <a href="@addUrl" class="btn btn-sm btn-green" role="button">
-            <i class="fa fa-plus"></i>
-            Agregar Producto
+        <a href="@goBackUrl" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Productos
         </a>
     </div>
 </div>
@@ -44,7 +39,7 @@
 @{ 
     var filterTemplate = new FilterBarTemplate()
     {
-        formAction = "ProdList",
+        formAction = "DeletedProdList",
         formController = "Productos",
         filters = new List<MvcHtmlString>()
         {
@@ -55,7 +50,6 @@
     };
 }
 @Html.Partial("Partial/_FiltersCollapse", filterTemplate)
-
 
 
 <!-- DATA TABLE -->
@@ -123,8 +117,9 @@
     </table>
 </div>
 
+
 <!-- MODALS -->
-@Html.Partial("Partial/_DeleteModalAndScript")
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", true } })
 @Html.Partial("Partial/_ToggleStatusModal")
 
 

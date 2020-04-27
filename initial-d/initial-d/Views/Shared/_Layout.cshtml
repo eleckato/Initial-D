@@ -150,11 +150,11 @@
     <script>
         {
             //! Automatic Alert System: Get the error message and show an alert with it
-            let err = '@error';
-            if (err) ShowAlert(err, 'alert-danger')
+            let err = '@error.Replace("\r\n", " ")';
+            if (err) ShowAlert(err, 'alert-danger', 3);
 
-            let success = '@success'
-            if (success) ShowAlert(success, 'alert-success', 1)
+            let success = '@success.Replace("\r\n", " ")';
+            if (success) ShowAlert(success, 'alert-success', 1);
         }
     </script>
 </body>

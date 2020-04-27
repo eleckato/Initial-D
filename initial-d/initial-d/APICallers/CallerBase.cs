@@ -10,12 +10,12 @@ using initial_d.Common;
 
 namespace initial_d.APICallers
 {
-    public class RepositoryBase
+    public class CallerBase
     {
         public readonly RestClient client;
         private readonly string _url = ConfigurationManager.AppSettings["BuffetAPI.url"];
 
-        public RepositoryBase()
+        public CallerBase()
         {
             client = new RestClient(_url);
             // Get user claims    

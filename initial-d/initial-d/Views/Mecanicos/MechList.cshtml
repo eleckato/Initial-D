@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<initial_d.Models.APIModels.Mecanico>
+@using initial_d.Common.FilterBar;
 @{
     ViewBag.Title = "Admin. de Mecánicos";
 
@@ -6,14 +7,15 @@
     // TODO Esto depende de que filtros se deciden poner
     string userName = ViewBag.userName ?? string.Empty;
     string userEmail = ViewBag.userEmail ?? string.Empty;
+    var userStatusList = (SelectList)ViewBag.userStatusLst;
     // var hasDebt
     // var hasPublicationPending
-    var userStatusList = (SelectList)ViewBag.userStatusLst;
 
     string banId = "BAN";
 
     // Action URL
     string addUrl = Url.Action("AddMech", "Mecanicos");
+    string delList = Url.Action("DeletedMechList", "Mecanicos");
     // detailsUrl on Document
 }
 
@@ -30,6 +32,10 @@
     </div>
 
     <div class="header-buttons">
+        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            Mecánicos Eliminados
+        </a>
         <a href="@addUrl" class="btn btn-sm btn-green" role="button">
             <i class="fa fa-plus"></i>
             Agregar Mecánico
@@ -40,7 +46,20 @@
 
 
 <!-- BUSCAR -->
-
+@{ 
+    var filterTemplate = new FilterBarTemplate()
+    {
+        formAction = "MechList",
+        formController = "Mecanicos",
+        filters = new List<MvcHtmlString>()
+        {
+            Html.TextBox("userName", userName, new { @class = "form-control form-control-sm h-100", @placeholder = "Nombre de Usuario" }),
+            Html.TextBox("userEmail", userEmail, new { @class = "form-control form-control-sm h-100", @placeholder = "Email" }),
+            Html.DropDownList("userStatusId", userStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" }),
+        }
+    };
+}
+@Html.Partial("Partial/_FiltersCollapse", filterTemplate)
 
 <!-- DATA TABLE -->
 <div class=" d-flex justify-content-center ">
@@ -63,64 +82,13 @@
             @foreach (var mech in Model)
             {
                 string detailsUrl = Url.Action("MechDetails", "Mecanicos", new { mechId = mech.appuser_id });
-                string userStatus = mech.status_id;
-                bool? isBanned = userStatus?.Equals(banId);
+                bool? isBanned = mech.status_id?.Equals(banId);
 
                 <tr class="clickable-row" data-url="@detailsUrl">
 
                     <!-- ACTION DROPDOWN -->
                     <td data-label="Actions" class="not-clickable">
-                        <div class="dropdown">
-
-                            <button class="btn btn-yellow btn-xsm dropdown-toggle" type="button" id="dropdownMenuButton"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
-                                Actions
-                            </button>
-
-                            <!-- DROPDOWN -->
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-                                <div class="d-flex flex-column">
-                                    @if (isBanned != null)
-                                    {
-
-                                        <a href="@detailsUrl" class="dropdown-item small">
-                                            <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
-                                            Detalles
-                                        </a>
-
-                                        if (isBanned == true)
-                                        {
-                                            <a class="dropdown-item small"
-                                               data-toggle="modal" href="#user-state-modal" data-mech-id="@mech.appuser_id" data-new-state="ACT">
-                                                <i class="fa fa-unlock-alt mr-1" aria-hidden="true"></i>
-                                                Dar de Alta
-                                            </a>
-                                        }
-                                        else if (isBanned == false)
-                                        {
-                                            <a class="dropdown-item small"
-                                               data-toggle="modal" href="#user-state-modal" data-mech-id="@mech.appuser_id" data-new-state="BAN">
-                                                <i class="fa fa-lock mr-1" aria-hidden="true"></i>
-                                                Dar de Baja
-                                            </a>
-                                        }
-
-                                        <a class="dropdown-item small" role="button" data-toggle="modal" data-mech-id="@mech.appuser_id" href="#delete-modal">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
-                                            Eliminar
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <p class="dropdown-item small">Error al cargar el Usuario</p>
-                                    }
-                                </div>
-
-                            </div>
-
-                        </div>
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(mech) { { "context", "list" } } )
                     </td>
 
                     <!-- USERNAME -->
@@ -183,16 +151,5 @@
 
 
 @section customScripts{
-    <script>
-        /** When the user clicks on a cell inside a .clickable-row, it redirect them to the User Details view of that User.
-         * Use .not-clickable on a cell to exclude it from the event */
-        $(document).on('click', '.clickable-row td:not(.not-clickable)', function () {
-            // Get the row
-            let row = $(this).closest('.clickable-row');
-            // Assemble the URL
-            let url = row.data('url');
-            // Redirect the window
-            window.location = url;
-        });
-    </script>
+    @Scripts.Render("~/Content/JS/c_table.js")
 }

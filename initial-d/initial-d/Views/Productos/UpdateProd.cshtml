@@ -1,27 +1,27 @@
 ﻿@model initial_d.Models.APIModels.Producto
 
 @{
-    ViewBag.Title = "Agregar Producto";
+    ViewBag.Title = $"{Model.name} | Actualizar Datos";
 
-    var prodStatusList = (SelectList)ViewBag.prodStatusList;
-    var prodUnitList = (SelectList)ViewBag.ProdUnitList;
+    var prodStatusList = (SelectList)ViewBag.prodStatusLst;
+    var ProdUnitList = (SelectList)ViewBag.ProdUnitList;
 
-    string GoBack_Url = Url.Action("ProdList", "Productos");
+    string GoBack_Url = Url.Action("ProdDetails", "Productos", new { prodId = Model.product_id });
 }
 
 <div class="header">
     
     <div class="header-title">
         <h2>
-            <i class="fa fa-box" aria-hidden="true"></i>
-            @ViewBag.Title
+            <i class="fa fa-edit" aria-hidden="true"></i>
+            Actualizar Datos
         </h2>
     </div>
 
 </div>
 
 
-@using (Html.BeginForm("AddProd", "Productos"))
+@using (Html.BeginForm("UpdateProd", "Productos"))
 {
     @Html.HiddenFor(m => m.product_id);
     @Html.HiddenFor(m => m.create_at);
@@ -56,7 +56,7 @@
                         <td>
                             <div class="row ">
                                 @Html.TextBoxFor(m => m.stock, new { @class = "form-control mr-3 ", @style="min-width: 0px; width: 4.6rem" })
-                                @Html.DropDownListFor(m => m.unit_id, prodUnitList, new { @class = "custom-select custom-select-sm form-control w-auto",  style="min-width: 0px;" })
+                                @Html.DropDownListFor(m => m.unit_id, ProdUnitList, new { @class = "custom-select custom-select-sm form-control w-auto",  style="min-width: 0px;" })
                             </div>
                             @Html.ValidationMessageFor(x => x.stock)
                         </td>
@@ -66,15 +66,6 @@
                         <td>
                             @Html.TextAreaFor(m => m.product_desc, new { @class = "form-control", rows = 5 })
                             @Html.ValidationMessageFor(x => x.product_desc)
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>@Html.DisplayNameFor(m => m.product_status)</th>
-                        <td>
-                            <div class="row ">
-                                @Html.DropDownListFor(m => m.product_status, prodStatusList, new { @class = "custom-select custom-select-sm form-control w-auto",  style="min-width: 0px;" })
-                            </div>
-                            @Html.ValidationMessageFor(x => x.stock)
                         </td>
                     </tr>
                 </table>

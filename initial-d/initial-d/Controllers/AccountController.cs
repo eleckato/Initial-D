@@ -129,7 +129,7 @@ namespace initial_d.Controllers
             try
             {
 
-                var res = new APICallers.UsuariosRepository().ResetPassword(model.Email); // TODO Call the API and stuff
+                var res = new APICallers.UsuariosCaller().ResetPassword(model.Email); // TODO Call the API and stuff
 
                 if (!res) return Error_FailedRequest(false);
 

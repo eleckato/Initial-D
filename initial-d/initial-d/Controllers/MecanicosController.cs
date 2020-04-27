@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using initial_d.APICallers;
 using initial_d.Common;
 using initial_d.Models.APIModels;
+using Microsoft.AspNet.Identity;
 
 namespace initial_d.Controllers
 {
@@ -12,13 +13,14 @@ namespace initial_d.Controllers
     [RoutePrefix("mecanicos-adm")]
     public class MecanicosController : BaseController
     {
-        readonly MecanicosRepository MP = new MecanicosRepository();
-        readonly UsuariosRepository UP = new UsuariosRepository();
+        readonly MecanicosCaller MP = new MecanicosCaller();
+        readonly UsuariosCaller UP = new UsuariosCaller();
 
         private const string addRoute = "agregar";
         private const string detailsRoute = "{mechId}";
         private const string updateRoute = "{mechId}/actualizar";
         private const string deleteRoute = "{mechId}/eliminar";
+        private const string deteledList = "eliminados";
         private const string changeStatusRoute = "{mechId}/change-status";
 
         public MecanicosController()
@@ -29,28 +31,27 @@ namespace initial_d.Controllers
         /* ---------------------------------------------------------------- */
         /* MECHANICS LIST */
         /* ---------------------------------------------------------------- */
-
-        // TODO Search Filters
-        // TODO Connection with Repository
+        // TODO Pagination
         /// <summary>
         /// GET | Show a list of Mechanics
         /// <para> /mecanicos-adm </para>
         /// </summary>
         [HttpGet]
         [Route]
-        public ActionResult MechList()
+        public ActionResult MechList(string userName = null, string userEmail = null, string userStatusId = null)
         {
             List<Mecanico> mecanicos;
+            List<UserStatus> userStatusLst;
 
             try
             {
-                mecanicos = MP.GetAllMech().ToList();
+                mecanicos = MP.GetAllMech(userName, userEmail, userStatusId)?.ToList();
                 if (mecanicos == null) return Error_FailedRequest();
 
                 var userTypeLst = UP.GetAllTypes().ToList();
                 if (userTypeLst == null) return Error_FailedRequest();
 
-                var userStatusLst = UP.GetAllStatus().ToList();
+                userStatusLst = UP.GetAllStatus().ToList();
                 if (userStatusLst == null) return Error_FailedRequest();
 
                 mecanicos.ForEach(user =>
@@ -64,15 +65,68 @@ namespace initial_d.Controllers
                 return Error_CustomError(e.Message);
             }
 
+            // To keep the state of the search filters when the user make a search
+            ViewBag.userName = userName;
+            ViewBag.userEmail = userEmail;
+
+            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status", userStatusId);
+
             return View(mecanicos);
         }
+
+        // TODO Pagination
+        /// <summary>
+        /// GET | Show a list of all deleted Mechanics
+        /// <para> /mecanicos-adm/eliminados </para>
+        [HttpGet]
+        [Route(deteledList)]
+        public ActionResult DeletedMechList(string userName = null, string userEmail = null, string userStatusId = null)
+        {
+            List<Mecanico> usuarios;
+            List<UserType> userTypeLst;
+            List<UserStatus> userStatusLst;
+
+            try
+            {
+                usuarios = MP.GetAllMech(userName, userEmail, userStatusId, true)?.ToList();
+                if (usuarios == null) return Error_FailedRequest();
+
+                // Remove Current User from the list
+                string currentUserId = User.Identity.GetUserId();
+                var cUser = usuarios.SingleOrDefault(x => x.appuser_id.Equals(currentUserId));
+                if (cUser != null) usuarios.Remove(cUser);
+
+                userTypeLst = UP.GetAllTypes().ToList();
+                if (userTypeLst == null) return Error_FailedRequest();
+
+                userStatusLst = UP.GetAllStatus().ToList();
+                if (userStatusLst == null) return Error_FailedRequest();
+
+                usuarios.ForEach(user =>
+                {
+                    user = (Mecanico)UP.ProcessUser(user, userTypeLst, userStatusLst);
+                });
+            }
+            catch (Exception e)
+            {
+                return Error_CustomError(e.Message);
+            }
+
+            // To keep the state of the search filters when the user make a search
+            ViewBag.userName = userName;
+            ViewBag.userEmail = userEmail;
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
+            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status");
+
+            return View(usuarios);
+        }
+
 
 
         /* ---------------------------------------------------------------- */
         /* MECHANIC DETAILS */
         /* ---------------------------------------------------------------- */
 
-        // TODO Connection with Repository
         /// <summary>
         /// GET  |  Show all the data of an User
         /// <para> /mecanicos-adm/{id} </para>
@@ -110,12 +164,10 @@ namespace initial_d.Controllers
             return View(mecanico);
         }
 
-
         /* ---------------------------------------------------------------- */
         /* UPDATE MECHANIC */
         /* ---------------------------------------------------------------- */
 
-        // TODO Connection with Repository
         /// <summary>
         /// GET  |  Show a form to update an existing Mechanic
         /// <para> /mecanicos-adm/{id}/actualizar </para>
@@ -144,7 +196,8 @@ namespace initial_d.Controllers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return Error_CustomError(e.Message);
+                Error_CustomError(e.Message);
+                return RedirectToAction("UpdateMech");
             }
 
             ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", mecanico.user_type_id);
@@ -153,7 +206,6 @@ namespace initial_d.Controllers
             return View(mecanico);
         }
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the data of a Mechanic
         /// <para> /mecanicos-adm/{id}/actualizar </para>
@@ -173,7 +225,8 @@ namespace initial_d.Controllers
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
-                return Error_CustomError(e.Message);
+                Error_CustomError(e.Message);
+                return RedirectToAction("UpdateMech");
             }
 
             string successMsg = "El Mecánico fue actualizado con éxito";
@@ -187,7 +240,6 @@ namespace initial_d.Controllers
         /* ADD MECHANIC */
         /* ---------------------------------------------------------------- */
 
-        // TODO Connection with Repository
         /// <summary>
         /// GET  |  Show a form to add a Mechanic
         /// <para> /mecanicos-adm/agregar </para>
@@ -196,7 +248,6 @@ namespace initial_d.Controllers
         [Route(addRoute)]
         public ActionResult AddMech()
         {
-            List<UserType> userTypeLst;
             List<UserStatus> userStatusLst;
 
             Mecanico mechTemplate;
@@ -205,9 +256,6 @@ namespace initial_d.Controllers
             {
                 mechTemplate = new Mecanico(true);
                 if (mechTemplate == null) return Error_FailedRequest();
-
-                userTypeLst = UP.GetAllTypes().ToList();
-                if (userTypeLst == null) return Error_FailedRequest();
 
                 userStatusLst = UP.GetAllStatus().ToList();
                 if (userStatusLst == null) return Error_FailedRequest();
@@ -219,13 +267,11 @@ namespace initial_d.Controllers
             }
 
 
-            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
             ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status");
 
             return View(mechTemplate);
         }
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to add a Mechanic
         /// <para> /mecanicos-adm/agregar </para>
@@ -236,11 +282,13 @@ namespace initial_d.Controllers
         {
             if (newMech == null) return Error_InvalidUrl();
 
+            string mechId;
+
             try
             {
-                var res = MP.AddMech(newMech);
+                mechId = MP.AddMech(newMech);
 
-                if (!res) return Error_FailedRequest();
+                if (mechId == null) return Error_FailedRequest();
             }
             catch (Exception e)
             {
@@ -251,9 +299,6 @@ namespace initial_d.Controllers
             string successMsg = "El Mecánico fue agregado con éxito";
             SetSuccessMsg(successMsg);
 
-            // TODO Put the actual appuser_id here when connection to API is implemented
-            string mechId = "U2"; // newUser.appuser_id;
-
             return RedirectToAction("MechDetails", new { mechId });
         }
 
@@ -262,7 +307,6 @@ namespace initial_d.Controllers
         /* DELETE MECHANIC */
         /* ---------------------------------------------------------------- */
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to delete a Mechanic
         /// <para> /mecanicos-adm/{id}/eliminar </para>
@@ -291,12 +335,38 @@ namespace initial_d.Controllers
             return RedirectToAction("MechList");
         }
 
+        /// <summary>
+        /// POST  |  API call to restore a deleted Mechanic
+        /// <para> /Mecanicos/RestoreUser </para>
+        /// </summary>
+        [HttpGet]
+        public ActionResult RestoreMech(string mechId)
+        {
+            if (string.IsNullOrEmpty(mechId)) return Error_InvalidUrl();
+
+            try
+            {
+                var res = MP.RestoreMech(mechId);
+                if (!res) return Error_FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+
+            string successMsg = "El Mecánico fue restaurado con éxito";
+            SetSuccessMsg(successMsg);
+
+            return RedirectToAction("DeletedMechList");
+        }
+
 
         /* ---------------------------------------------------------------- */
         /* OTHER ACTIONS */
         /* ---------------------------------------------------------------- */
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the Status of a Mechanic
         /// </summary>
@@ -309,7 +379,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = true; // UP.ChangeUserStatus(userId, userStatusId);
+                var res = MP.ChangeUserStatus(mechId, userStatusId);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)

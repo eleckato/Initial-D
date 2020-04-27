@@ -1,0 +1,128 @@
+﻿@model initial_d.Models.APIModels.Producto
+@using initial_d.Common.Extensions
+
+@{
+    ViewBag.Title = $"{Model.name} | Productos";
+
+    var prod = Model;
+    string prodStatus = Model.product_status;
+    bool isDeleted = Model.deleted;
+
+    string goBack_Url = Url.Action(isDeleted ? "DeletedProdList" : "ProdList", "Productos");
+    
+    // Ids to keep an eye on
+    string actId = "ACT";
+    string inaId = "INA";
+}
+
+<!-- TITULO  |  BUTTONS -->
+<div class="header">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-box" aria-hidden="true"></i>
+            Producto
+        </h2>
+    </div>
+
+    <div class="header-buttons">
+        <a href="@goBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Volver
+        </a>
+
+        <!-- ACTIONS DROPDOWN -->
+        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } } )
+    </div>
+
+</div>
+
+
+<div class="row justify-content-around">
+
+    <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
+        <div class="c-jumbotron"> 
+            <h3 class="mb-4"> Información General </h3>
+
+            <table class="table table-borderless c-info-table">
+                <!-- NOMBRE -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.name)</th>
+                    <td>@prod.name</td>
+                </tr>
+
+                <!-- MARCA -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.brand)</th>
+                    <td>@prod.brand</td>
+                </tr>
+                
+                <!-- STOCK -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.stock)</th>
+                    <td>@(prod.stock) @(prod.Unit.abbreviation).</td>
+                </tr>
+
+                <!-- DESCRIPCIÓN -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.product_desc)</th>
+                    <td>@prod.product_desc</td>
+                </tr>
+                
+                <!-- STATUS -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.product_status)</th>
+                    <td>
+                        @if (prodStatus.Equals(inaId))
+                        {<i class="fa fa-eye-slash mr-1 text-danger" aria-hidden="true"></i>}
+                        @if (prodStatus.Equals(actId))
+                        {<i class="fa fa-eye mr-1 color-green" aria-hidden="true"></i>}
+                        @prod.status_name
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+    <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
+        <div class="c-jumbotron">
+            <h3 class="@(isDeleted ? "" : "mb-4")"> Información de Sistema </h3>
+            
+            @* Mensaje de Producto Eliminado *@
+            @if (isDeleted)
+            {
+                <div class="mt-4">
+                    <p>
+                        <i class="fa fa-trash-alt" aria-hidden="true" style="color:var(--red)"></i>
+                        Producto Eliminado
+                    </p>
+                </div>
+            }
+
+            <table class="table table-borderless c-info-table">
+                
+                <!-- UPDATED AT -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.update_at)</th>
+                    <td>@Html.DisplayFor(m => m.update_at)</td>
+                </tr>
+
+                <!-- CREATED AT -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.create_at)</th>
+                    <td>@Html.DisplayFor(m => m.create_at)</td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+<!-- MODALS -->
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })
+@Html.Partial("Partial/_ToggleStatusModal")

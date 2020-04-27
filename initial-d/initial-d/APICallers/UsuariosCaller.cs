@@ -9,7 +9,7 @@ using initial_d.Providers;
 
 namespace initial_d.APICallers
 {
-    public class UsuariosRepository : RepositoryBase
+    public class UsuariosCaller : CallerBase
     {
         private readonly string prefix = "user-adm";
 
@@ -53,55 +53,20 @@ namespace initial_d.APICallers
             },
         };
 
-        /// <summary>
-        /// API call to add an User
-        /// </summary>
-        /// <param name="newUser"> New User </param>
-        public String AddUser(Usuario newUser)
-        {
-            if (newUser == null)
-            {
-                ErrorWriter.InvalidArgumentsError();
-                return null;
-            }
-
-            try
-            {
-                var userId = newUser.appuser_id;
-
-                var request = new RestRequest("user-auth/register", Method.POST)
-                {
-                    RequestFormat = DataFormat.Json
-                };
-
-                newUser.hash = JwtProvider.EncryptHMAC(newUser.hash);
-                request.AddJsonBody(newUser);
-
-                var response = client.Execute(request);
-
-                if(response.StatusCode == HttpStatusCode.Conflict)
-                    throw new Exception("El Nombre de Usuario o Mail ya existe");
-
-                CheckStatusCode(response);
-
-                return response.Content;
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                throw e;
-            }
-        }
+        /* ---------------------------------------------------------------- */
+        /* USER CRUD */
+        /* ---------------------------------------------------------------- */
 
         // TODO Pagination
         /// <summary>
         /// API call to list all Users
         /// </summary>
-        public IEnumerable<Usuario> GetAllUsers(string userName, string userEmail, string userTypeId, string userStatusId)
+        public IEnumerable<Usuario> GetAllUsers(string userName, string userEmail, string userTypeId, string userStatusId, bool deleted = false)
         {
             try
             {
-                var url = $"{prefix}/users?username={userName}&email={userEmail}&user_type_id={userTypeId}&status_id={userStatusId}";
+                var delString = deleted ? "&deleted=true" : "";
+                var url = $"{prefix}/users?username={userName}&email={userEmail}&user_type_id={userTypeId}&status_id={userStatusId}{delString}";
 
                 var request = new RestRequest(url, Method.GET)
                 {
@@ -118,36 +83,6 @@ namespace initial_d.APICallers
                 return response.Data;
 
                 //// return mockData;
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                throw e;
-            }
-        }
-
-        // TODO Search filters
-        // TODO Pagination
-        /// <summary>
-        /// API call to list all Deleted Users
-        /// </summary>
-        public IEnumerable<Usuario> GetDeletedUsers()
-        {
-            try
-            {
-                var request = new RestRequest($"{prefix}/users/deleted", Method.GET)
-                {
-                    RequestFormat = DataFormat.Json
-                };
-                // For pagination
-                //request.AddParameter("page", "1", ParameterType.UrlSegment);
-                //request.AddParameter("size", "1", ParameterType.UrlSegment);
-
-                var response = client.Execute<List<Usuario>>(request);
-
-                CheckStatusCode(response);
-
-                return response.Data;
             }
             catch (Exception e)
             {
@@ -352,71 +287,9 @@ namespace initial_d.APICallers
             }
         }
 
-        /// <summary>
-        /// API call to change the Password of an User
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="oldPassword"></param>
-        /// <returns></returns>
-        public bool UpdatePassword(string password, string oldPassword)
-        {
-            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(oldPassword))
-            {
-                ErrorWriter.InvalidArgumentsError();
-                return false;
-            }
-
-            try
-            {
-                var request = new RestRequest($"user-auth/change-password", Method.POST);
-
-                password = JwtProvider.EncryptHMAC(password);
-                oldPassword = JwtProvider.EncryptHMAC(oldPassword);
-                request.AddJsonBody(new { psw = password, old_psw = oldPassword });
-
-                var response = client.Execute(request);
-
-                if (response.StatusCode == HttpStatusCode.Conflict)
-                    throw new Exception("La contraseña ingresada es incorrecta");
-
-                // Throw an exception if the StatusCode is different from 200
-                CheckStatusCode(response);
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                throw e;
-            }
-        }
-
-
-        public bool ResetPassword(string email)
-        {
-            if (string.IsNullOrEmpty(email))
-            {
-                ErrorWriter.InvalidArgumentsError();
-                return false;
-            }
-
-            try
-            {
-                var request = new RestRequest($"user-auth/Recover-pass?email={email}", Method.POST);
-
-                var response = client.Execute(request);
-                
-                // Throw an exception if the StatusCode is different from 200
-                CheckStatusCode(response);
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                throw e;
-            }
-        }
+        /* ---------------------------------------------------------------- */
+        /* GET SECONDARY DATA */
+        /* ---------------------------------------------------------------- */
 
         /// <summary>
         /// API call to get all User Types, with name and ID
@@ -469,6 +342,10 @@ namespace initial_d.APICallers
         }
 
 
+        /* ---------------------------------------------------------------- */
+        /* HELPERS */
+        /* ---------------------------------------------------------------- */
+
         /// <summary>
         /// Set all the secondary data ,like getting the status Name from the status Id
         /// </summary>
@@ -486,6 +363,121 @@ namespace initial_d.APICallers
 
             return user;
         }
-        
+
+
+        /* ---------------------------------------------------------------- */
+        /* USER AUTH */
+        /* ---------------------------------------------------------------- */
+
+        /// <summary>
+        /// API call to register an User
+        /// </summary>
+        /// <param name="newUser"> New User </param>
+        public string RegisterUser(Usuario newUser)
+        {
+            if (newUser == null)
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return null;
+            }
+
+            try
+            {
+                var userId = newUser.appuser_id;
+
+                var request = new RestRequest("user-auth/register", Method.POST)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                newUser.hash = JwtProvider.EncryptHMAC(newUser.hash);
+                request.AddJsonBody(newUser);
+
+                var response = client.Execute(request);
+
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                    throw new Exception("El Nombre de Usuario o Mail ya existe");
+
+                CheckStatusCode(response);
+
+                return response.Content;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// API call to change the Password of an User
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="oldPassword"></param>
+        /// <returns></returns>
+        public bool UpdatePassword(string password, string oldPassword)
+        {
+            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(oldPassword))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                var request = new RestRequest($"user-auth/change-password", Method.POST);
+
+                password = JwtProvider.EncryptHMAC(password);
+                oldPassword = JwtProvider.EncryptHMAC(oldPassword);
+                request.AddJsonBody(new { psw = password, old_psw = oldPassword });
+
+                var response = client.Execute(request);
+
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                    throw new Exception("La contraseña ingresada es incorrecta");
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// API call that will send an Email to the User with a new password. It doesn't matter if the mail exist or not, 
+        /// the request will always return 200 if the connection was successful
+        /// </summary>
+        /// <param name="email"> User Email </param>
+        public bool ResetPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                var request = new RestRequest($"user-auth/Recover-pass?email={email}", Method.POST);
+
+                var response = client.Execute(request);
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+        }
+
     }
 }

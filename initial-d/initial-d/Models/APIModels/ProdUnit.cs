@@ -5,14 +5,16 @@ using System.Web;
 
 namespace initial_d.Models.APIModels
 {
-    public class PublicStatus
+    public class ProdUnit
     {
-        public string public_status_id { get; set; }
-        public string status_name { get; set; }
-        public DateTime created_at { get; set; }
+        public string abbreviation { get; set; }
+        public string name { get; set; }
+        public string plural_name { get; set; }
+        public DateTime create_at { get; set; }
         public DateTime update_at { get; set; }
         public bool deleted { get; set; }
-        public PublicStatus()
+
+        public ProdUnit()
         {
 
         }

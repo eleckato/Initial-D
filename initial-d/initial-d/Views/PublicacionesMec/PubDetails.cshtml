@@ -43,11 +43,11 @@
         <table class="table c-info-table c-data-table-bordered mb-0">
             <tr>
                 <th>@Html.DisplayNameFor(m => m.appuser_id)</th>
-                <td>@Html.DisplayFor(m => m.appuser_id)</td>
+                <td>@Html.DisplayFor(m => m.mech_name)</td>
             </tr>
             <tr>
                 <th>@Html.DisplayNameFor(m => m.public_status_id)</th>
-                <td>@Html.DisplayFor(m => m.public_status_id)</td>
+                <td>@Html.DisplayFor(m => m.status_name)</td>
             </tr>
             <tr>
                 <th>@Html.DisplayNameFor(m => m.views)</th>
@@ -80,11 +80,11 @@
         <table class="table c-info-table c-data-table-bordered mb-0">
             <tr>
                 <th>@Html.DisplayNameFor(m => m.created_at)</th>
-                <td>@Html.DisplayFor(m => m.created_at)</td>
+                <td>@Model.created_at.ToString("dd/MM/yyyy hh:mm")</td>
             </tr>
             <tr>
                 <th>@Html.DisplayNameFor(m => m.updated_at)</th>
-                <td>@Html.DisplayFor(m => m.updated_at)</td>
+                <td>@Model.updated_at.ToString("dd/MM/yyyy hh:mm")</td>
             </tr>
             @* PUBLICACIÓN ELIMINADA *@
             @if (isDeleted)
@@ -101,7 +101,7 @@
 
 </div>
 
-<!-- ALL THE INFO -->
+<!-- CONTENIDO DE LA PUBLICACIÓN -->
 <div class="c-jumbotron">
     <div class="mb-3">
         <h3 class="font-weight-bold mb-2">@Html.DisplayFor(m => m.title)</h3>

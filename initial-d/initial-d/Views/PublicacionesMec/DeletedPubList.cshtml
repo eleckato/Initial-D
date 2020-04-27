@@ -1,20 +1,17 @@
 ﻿@model IEnumerable<initial_d.Models.APIModels.PublicacionMec>
+@using initial_d.Common.FilterBar;
+
 @{
     ViewBag.Title = "Publicaciones Eliminadas";
-
+    
     // Filters
-    // TODO Esto depende de que filtros se deciden poner
-    string userName = ViewBag.userName ?? string.Empty;
-    string statusId = ViewBag.statusId ?? string.Empty;
+    string comuna = ViewBag.comuna ?? string.Empty;
+    string bussName = ViewBag.bussName ?? string.Empty;
+    string pubTitle = ViewBag.pubTitle ?? string.Empty;
+    var pubStatusList = (SelectList)ViewBag.pubStatusList;
 
     // Action URL
     string goBackUrl = Url.Action("PubList", "PublicacionesMec");
-    
-    string pendingId = "PEN";
-    string rejectId = "REJ";
-    string actId = "ACT";
-    string inactId = "INA";
-    string debtId = "DEB";
 }
 
 <!-- HEADER | ACTION BUTTONS -->
@@ -37,20 +34,37 @@
 
 </div>
 
+<!-- BUSCAR -->
+@{ 
+    var filterTemplate = new FilterBarTemplate()
+    {
+        formAction = "DeletedPubList",
+        formController = "PublicacionesMec",
+        filters = new List<MvcHtmlString>()
+        {
+            Html.TextBox("comuna", comuna, new { @class = "form-control form-control-sm h-100", @placeholder = "Comuna" }),
+            Html.TextBox("bussName", bussName, new { @class = "form-control form-control-sm h-100", @placeholder = "Empresa" }),
+            Html.DropDownList("statusId", pubStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" }),
+        }
+    };
+}
+@Html.Partial("Partial/_FiltersCollapse", filterTemplate)
+
 
 <!-- DATA TABLE -->
 <div class=" d-flex justify-content-center ">
     <table class="table c-info-table c-table-sm-responsive c-table-bordered">
-
+        
         <thead>
             <tr>
                 <th>Actions</th>
                 <th>@Html.DisplayNameFor(m => m.appuser_id)</th>
+                <th>@Html.DisplayNameFor(m => m.bussiness_name)</th>
                 <th>@Html.DisplayNameFor(m => m.created_at)</th>
                 <th>@Html.DisplayNameFor(m => m.comuna)</th>
                 <th>@Html.DisplayNameFor(m => m.mobile_number)</th>
                 <th class="cell-hidden-xl">@Html.DisplayNameFor(m => m.views)</th>
-                <th>Old Status</th>
+                <th>@Html.DisplayNameFor(m => m.public_status_id)</th>
             </tr>
         </thead>
 
@@ -62,17 +76,20 @@
                 string detailsUrl = Url.Action("PubDetails", "PublicacionesMec", new { pubId = pub.public_id });
 
                 <tr class="clickable-row" data-url="@detailsUrl">
-
+                    
                     <!-- ACTION DROPDOWN -->
                     <td data-label="Actions" class="not-clickable">
-                        
-                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(pub) { { "context", "deleteList" } } )
-
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(pub) { { "context", "deleteLList" } } )
                     </td>
                     
-                    <!-- ID MECANICO -->
+                    <!-- MECÁNICO -->
                     <td data-label="@Html.DisplayNameFor(m => m.appuser_id)">
-                        @Html.DisplayFor(m => pub.appuser_id)
+                        @pub.mech_name
+                    </td>
+                    
+                    <!-- EMPRESA -->
+                    <td data-label="@Html.DisplayNameFor(m => m.bussiness_name)">
+                        @pub.bussiness_name
                     </td>
                     
                     <!-- FECHA PULICACIÓN -->
@@ -82,22 +99,22 @@
 
                     <!-- COMUNA -->
                     <td data-label="@Html.DisplayNameFor(m => m.comuna)">
-                        @Html.DisplayFor(m => pub.comuna)
+                        @pub.comuna
                     </td>
 
                     <!-- TELEFONO -->
                     <td data-label="@Html.DisplayNameFor(m => m.mobile_number)">
-                        @Html.DisplayFor(m => pub.mobile_number)
+                        @pub.mobile_number
                     </td>
 
                     <!-- VISITAS -->
                     <td data-label="@Html.DisplayNameFor(m => m.views)" class="cell-hidden-xl">
-                        @Html.DisplayFor(m => pub.views)
+                        @pub.views
                     </td>
 
                     <!-- STATUS -->
                     <td data-label="@Html.DisplayNameFor(m => m.public_status_id)">
-                        @Html.DisplayFor(m => pub.public_status_id)
+                        @pub.status_name
                     </td>
 
 
@@ -106,24 +123,11 @@
             }
 
         </tbody>
-
     </table>
 </div>
 
-
 @section customScripts{
-    <script>
-        /** When the user clicks on a cell inside a .clickable-row, it redirect them to the User Details view of that User.
-         * Use .not-clickable on a cell to exclude it from the event */
-        $(document).on('click', '.clickable-row td:not(.not-clickable)', function () {
-            // Get the row
-            let row = $(this).closest('.clickable-row');
-            // Assemble the URL
-            let url = row.data('url');
-            // Redirect the window
-            window.location = url;
-        });
-    </script>
+    @Scripts.Render("~/Content/JS/c_table.js")
 }
 
 @Html.Partial("Partial/_DeletePubModal", new ViewDataDictionary(ViewData) { { "isDeleted", true } })

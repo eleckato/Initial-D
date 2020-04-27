@@ -14,7 +14,7 @@ namespace initial_d.Controllers
     [RoutePrefix("perfil")]
     public class UserProfileController : BaseController
     {
-        readonly UsuariosRepository UP = new UsuariosRepository();
+        readonly UsuariosCaller UP = new UsuariosCaller();
 
         private const string ProfileUrl = "";
         private const string UpdateProfileUrl = "actualizar-datos";

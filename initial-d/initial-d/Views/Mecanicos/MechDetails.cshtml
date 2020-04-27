@@ -9,6 +9,7 @@
 
     string mechId = Model.appuser_id;
     string mechStatus = Model.status_id;
+    bool isDeleted = Model.deleted;
 
     string banId = "BAN";
     string actId = "ACT";
@@ -36,50 +37,7 @@
         </a>
 
         <!-- ACTIONS DROPDOWN -->
-        <div class="dropdown">
-
-            <button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-cog mr-1 " aria-hidden="true"></i>
-                Actions
-            </button>
-            
-            <!-- DROPDOWN -->
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <div class="d-flex flex-column">
-
-                    <a href="@update_Url" class="dropdown-item small">
-                        <i class="fa fa-user-edit" aria-hidden="true"></i>
-                        Actualizar Datos
-                    </a>
-
-                    @if (mechStatus.Equals(banId))
-                    {
-                        <a class="dropdown-item small"
-                           data-toggle="modal" href="#user-state-modal" data-mech-id="@mechStatus" data-new-state="ACT">
-                            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
-                            Dar de Alta
-                        </a>
-                    }
-                    else
-                    {
-                        <a class="dropdown-item small"
-                           data-toggle="modal" href="#user-state-modal" data-mech-id="@mechStatus" data-new-state="BAN">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-                            Dar de Baja
-                        </a>
-                    }
-
-                    <a class="dropdown-item small" role="button" data-toggle="modal" data-mech-id="@mechId" href="#delete-modal">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                        Eliminar
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
+        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } } )
     </div>
 
 </div>
@@ -89,21 +47,27 @@
 
     <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
         <div class="c-jumbotron">
-            <h3 class="mb-4"> Información de Sistema </h3>
+            <h3 class="@(isDeleted ? "" : "mb-4")"> Información de Sistema </h3>
+            
+            @* Mensaje de Mecánico Eliminado *@
+            @if (isDeleted)
+            {
+                <div class="mt-4">
+                    <p>
+                        <i class="fa fa-trash-alt" aria-hidden="true" style="color:var(--red)"></i>
+                        Mecánico Eliminado
+                    </p>
+                </div>
+            }
 
             <table class="table table-borderless c-info-table">
+                <!-- USERNAME -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.username)</th>
                     <td>@Html.DisplayFor(m => m.username)</td>
                 </tr>
-                <tr>
-                    <th>@Html.DisplayNameFor(m => m.lastlogin)</th>
-                    <td>@Html.DisplayFor(m => m.lastlogin)</td>
-                </tr>
-                <tr>
-                    <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
-                    <td>@Html.DisplayFor(m => m.user_type_name)</td>
-                </tr>
+                
+                <!-- STATUS -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.status_id)</th>
                     <td>
@@ -114,6 +78,14 @@
                         @Html.DisplayFor(m => m.status_name)
                     </td>
                 </tr>
+
+                <!-- USER TYPE -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
+                    <td>@Html.DisplayFor(m => m.user_type_name)</td>
+                </tr>
+
+                <!-- EMAIL CONFIRMADO -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.mail_confirmed)</th>
                     @{
@@ -125,14 +97,7 @@
                         <div class="c-badge @color">@str</div>
                     </td>
                 </tr>
-                <tr>
-                    <th>@Html.DisplayNameFor(m => m.updated_at)</th>
-                    <td>@Html.DisplayFor(m => m.updated_at)</td>
-                </tr>
-                <tr>
-                    <th>@Html.DisplayNameFor(m => m.created_at)</th>
-                    <td>@Html.DisplayFor(m => m.created_at)</td>
-                </tr>
+
                 <!-- PUBLICACIÓN PENDIENTE -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.hasPendingPublication)</th>
@@ -145,6 +110,7 @@
                         <div class="c-badge  @color">@str</div>
                     </td>
                 </tr>
+
                 <!-- TIENE DEUDA -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.hasDebt)</th>
@@ -156,6 +122,24 @@
                         }
                         <div class="c-badge  @color">@str</div>
                     </td>
+                </tr>
+                
+                <!-- LAST LOGIN -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.lastlogin)</th>
+                    <td>@Html.DisplayFor(m => m.lastlogin)</td>
+                </tr>
+                
+                <!-- UPDATED AT -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.updated_at)</th>
+                    <td>@Html.DisplayFor(m => m.updated_at)</td>
+                </tr>
+
+                <!-- CREATED AT -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.created_at)</th>
+                    <td>@Html.DisplayFor(m => m.created_at)</td>
                 </tr>
             </table>
 
@@ -200,4 +184,4 @@
 
 
 @Html.Partial("Partial/_ToggleUserStatusModal")
-@Html.Partial("Partial/_DeleteModalAndScript")
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })

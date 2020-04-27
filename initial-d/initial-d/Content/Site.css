@@ -278,7 +278,7 @@ h5.modal-title .fa {
         font-size: inherit;
     }
 
-    button, a:not(.small), td, input[type="text"] {
+    button, a:not(.small), td, input[type="text"], textarea, select {
         font-size: 100% !important;
     }
 

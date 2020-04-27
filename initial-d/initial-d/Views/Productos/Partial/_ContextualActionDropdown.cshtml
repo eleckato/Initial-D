@@ -1,0 +1,93 @@
+﻿@model initial_d.Models.APIModels.Producto
+@{ 
+    // Product data needed to perform the Actions or make decisions about the menu
+    string prodId = Model.product_id;
+    string prodStatus = Model.product_status;
+    bool isDeleted = Model.deleted;
+
+    // Context to decide what to show
+    string ctx = (string)ViewData["context"] ?? string.Empty;
+    bool isList = ctx.Equals("list");
+    bool isDetails = ctx.Equals("details");
+    bool isdeleteList = ctx.Equals("deleteList");
+
+    // Ids to keep an eye on
+    string actId = "ACT";
+    string inaId = "INA";
+
+    // Action URLs
+    string detailsUrl = Url.Action("ProdDetails", "Productos", new { prodId });
+    string update_Url = Url.Action("UpdateProd", "Productos", new { prodId });
+}
+
+<div class="dropdown">
+
+	<button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<i class="fa fa-cog mr-1 " aria-hidden="true"></i>
+		Actions
+	</button>
+
+	<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+		<div class="d-flex flex-column">
+			@if(isList || isdeleteList)
+            {
+                <!-- DETALLES -->
+                <a href="@detailsUrl" class="dropdown-item small">
+                    <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
+                    Detalles
+                </a>
+			}
+
+            @if (isDetails && !isDeleted)
+            {
+                <!-- ACTUALIZAR DATOS -->
+				<a href="@update_Url" class="dropdown-item small">
+					<i class="fa fa-edit" aria-hidden="true"></i>
+					Actualizar Datos
+				</a>
+            }
+
+			@if ((isDetails || isList) && !isDeleted)
+            {
+
+				<!-- HABILITAR/DESHABILITAR -->
+                if (prodStatus.Equals(inaId))
+                {
+					<a class="dropdown-item small"
+					   data-toggle="modal" href="#status-modal" data-prod-id="@prodId" data-new-state="@actId">
+						<i class="fa fa-eye" aria-hidden="true"></i>
+						Habilitar
+					</a>
+				}
+				else
+				{
+					<a class="dropdown-item small"
+					   data-toggle="modal" href="#status-modal" data-prod-id="@prodId" data-new-state="@inaId">
+						<i class="fa fa-eye-slash" aria-hidden="true"></i>
+						Deshabilitar
+					</a>
+				}
+
+				<!-- ELIMINAR -->
+				<a class="dropdown-item small" role="button" data-toggle="modal" data-prod-id="@prodId" href="#delete-modal">
+					<i class="fa fa-trash" aria-hidden="true"></i>
+					Eliminar
+				</a>
+
+			}
+
+			@if(isDeleted)
+			{
+				<!-- RESTAURAR -->
+				<a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-prod-id="@prodId" href="#delete-modal">
+					<i class="fa fa-trash-restore" aria-hidden="true"></i>
+					Restaurar
+				</a>
+			}
+
+		</div>
+
+	</div>
+
+</div>

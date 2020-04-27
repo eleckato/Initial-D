@@ -1,59 +1,57 @@
-﻿@model IEnumerable<initial_d.Models.APIModels.Usuario>
+﻿@model IEnumerable<initial_d.Models.APIModels.Mecanico>
 @using initial_d.Common.FilterBar;
-
 @{
-    ViewBag.Title = "Admin. de Clientes";
+    ViewBag.Title = "Admin. de Mecánicos";
 
-    // To Keep an State on the Search Filters
+    // Filters
+    // TODO Esto depende de que filtros se deciden poner
     string userName = ViewBag.userName ?? string.Empty;
     string userEmail = ViewBag.userEmail ?? string.Empty;
-    var userTypeList = (SelectList)ViewBag.userTypeLst;
     var userStatusList = (SelectList)ViewBag.userStatusLst;
-    
+    // var hasDebt
+    // var hasPublicationPending
+
     string banId = "BAN";
 
-    // Action Url
-    string addUrl = Url.Action("AddUser", "Usuarios");
-    string delList = Url.Action("DeletedUserList", "Usuarios");
+    // Action URL
+    string goBackUrl = Url.Action("MechList", "Mecanicos");
     // detailsUrl on Document
 }
+
+@Styles.Render("~/Content/CSS/mecanicos-general.css")
 
 <!-- HEADER | ACTION BUTTONS -->
 <div class="header ">
 
     <div class="header-title">
         <h2>
-            <i class="fa fa-users" aria-hidden="true"></i>
-            Administrador de Usuarios
+            <i class="fa fa-wrench" aria-hidden="true"></i>
+            Mecánicos Eliminados
         </h2>
+
     </div>
-    
     <!-- BUTTONS -->
     <div class="header-buttons">
-        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-            Usuarios Eliminados
-        </a>
-        <a href="@addUrl" class="btn btn-sm btn-green" role="button">
-            <i class="fa fa-user-plus"></i>
-            Agregar Usuario
+        <a href="@goBackUrl" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Mecánicos
         </a>
     </div>
 
 </div>
 
+
 <!-- BUSCAR -->
 @{ 
     var filterTemplate = new FilterBarTemplate()
     {
-        formAction = "UserList",
-        formController = "Usuarios",
+        formAction = "DeletedMechList",
+        formController = "Mecanicos",
         filters = new List<MvcHtmlString>()
         {
             Html.TextBox("userName", userName, new { @class = "form-control form-control-sm h-100", @placeholder = "Nombre de Usuario" }),
             Html.TextBox("userEmail", userEmail, new { @class = "form-control form-control-sm h-100", @placeholder = "Email" }),
-            Html.DropDownList("userTypeId", userTypeList, "Tipo", new { @class = "custom-select custom-select-sm form-control" }),
-            Html.DropDownList("userStatusId", userStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" })
+            Html.DropDownList("userStatusId", userStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" }),
         }
     };
 }
@@ -68,30 +66,28 @@
                 <th>Actions</th>
                 <th>@Html.DisplayNameFor(m => m.username)</th>
                 <th class="cell-hidden-lg">@Html.DisplayNameFor(m => m.fullName)</th>
-                <th>
-                    <div>
-                        @Html.DisplayNameFor(m => m.email)
-                    </div>
-                </th>
-                <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
+                <th>@Html.DisplayNameFor(m => m.email)</th>
                 <th>@Html.DisplayNameFor(m => m.status_id)</th>
+                <th>@Html.DisplayNameFor(m => m.hasPendingPublication)</th>
+                <th>@Html.DisplayNameFor(m => m.hasDebt)</th>
             </tr>
         </thead>
 
         <tbody>
-            @* Print one row by User *@
-            @foreach (var user in Model)
+            @* Print one row by Mechanic *@
+            @foreach (var mech in Model)
             {
-                string detailsUrl = Url.Action("UserDetails", "Usuarios", new { userId = user.appuser_id });
-                string userStatus = user.status_id;
+                string detailsUrl = Url.Action("MechDetails", "Mecanicos", new { mechId = mech.appuser_id });
+                string userStatus = mech.status_id;
                 bool? isBanned = userStatus?.Equals(banId);
 
                 <tr class="clickable-row" data-url="@detailsUrl">
 
                     <!-- ACTION DROPDOWN -->
                     <td data-label="Actions" class="not-clickable">
-                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(user) { { "context", "list" } } )
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(mech) { { "context", "deleteList" } } )
                     </td>
+
 
                     <!-- USERNAME -->
                     <td data-label="@Html.DisplayNameFor(m => m.username)">
@@ -100,29 +96,44 @@
                             var statClass = isBanned == true ? "fa-user-lock text-danger" : "fa-user-check color-green";
                             <div class="w-max-content-sm">
                                 <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
-                                @Html.DisplayFor(m => user.username)
+                                @Html.DisplayFor(m => mech.username)
                             </div>
                         }
                     </td>
 
-                    <!-- FULL NAME -->
+                    <!-- NOMBRE -->
                     <td data-label="@Html.DisplayNameFor(m => m.fullName)" class="cell-hidden-lg">
-                        @Html.DisplayFor(m => user.fullName)
+                        @Html.DisplayFor(m => mech.fullName)
                     </td>
 
                     <!-- EMAIL -->
                     <td data-label="@Html.DisplayNameFor(m => m.email)">
-                        @Html.ValueFor(m => user.email)
-                    </td>
-
-                    <!-- USER TYPE -->
-                    <td data-label="@Html.DisplayNameFor(m => m.user_type_id)">
-                        @Html.DisplayFor(m => user.user_type_name)
+                        @Html.ValueFor(m => mech.email)
                     </td>
 
                     <!-- STATUS -->
                     <td data-label="@Html.DisplayNameFor(m => m.status_id)">
-                        @Html.DisplayFor(m => user.status_name)
+                        @Html.DisplayFor(m => mech.status_name)
+                    </td>
+
+                    <!-- PUBLICACIÓN PENIENTE -->
+                    <td data-label="@Html.DisplayNameFor(m => m.hasPendingPublication)">
+                        @{
+                            var hasPendingPublication = mech.hasPendingPublication;
+                            var str = hasPendingPublication ? "Si" : "No";
+                            var color = hasPendingPublication ? "bg-green" : "bg-black";
+                        }
+                        <div class="c-badge ml-auto mx-sm-auto  @color">@str</div>
+                    </td>
+
+                    <!-- TIENE DEUDA -->
+                    <td data-label="@Html.DisplayNameFor(m => m.hasDebt)">
+                        @{
+                            var hasDebt = mech.hasDebt;
+                            str = hasDebt ? "Si" : "No";
+                            color = hasDebt ? "bg-green" : "bg-black";
+                        }
+                        <div class="c-badge ml-auto mx-sm-auto  @color">@str</div>
                     </td>
                 </tr>
             }
@@ -133,16 +144,8 @@
 </div>
 
 
-<!-- ERROR TRIGGER FOR TESTING -->
-<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "FFF" })" class="btn btn-xsm btn-secondary mr-2" role="button">
-    <i class="fa fa-bug mr-1" aria-hidden="true"></i>
-    TRIGGER PARA ID NO INVÁLIDO
-</a>
-
-<!-- MODALS -->
 @Html.Partial("Partial/_ToggleUserStatusModal")
-@Html.Partial("Partial/_DeleteModalAndScript")
-@Html.Partial("Partial/_ChangeTypeModal")
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", true } })
 
 
 @section customScripts{

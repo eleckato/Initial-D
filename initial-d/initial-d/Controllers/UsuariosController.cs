@@ -15,7 +15,7 @@ namespace initial_d.Controllers
     [RoutePrefix("usuarios-adm")]
     public class UsuariosController : BaseController
     {
-        readonly UsuariosRepository UP = new UsuariosRepository();
+        readonly UsuariosCaller UP = new UsuariosCaller();
         public string currentUserId = "";
 
         private const string addRoute = "agregar";
@@ -38,7 +38,7 @@ namespace initial_d.Controllers
         // TODO Pagination
         /// <summary>
         /// GET | Show a list of Users
-        /// <para> /usuarios </para>
+        /// <para> /usuarios-adm </para>
         /// </summary>
         [HttpGet]
         [Route]
@@ -85,6 +85,53 @@ namespace initial_d.Controllers
             return View(usuarios);
         }
 
+        // TODO Pagination
+        /// <summary>
+        /// GET | Show a list of all deleted Users
+        /// <para> /usuarios-adm/eliminados </para>
+        [HttpGet]
+        [Route(deteledList)]
+        public ActionResult DeletedUserList(string userName = null, string userEmail = null, string userTypeId = null, string userStatusId = null)
+        {
+            List<Usuario> usuarios;
+            List<UserType> userTypeLst;
+            List<UserStatus> userStatusLst;
+
+            try
+            {
+                usuarios = UP.GetAllUsers(userName, userEmail, userTypeId, userStatusId, true)?.ToList();
+                if (usuarios == null) return Error_FailedRequest();
+
+                // Remove Current User from the list
+                string currentUserId = User.Identity.GetUserId();
+                var cUser = usuarios.SingleOrDefault(x => x.appuser_id.Equals(currentUserId));
+                if (cUser != null) usuarios.Remove(cUser);
+
+                userTypeLst = UP.GetAllTypes().ToList();
+                if (userTypeLst == null) return Error_FailedRequest();
+
+                userStatusLst = UP.GetAllStatus().ToList();
+                if (userStatusLst == null) return Error_FailedRequest();
+
+                usuarios.ForEach(user =>
+                {
+                    user = UP.ProcessUser(user, userTypeLst, userStatusLst);
+                });
+            }
+            catch (Exception e)
+            {
+                return Error_CustomError(e.Message);
+            }
+
+            // To keep the state of the search filters when the user make a search
+            ViewBag.userName = userName;
+            ViewBag.userEmail = userEmail;
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
+            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status");
+
+            return View(usuarios);
+        }
+
 
         /* ---------------------------------------------------------------- */
         /* USER DETAILS */
@@ -92,7 +139,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// GET  |  Show all the data of an User
-        /// <para> /usuarios/{id} </para>
+        /// <para> /usuarios-adm/{id} </para>
         /// </summary>
         [HttpGet]
         [Route(detailsRoute)]
@@ -135,7 +182,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// GET  |  Show a form to update an existing User
-        /// <para> /usuarios/{id}/actualizar </para>
+        /// <para> /usuarios-adm/{id}/actualizar </para>
         /// </summary>
         [HttpGet]
         [Route(updateRoute)]
@@ -173,7 +220,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// POST  |  API call to update the data of an User
-        /// <para> /usuarios/{id}/actualizar </para>
+        /// <para> /usuarios-adm/{id}/actualizar </para>
         /// </summary>
         [HttpPost]
         [Route(updateRoute)]
@@ -212,7 +259,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// GET  |  Show a form to add an User
-        /// <para> /usuarios/agregar </para>
+        /// <para> /usuarios-adm/agregar </para>
         /// </summary>
         [HttpGet]
         [Route(addRoute)]
@@ -250,7 +297,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// POST  |  API call to add an User
-        /// <para> /usuarios/agregar </para>
+        /// <para> /usuarios-adm/agregar </para>
         /// </summary>
         [HttpPost]
         [Route(addRoute)]
@@ -262,7 +309,7 @@ namespace initial_d.Controllers
 
             try
             {
-                userId = UP.AddUser(newUser);
+                userId = UP.RegisterUser(newUser);
 
                 if (userId == null) return Error_FailedRequest();
             }
@@ -289,7 +336,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// POST  |  API call to delete an User
-        /// <para> /usuarios/{id}/eliminar </para>
+        /// <para> /usuarios-adm/{id}/eliminar </para>
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
@@ -344,60 +391,13 @@ namespace initial_d.Controllers
             return RedirectToAction("DeletedUserList");
         }
 
-        // TODO Search Filters
-        // TODO Pagination
-        /// <summary>
-        /// GET | Show a list of all deleted Users
-        /// <para> /usuarios/eliminados </para>
-        [HttpGet]
-        [Route(deteledList)]
-        public ActionResult DeletedUserList()
-        {
-            List<Usuario> usuarios;
-            List<UserType> userTypeLst;
-            List<UserStatus> userStatusLst;
-
-            try
-            {
-                usuarios = UP.GetDeletedUsers()?.ToList();
-                if (usuarios == null) return Error_FailedRequest();
-
-                // Remove Current User from the list
-                string currentUserId = User.Identity.GetUserId();
-                var cUser = usuarios.SingleOrDefault(x => x.appuser_id.Equals(currentUserId));
-                if (cUser != null) usuarios.Remove(cUser);
-
-                userTypeLst = UP.GetAllTypes().ToList();
-                if (userTypeLst == null) return Error_FailedRequest();
-
-                userStatusLst = UP.GetAllStatus().ToList();
-                if (userStatusLst == null) return Error_FailedRequest();
-
-                usuarios.ForEach(user =>
-                {
-                    user = UP.ProcessUser(user, userTypeLst, userStatusLst);
-                });
-            }
-            catch (Exception e)
-            {
-                return Error_CustomError(e.Message);
-            }
-
-            // To keep the state of the search filters when the user make a search
-            //ViewBag.userName = userName;
-            //ViewBag.userEmail = userEmail;
-            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name"/*, userTypeId*/);
-            ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status"/*, userStatusId*/);
-
-            return View(usuarios);
-        }
-
         /* ---------------------------------------------------------------- */
         /* OTHER ACTIONS */
         /* ---------------------------------------------------------------- */
 
         /// <summary>
         /// POST  |  API call to update the type of an User
+        /// <para> /Usuarios/ChangeUsertype </para>
         /// </summary>
         /// <param name="userId"> Id of the User to update </param>
         /// <param name="userTypeId"> Id of the new Type for the User </param>
@@ -426,6 +426,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// POST  |  API call to update the Status of an User
+        /// <para> /Usuarios/ChangeUserStatus </para>
         /// </summary>
         /// <param name="userId"> Id of the User to update </param>
         /// <param name="userStatusId"> Id of the new Status for the User </param>

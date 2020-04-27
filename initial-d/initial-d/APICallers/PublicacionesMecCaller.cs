@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace initial_d.APICallers
 {
-    public class PublicacionesMecRepository : RepositoryBase
+    public class PublicacionesMecCaller : CallerBase
     {
-        private readonly string prefix = "????";
+        private readonly string prefix = "pub-adm";
 
         List<PublicacionMec> mockData = new List<PublicacionMec>()
         {
@@ -85,32 +85,33 @@ namespace initial_d.APICallers
             }
         };
 
+        /* ---------------------------------------------------------------- */
+        /* PUBLICATION CRUD */
+        /* ---------------------------------------------------------------- */
 
-        // TODO Connection with API
-        // TODO Search filters
         // TODO Pagination
         /// <summary>
         /// API call to list all the Mechanic Publications
         /// </summary>
-        public IEnumerable<PublicacionMec> GetAllPub()
+        public IEnumerable<PublicacionMec> GetAllPub(string comuna, string statusId, string bussName, string title, bool deleted = false)
         {
             try
             {
-                //var request = new RestRequest($"{prefix}/mechanics", Method.GET)
-                //{
-                //    RequestFormat = DataFormat.Json
-                //};
-                //// For pagination
-                ////request.AddParameter("page", "1", ParameterType.UrlSegment);
-                ////request.AddParameter("size", "1", ParameterType.UrlSegment);
+                var delString = deleted ? "&deleted=true" : "";
+                string url = $"{prefix}/publications?comuna={comuna}&public_status_id={statusId}&bussiness_name={bussName}&title={title}{delString}";
+                var request = new RestRequest(url, Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+                // For pagination
+                //request.AddParameter("page", "1", ParameterType.UrlSegment);
+                //request.AddParameter("size", "1", ParameterType.UrlSegment);
 
-                //var response = client.Execute<List<Mecanico>>(request);
+                var response = client.Execute<List<PublicacionMec>>(request);
 
-                //CheckStatusCode(response);
+                CheckStatusCode(response);
 
-                //return response.Data;
-
-                return mockData.Where(x => !x.deleted).ToList();
+                return response.Data;
             }
             catch (Exception e)
             {
@@ -119,27 +120,6 @@ namespace initial_d.APICallers
             }
         }
 
-
-        // TODO Search filters
-        // TODO Pagination
-        /// <summary>
-        /// API call to list all Deleted Publications
-        /// </summary>
-        public IEnumerable<PublicacionMec> GetAllDeletedPub()
-        {
-            try
-            {
-                return mockData.Where(x => x.deleted).ToList();
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                return null;
-            }
-        }
-
-
-        // TODO Connection with API
         /// <summary>
         /// API call to get a Mechanic Publication
         /// </summary>
@@ -154,19 +134,17 @@ namespace initial_d.APICallers
 
             try
             {
-                //var request = new RestRequest($"{prefix}/mechanics/{mechId}", Method.GET)
-                //{
-                //    RequestFormat = DataFormat.Json
-                //};
+                var request = new RestRequest($"{prefix}/publications/{pubId}", Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
 
-                //var response = client.Execute<Mecanico>(request);
+                var response = client.Execute<PublicacionMec>(request);
 
-                //string notFoundMsg = "El Mecánico requerido no existe";
-                //CheckStatusCode(response, notFoundMsg);
+                string notFoundMsg = "La Publicación requerida no existe";
+                CheckStatusCode(response, notFoundMsg);
 
-                //return response.Data;
-
-                return mockData.SingleOrDefault(x => x.public_id.Equals(pubId));
+                return response.Data;
             }
             catch (Exception e)
             {
@@ -175,8 +153,6 @@ namespace initial_d.APICallers
             }
         }
 
-
-        // TODO Connection with API
         /// <summary>
         /// API call to delete a Mechanic Publication
         /// </summary>
@@ -191,7 +167,16 @@ namespace initial_d.APICallers
 
             try
             {
-                // CALL THE API
+                var request = new RestRequest($"{prefix}/publications/{pubId}", Method.DELETE)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                var response = client.Execute(request);
+
+                // Throw an exception if the StatusCode is different from 200
+                string notFoundMsg = "La Publicación requerida no existe";
+                CheckStatusCode(response, notFoundMsg);
 
                 return true;
             }
@@ -202,7 +187,6 @@ namespace initial_d.APICallers
             }
         }
 
-        // TODO Connection with API
         /// <summary>
         /// API call to restore an Publication
         /// </summary>
@@ -217,7 +201,12 @@ namespace initial_d.APICallers
 
             try
             {
-                // API CALL
+                var request = new RestRequest($"{prefix}/publications/{pubId}/restore", Method.PUT);
+
+                var response = client.Execute(request);
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
 
                 return true;
             }
@@ -255,8 +244,6 @@ namespace initial_d.APICallers
             }
         }
 
-
-        // TODO Connection with API
         /// <summary>
         /// API call to update the Status of a Mechanic Publication
         /// </summary>
@@ -272,10 +259,16 @@ namespace initial_d.APICallers
 
             try
             {
-                // CALL THE API
+                string url = $"{prefix}/publications/{pubId}/change-status?public_status_id={newStateId}";
+
+                var request = new RestRequest(url, Method.POST);
+
+                var response = client.Execute(request);
+
+                // Throw an exception if the StatusCode is different from 200
+                CheckStatusCode(response);
 
                 return true;
-
             }
             catch (Exception e)
             {
@@ -284,5 +277,57 @@ namespace initial_d.APICallers
             }
         }
 
+
+        /* ---------------------------------------------------------------- */
+        /* GET SECONDARY DATA */
+        /* ---------------------------------------------------------------- */
+
+        /// <summary>
+        /// API call to get all Publication Status, with name and ID
+        /// </summary>
+        public IEnumerable<PublicStatus> GetAllStatus()
+        {
+            try
+            {
+                var request = new RestRequest($"{prefix}/public-status", Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                var response = client.Execute<List<PublicStatus>>(request);
+
+                CheckStatusCode(response);
+
+                return response.Data;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+        }
+
+
+        /* ---------------------------------------------------------------- */
+        /* HELPERS */
+        /* ---------------------------------------------------------------- */
+
+        /// <summary>
+        /// Set all the secondary data ,like getting the status Name from the status Id
+        /// </summary>
+        /// <param name="pub"> Publication to process </param>
+        /// <param name="pubStatusLst"> List with all Status Names </param>
+        public PublicacionMec ProcessPub(PublicacionMec pub, List<PublicStatus> pubStatusLst, List<Mecanico> mechList)
+        {
+            if (pub == null || pubStatusLst == null) return null;
+
+            var thisUserType = pubStatusLst.FirstOrDefault(type => type.public_status_id.Equals(pub.public_status_id));
+            pub.status_name = thisUserType?.status_name ?? string.Empty;
+
+            var thisMech = mechList.FirstOrDefault(x => x.appuser_id.Equals(pub.appuser_id));
+            pub.mech_name = thisMech.fullName;
+
+            return pub;
+        }
     }
 }

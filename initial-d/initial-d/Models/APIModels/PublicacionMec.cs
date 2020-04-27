@@ -13,12 +13,15 @@ namespace initial_d.Models.APIModels
 
         [Display(Name = "Mecánico")]
         public string appuser_id { get; set; }
+        public string mech_name { get; set; }
 
 
         public string user_type_id { get; set; }
 
         [Display(Name = "Status")]
         public string public_status_id { get; set; }
+
+        public string status_name { get; set; }
 
         [Display(Name = "Fecha de Publicación")]
         public DateTime created_at { get; set; }

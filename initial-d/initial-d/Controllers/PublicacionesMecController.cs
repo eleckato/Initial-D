@@ -9,14 +9,13 @@ using initial_d.Models.APIModels;
 namespace initial_d.Controllers
 {
     [Authorize]
-    [RoutePrefix("mecanic/publicaciones")]
+    [RoutePrefix("mecanicos/publicaciones")]
     public class PublicacionesMecController : BaseController
     {
-        readonly PublicacionesMecRepository PP = new PublicacionesMecRepository();
-        readonly MecanicosRepository MP = new MecanicosRepository();
-        readonly UsuariosRepository UP = new UsuariosRepository();
+        readonly PublicacionesMecCaller PMC = new PublicacionesMecCaller();
+        readonly MecanicosCaller MC = new MecanicosCaller();
+        readonly UsuariosCaller UC = new UsuariosCaller();
 
-        ////private const string addRoute = "agregar";
         private const string detailsRoute = "{pubId}";
         private const string updateRoute = "{pubId}/actualizar";
         private const string deleteRoute = "{pubId}/eliminar";
@@ -32,28 +31,88 @@ namespace initial_d.Controllers
         /* PUBLICATION LIST */
         /* ---------------------------------------------------------------- */
 
-        // TODO Search Filters
-        // TODO Connection with Repository
+        // TODO Pagination
         /// <summary>
         /// GET | Show a list of Publications
-        /// <para> /mecanicos-adm/publicaciones </para>
+        /// <para> /mecanicos/publicaciones </para>
         /// </summary>
         [HttpGet]
         [Route]
-        public ActionResult PubList()
+        public ActionResult PubList(string comuna, string bussName, string pubTitle, string statusId)
         {
             List<PublicacionMec> pubs;
+            List<PublicStatus> pubStatusList;
 
             try
             {
-                pubs = PP.GetAllPub().ToList();
+                pubs = PMC.GetAllPub(comuna, statusId, bussName, pubTitle).ToList();
                 if (pubs == null) return Error_FailedRequest();
+
+                pubStatusList = PMC.GetAllStatus().ToList();
+                if (pubStatusList == null) return Error_FailedRequest();
+
+                List<Mecanico> mechList = MC.GetAllMech(null, null, null).ToList();
+
+                pubs.ForEach(pub =>
+                {
+                    pub = PMC.ProcessPub(pub, pubStatusList, mechList);
+                });
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
                 return Error_CustomError(e.Message);
             }
+
+            // To keep the state of the search filters when the user make a search
+            ViewBag.comuna = comuna;
+            ViewBag.statusId = statusId;
+            ViewBag.pubTitle = pubTitle;
+            ViewBag.pubStatusList = new SelectList(pubStatusList, "public_status_id", "status_name", statusId);
+
+            return View(pubs);
+        }
+
+
+        // TODO Pagination
+        /// <summary>
+        /// GET | Show a list of all deleted Publications
+        /// <para> /mecanicos/publicaciones/eliminados </para>
+        /// </summary>
+        [HttpGet]
+        [Route(deteledList)]
+        public ActionResult DeletedPubList(string comuna, string bussName, string pubTitle, string statusId)
+        {
+            List<PublicacionMec> pubs;
+            List<PublicStatus> pubStatusList;
+
+            try
+            {
+                pubs = PMC.GetAllPub(comuna, statusId, bussName, pubTitle, true).ToList();
+                if (pubs == null) return Error_FailedRequest();
+
+                pubStatusList = PMC.GetAllStatus().ToList();
+                if (pubStatusList == null) return Error_FailedRequest();
+
+                List<Mecanico> mechList = MC.GetAllMech(null, null, null).ToList();
+
+                pubs.ForEach(pub =>
+                {
+                    pub = PMC.ProcessPub(pub, pubStatusList, mechList);
+                });
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+            // To keep the state of the search filters when the user make a search
+            ViewBag.comuna = comuna;
+            ViewBag.statusId = statusId;
+            ViewBag.pubTitle = pubTitle;
+
+            ViewBag.pubStatusList = new SelectList(pubStatusList, "public_status_id", "status_name", statusId);
 
             return View(pubs);
         }
@@ -63,10 +122,9 @@ namespace initial_d.Controllers
         /* PUBLICATION DETAILS */
         /* ---------------------------------------------------------------- */
 
-        // TODO Connection with Repository
         /// <summary>
         /// GET  |  Show all the data of a Publication
-        /// <para> /mecanicos-adm/publicaciones/{id} </para>
+        /// <para> /mecanicos/publicaciones/{id} </para>
         /// </summary>
         [HttpGet]
         [Route(detailsRoute)]
@@ -78,8 +136,15 @@ namespace initial_d.Controllers
 
             try
             {
-                pub = PP.GetPub(pubId);
+                pub = PMC.GetPub(pubId);
                 if (pub == null) return Error_FailedRequest();
+
+                var pubStatusList = PMC.GetAllStatus().ToList();
+                if (pubStatusList == null) return Error_FailedRequest();
+
+                List<Mecanico> mechList = MC.GetAllMech(null, null, null).ToList();
+
+                pub = PMC.ProcessPub(pub, pubStatusList, mechList);
             }
             catch (Exception e)
             {
@@ -97,7 +162,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// POST  |  API call to delete a Publication
-        /// <para> /mecanicos-adm/{id}/eliminar </para>
+        /// <para> /mecanicos/publicaciones/{id}/eliminar </para>
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
@@ -107,7 +172,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = PP.DeletePub(pubId);
+                var res = PMC.DeletePub(pubId);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -123,9 +188,9 @@ namespace initial_d.Controllers
             return RedirectToAction("PubList");
         }
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to restore a deleted Publication
+        /// <para> /PublicacionesMec/RestorePub </para>
         /// </summary>
         [HttpGet]
         public ActionResult RestorePub(string pubId)
@@ -134,7 +199,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = PP.RestorePub(pubId);
+                var res = PMC.RestorePub(pubId);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -151,40 +216,14 @@ namespace initial_d.Controllers
             return RedirectToAction("DeletedPubList");
         }
 
-        // TODO Search Filters
-        /// <summary>
-        /// GET | Show a list of all deleted Publications
-        /// <para> /mechanic-admin/publicaciones/eliminados </para>
-        [HttpGet]
-        [Route(deteledList)]
-        public ActionResult DeletedPubList()
-        {
-            List<PublicacionMec> pubs;
-
-            try
-            {
-                pubs = PP.GetAllDeletedPub().ToList();
-                if (pubs == null) return Error_FailedRequest();
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                return Error_CustomError(e.Message);
-            }
-
-            return View(pubs);
-        }
-
-
 
         /* ---------------------------------------------------------------- */
         /* OTHER ACTIONS */
         /* ---------------------------------------------------------------- */
 
-        // TODO Connection with Repository
         /// <summary>
         /// POST  |  API call to update the Status of a Publication
-        /// <para> /PublicacionesMec/ChangeUserStatus/{id} </para>
+        /// <para> /PublicacionesMec/ChangeUserStatus </para>
         /// </summary>
         /// <param name="pubId"> Id of the Publication to update </param>
         /// <param name="newStatusId"> Id of the new Status for the Publication </param>
@@ -194,7 +233,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = PP.ChangeStatus(pubId, newStatusId);
+                var res = PMC.ChangeStatus(pubId, newStatusId);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -230,6 +269,9 @@ namespace initial_d.Controllers
         }
 
 
+        /* ---------------------------------------------------------------- */
+        /* HELPERS */
+        /* ---------------------------------------------------------------- */
 
         public void SetNavbar()
         {

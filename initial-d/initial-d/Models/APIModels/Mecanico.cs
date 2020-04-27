@@ -31,7 +31,7 @@ namespace initial_d.Models.APIModels
             phone = string.Empty;
             lastlogin = DateTime.Today;
             mail_confirmed = false;
-            user_type_id = string.Empty;
+            user_type_id = "MEC";
             user_type_name = string.Empty;
             status_id = string.Empty;
             status_name = string.Empty;

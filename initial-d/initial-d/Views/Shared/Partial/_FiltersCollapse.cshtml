@@ -1,0 +1,143 @@
+﻿@model initial_d.Common.FilterBar.FilterBarTemplate
+@{ 
+    /* Para usar esta PartialView se debe crear un objeto FilterBarTemplate con el Action y Controller en strings, además,
+     * una list de entre 1 y 4 inputs hechos con HtmlHelper, como Html.Textbox o Html.DropDown
+     * Luego, se debe pasar este objeto como Modelo para esta PartialView */
+    
+    //? Actualmente solo soporta 4 elementos
+    // TODO Dart soporte para 1, 2 y 3 elementos
+
+    // @using initial_d.Common.FilterBar;
+
+
+    string action = Model.formAction;
+    string controller = Model.formController;
+    List<MvcHtmlString> inputList = Model.filters;
+
+    int inputCount = inputList.Count;
+}
+
+<!-- BUSCAR -->
+<div class="mb-4">
+
+    @using (Html.BeginForm(action, controller, FormMethod.Get))
+    {
+        <div class="form-row">
+            
+            <!-- Collapse Button. Only visible in md and less -->
+            <div class="d-flex align-content-center d-md-none bg-white rounded w-100 py-2 px-3 mb-2 cursor-pointer border" 
+                 data-toggle="collapse" href="#search-collapse">
+                <h5 class="m-0 font-weight-bold">Buscar</h5>
+                <i class="ml-auto fa fa-chevron-down align-self-center" aria-hidden="true"></i>
+            </div>
+
+            <!-- Collapse section -->
+            <div id="search-collapse" class="collapse row col-12">
+
+                <div class="col-12 col-md-11">
+                    <div class="row">
+
+                        @if(inputCount == 4)
+                        {
+                            <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-lg-0 pr-0 pr-md-3">
+                                @inputList[0]
+                            </div>
+                            <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-lg-0 pr-0 pr-md-3">
+                                @inputList[1]
+                            </div>
+                            <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-md-0 pr-0 pr-md-3">
+                                @inputList[2]
+                            </div>
+                            <div class="input-group col-12 col-md-6 col-lg-3 mb-2 mb-md-0 pr-0 pr-md-3">
+                                @inputList[3]
+                            </div>
+                        }
+                        else if(inputCount == 3)
+                        {
+                            <div class="input-group col-12 col-md-6 col-lg-4 mb-2 mb-lg-0 pr-0 pr-md-3">
+                                @inputList[0]
+                            </div>
+                            <div class="input-group col-12 col-md-6 col-lg-4 mb-2 mb-lg-0 pr-0 pr-md-3">
+                                @inputList[1]
+                            </div>
+                            <div class="input-group col-12 col-md-6 col-lg-4 mb-2 mb-md-0 pr-0 pr-md-3">
+                                @inputList[2]
+                            </div>
+                        }
+                        else if(inputCount == 2)
+                        {
+                            <div class="input-group col-12 col-md-6 mb-2 mb-md-0 pr-0 pr-md-3">
+                                @inputList[0]
+                            </div>
+                            <div class="input-group col-12 col-md-6 mb-2 mb-md-0 pr-0 pr-md-3">
+                                @inputList[1]
+                            </div>
+                        }
+                        else if(inputCount == 1)
+                        {
+                            <div class="input-group col-12 col-md-8 col-lg-6 mb-2 mb-md-0 pr-0 pr-md-3 ml-auto">
+                                @inputList[0]
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="col col-md-1 h-auto">
+                    <button class="btn btn-sm btn-yellow w-100 h-100" role="button" type="submit">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+<script>
+
+    WaitForJquery(function () {
+
+        // Check if the viewport is in a Bootstrap breakpoint
+        var isBreakpoint = function (viewport_size) {
+            // For Debuging, don't delete
+            //if (isBreakpoint('xs')) { console.log('IS XS'); }
+            //if (isBreakpoint('sm')) { console.log('IS SM'); }
+            //if (isBreakpoint('md')) { console.log('IS MD'); }
+            //if (isBreakpoint('lg')) { console.log('IS LG'); }
+
+            return $('.device-' + viewport_size).is(':visible')
+        }
+
+        // Set the system for isBreakpoint to work and initialize the Search Bar Visibility
+        $(document).ready(function () {
+            var test_divs = "<div class='device-xs d-none d-xs-block'></div>";
+            test_divs = test_divs + "<div class='device-sm d-none d-sm-block visible-sm'></div>";
+            test_divs = test_divs + "<div class='device-md d-none d-md-block visible-md'></div>";
+            test_divs = test_divs + "<div class='device-lg d-none d-lg-block visible-lg'></div>";
+            $("body").append(test_divs);
+
+            updateSearchVisibility()
+        })
+
+
+        // Update the Search bar visibility
+        function updateSearchVisibility() {
+            // If the the viewport is > md, show the bar
+            if (isBreakpoint('md')){
+                $('#search-collapse').addClass('show');
+            }
+            // If the the viewport is < md, hide the bar
+            else {
+                $('#search-collapse').removeClass('show');
+            }
+        }
+
+        // Update the Search Bar Visibility on window rezise
+        $(window).on('resize', debounce(function(e){
+            updateSearchVisibility();
+        }));
+
+    })
+
+</script>

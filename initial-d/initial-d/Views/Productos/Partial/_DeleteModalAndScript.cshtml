@@ -1,5 +1,5 @@
 ﻿@* Just make a button these attributes and done      
-   data-toggle="modal" href="#delete-modal" data-mech-id="{mechId}" 
+   data-toggle="modal" href="#delete-modal" data-prod-id="{prodId}" 
 *@
 @{ 
     bool isDeleted = (bool?)ViewData["isDeleted"] ?? false;
@@ -22,11 +22,11 @@
             <div class="modal-body">
                 @if (!isDeleted)
                 {
-                    <p>¿Estas seguro/a que quieres eliminar a este Mecánico?</p>
+                    <p>¿Estas seguro/a que quieres eliminar a este Producto?</p>
                 }
                 else
                 {
-                    <p>¿Estas seguro/a que quieres restaurar a este Mecánico?</p>
+                    <p>¿Estas seguro/a que quieres restaurar a este Producto?</p>
                 }
             </div>
 
@@ -46,21 +46,20 @@
 </div>
 
 <script>
-    function LoadDeleteScript() {
+    WaitForJquery(function () {
         $(document).on('show.bs.modal', '#delete-modal', function (event) {
             // Button that triggered the modal
             var button = $(event.relatedTarget)
 
             // Extract the userId
-            var mechId = button.data('mech-id')
+            var prodId = button.data('prod-id')
 
             // Get the actual delete button from the modal
             var delbtn = $(this).find('#modal-delete-btn');
 
-            let url = '@Url.Action(isDeleted ? "RestoreMech" : "DeleteMech", "Mecanicos", new { mechId = "replace_this_id" })'.replace('replace_this_id', mechId);
+            let url = '@Url.Action(isDeleted ? "RestoreProd" : "DeleteProd", "Productos", new { prodId = "replace_this_id" })'.replace('replace_this_id', prodId);
 
             delbtn.attr('href', value = url);
         });
-    }
-    WaitForJquery(LoadDeleteScript);
+    });
 </script>
