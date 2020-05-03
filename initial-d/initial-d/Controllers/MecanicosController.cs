@@ -38,14 +38,14 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route]
-        public ActionResult MechList(string userName = null, string userEmail = null, string userStatusId = null)
+        public ActionResult MechList(string userName = null, string userRut = null, string userStatusId = null)
         {
             List<Mecanico> mecanicos;
             List<UserStatus> userStatusLst;
 
             try
             {
-                mecanicos = MP.GetAllMech(userName, userEmail, userStatusId)?.ToList();
+                mecanicos = MP.GetAllMech(userName, userRut, userStatusId)?.ToList();
                 if (mecanicos == null) return Error_FailedRequest();
 
                 var userTypeLst = UP.GetAllTypes().ToList();
@@ -67,7 +67,7 @@ namespace initial_d.Controllers
 
             // To keep the state of the search filters when the user make a search
             ViewBag.userName = userName;
-            ViewBag.userEmail = userEmail;
+            ViewBag.userRut = userRut;
 
             ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status", userStatusId);
 
@@ -80,7 +80,7 @@ namespace initial_d.Controllers
         /// <para> /mecanicos-adm/eliminados </para>
         [HttpGet]
         [Route(deteledList)]
-        public ActionResult DeletedMechList(string userName = null, string userEmail = null, string userStatusId = null)
+        public ActionResult DeletedMechList(string userName = null, string userRut = null, string userStatusId = null)
         {
             List<Mecanico> usuarios;
             List<UserType> userTypeLst;
@@ -88,7 +88,7 @@ namespace initial_d.Controllers
 
             try
             {
-                usuarios = MP.GetAllMech(userName, userEmail, userStatusId, true)?.ToList();
+                usuarios = MP.GetAllMech(userName, userRut, userStatusId, true)?.ToList();
                 if (usuarios == null) return Error_FailedRequest();
 
                 // Remove Current User from the list
@@ -114,7 +114,7 @@ namespace initial_d.Controllers
 
             // To keep the state of the search filters when the user make a search
             ViewBag.userName = userName;
-            ViewBag.userEmail = userEmail;
+            ViewBag.userRut = userRut;
             ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
             ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status");
 

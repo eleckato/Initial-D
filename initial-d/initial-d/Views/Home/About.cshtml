@@ -2,4 +2,506 @@
     ViewBag.Title = "Acerca de Nosotros";
 }
 
-<h2>Acerca de Nosotros</h2>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+            Generar Pedido
+        </h2>
+    </div>
+</div>
+
+<!-- ACTIONN BUTTONS -->
+<div class="mb-3">
+    <a href="#" class="btn btn-sm btn-yellow" role="button" data-toggle="modal" data-target="#add-element">
+        <i class="fa fa-plus"></i>
+        Agregar
+    </a>
+</div>
+
+
+<!-- PRODUCTOS EN CARRO -->
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+        <thead>
+            <tr>
+                <th>Acciones</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr data-url="#">
+                    
+                <!-- ACTION DROPDOWN -->
+                <td data-label="Actions" class="not-clickable">
+                    <div class="row">
+                        <button class="btn btn-sm btn-yellow mr-2" data-target="#details-element-modal" data-toggle="modal">
+                            <i class="fa fa-bars m-0"></i>
+                        </button>
+                        <button class="btn btn-sm btn-red mr-2" data-target="#delete-element-modal" data-toggle="modal">
+                            <i class="fa fa-trash m-0"></i>
+                        </button>
+                    </div>
+                    
+                </td>
+                    
+                <!-- NOMBRE -->
+                <td data-label="">
+                    Lorem ipsum dolor sit amet
+                </td>
+                    
+                <!-- TIPO -->
+                <td data-label="">
+                    Lorem Ipsum
+                </td>
+                    
+                <!-- PRECIO -->
+                <td data-label="">
+                    $999.999.999
+                </td>
+                    
+                <!-- CANTIDAD -->
+                <td data-label="">
+                    <div class="row w-max-content">
+                        <button class="btn btn-sm btn-yellow mr-2">
+                            <i class="fa fa-minus m-0"></i>
+                        </button>
+                        999999999
+                        <button class="btn btn-sm btn-yellow ml-2">
+                            <i class="fa fa-plus m-0"></i>
+                        </button>
+                    </div>
+                </td>
+                    
+                <!-- TOTAL -->
+                <td data-label="">
+                    $999.999.999
+                </td>
+
+            </tr>
+            <tr data-url="#">
+                    
+                <!-- ACTION DROPDOWN -->
+                <td data-label="Actions" class="not-clickable">
+                    <div class="row">
+                        <button class="btn btn-sm btn-yellow mr-2" data-target="#details-element-modal" data-toggle="modal">
+                            <i class="fa fa-bars m-0"></i>
+                        </button>
+                        <button class="btn btn-sm btn-red mr-2" data-target="#delete-element-modal" data-toggle="modal">
+                            <i class="fa fa-trash m-0"></i>
+                        </button>
+                    </div>
+                    
+                </td>
+                    
+                <!-- NOMBRE -->
+                <td data-label="">
+                    Lorem ipsum dolor sit amet
+                </td>
+                    
+                <!-- TIPO -->
+                <td data-label="">
+                    Lorem Ipsum
+                </td>
+                    
+                <!-- PRECIO -->
+                <td data-label="">
+                    $999.999.999
+                </td>
+                    
+                <!-- CANTIDAD -->
+                <td data-label="">
+                    <div class="row w-max-content">
+                        <button class="btn btn-sm btn-yellow mr-2">
+                            <i class="fa fa-minus m-0"></i>
+                        </button>
+                        999999999
+                        <button class="btn btn-sm btn-yellow ml-2">
+                            <i class="fa fa-plus m-0"></i>
+                        </button>
+                    </div>
+                </td>
+                    
+                <!-- TOTAL -->
+                <td data-label="">
+                    $999.999.999
+                </td>
+
+            </tr>
+            <tr data-url="#">
+                    
+                <!-- ACTION DROPDOWN -->
+                <td data-label="Actions" class="not-clickable">
+                    <div class="row">
+                        <button class="btn btn-sm btn-yellow mr-2" data-target="#details-element-modal" data-toggle="modal">
+                            <i class="fa fa-bars m-0"></i>
+                        </button>
+                        <button class="btn btn-sm btn-red mr-2" data-target="#delete-element-modal" data-toggle="modal">
+                            <i class="fa fa-trash m-0"></i>
+                        </button>
+                    </div>
+                    
+                </td>
+                    
+                <!-- NOMBRE -->
+                <td data-label="">
+                    Lorem ipsum dolor sit amet
+                </td>
+                    
+                <!-- TIPO -->
+                <td data-label="">
+                    Lorem Ipsum
+                </td>
+                    
+                <!-- PRECIO -->
+                <td data-label="">
+                    $999.999.999
+                </td>
+                    
+                <!-- CANTIDAD -->
+                <td data-label="">
+                    <div class="row w-max-content">
+                        <button class="btn btn-sm btn-yellow mr-2">
+                            <i class="fa fa-minus m-0"></i>
+                        </button>
+                        999999999
+                        <button class="btn btn-sm btn-yellow ml-2">
+                            <i class="fa fa-plus m-0"></i>
+                        </button>
+                    </div>
+                </td>
+                    
+                <!-- TOTAL -->
+                <td data-label="">
+                    $999.999.999
+                </td>
+
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+
+<!-- TOTAL Y PAGO -->
+<div class="c-jumbotron w-max-content  ml-auto">
+    <div class="mx-5">
+        <div class="row mb-3">
+            <h5 class="mr-4">Total</h5>
+            <h4 class="font-weight-bold">$999.999.999</h4>
+        </div>
+
+        <div class="row">
+            <a href="#" class="btn btn-sm btn-red mr-3" role="button">
+                <i class="fa fa-times"></i>
+                Cancelar
+            </a>
+            <a href="#" class="btn btn-sm btn-green mr-3" role="button">
+                <i class="fa fa-shopping-cart"></i>
+                Confirmar Pedido
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- MODAL AGREGAR AL CARRO -->
+<div id="add-element" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-cart-plus mr-2 " aria-hidden="true"></i> 
+                    Buscar Producto o Servicio
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body px-5">
+                <p>Seleccione un Producto o Servicio para agregar</p>
+
+                <div class="row mb-3">
+
+                    <input type="text" name="" value="" class="form-control w-max-content mr-3" placeholder="Nombre"/>
+                    <input type="text" name="" value="" class="form-control w-max-content mr-3" placeholder="Tipo"/>
+                    <button type="submit" role="button" class="btn btn-sm btn-yellow">
+                        <i class="fa fa-search mx-3" aria-hidden="true"></i>
+                    </button>
+
+                </div>
+                
+                <div class=" d-flex justify-content-center ">
+                    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Stock</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr class="modal-add-prod-row cursor-pointer">
+                                <!-- NOMBRE -->
+                                <td data-label="">
+                                    Lorem ipsum dolor sit amet
+                                </td>
+                                <!-- TIPO -->
+                                <td data-label="">
+                                    Lorem ipsum
+                                </td>
+                                <!-- STOCK -->
+                                <td data-label="">
+                                    999999999
+                                </td>
+                                <!-- PRECIO -->
+                                <td data-label="">
+                                    $999.999.999
+                                </td>
+                            </tr>
+                            <tr class="modal-add-prod-row cursor-pointer">
+                                <!-- NOMBRE -->
+                                <td data-label="">
+                                    Lorem ipsum dolor sit amet
+                                </td>
+                                <!-- TIPO -->
+                                <td data-label="">
+                                    Lorem ipsum
+                                </td>
+                                <!-- STOCK -->
+                                <td data-label="">
+                                    999999999
+                                </td>
+                                <!-- PRECIO -->
+                                <td data-label="">
+                                    $999.999.999
+                                </td>
+                            </tr>
+                            <tr class="modal-add-prod-row cursor-pointer">
+                                <!-- NOMBRE -->
+                                <td data-label="">
+                                    Lorem ipsum dolor sit amet
+                                </td>
+                                <!-- TIPO -->
+                                <td data-label="">
+                                    Lorem ipsum
+                                </td>
+                                <!-- STOCK -->
+                                <td data-label="">
+                                    999999999
+                                </td>
+                                <!-- PRECIO -->
+                                <td data-label="">
+                                    $999.999.999
+                                </td>
+                            </tr>
+                            <tr class="modal-add-prod-row cursor-pointer">
+                                <!-- NOMBRE -->
+                                <td data-label="">
+                                    Lorem ipsum dolor sit amet
+                                </td>
+                                <!-- TIPO -->
+                                <td data-label="">
+                                    Lorem ipsum
+                                </td>
+                                <!-- STOCK -->
+                                <td data-label="">
+                                    999999999
+                                </td>
+                                <!-- PRECIO -->
+                                <td data-label="">
+                                    $999.999.999
+                                </td>
+                            </tr>
+                            <tr class="modal-add-prod-row cursor-pointer">
+                                <!-- NOMBRE -->
+                                <td data-label="">
+                                    Lorem ipsum dolor sit amet
+                                </td>
+                                <!-- TIPO -->
+                                <td data-label="">
+                                    Lorem ipsum
+                                </td>
+                                <!-- STOCK -->
+                                <td data-label="">
+                                    999999999
+                                </td>
+                                <!-- PRECIO -->
+                                <td data-label="">
+                                    $999.999.999
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="modal-footer justify-content-start">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <div class="row ml-auto">
+                    <label class="m-0 mr-2 my-auto">Cantidad</label>
+                    <input type="number" min="0"  name="sell-quatity" value="" class="form-control mr-4 quatity-box"/>
+                    
+                    <button type="submit" role="button" class="btn btn-sm btn-green" disabled="disabled">
+                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DETALLES DE ELEMENT -->
+<div id="details-element-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-bars mr-2" aria-hidden="true"></i>
+                    Detalles
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="px-5">
+                    <table class="table c-info-table c-data-table-bordered mb-3">
+                        <tr>
+                            <td>Código</td>
+                            <td>@Guid.NewGuid().ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>Nombre</td>
+                            <td>Lorem ipsum dolor sit amet</td>
+                        </tr>
+                        <tr>
+                            <td>Tipo</td>
+                            <td>Lorem Ipsum</td>
+                        </tr>
+                        <tr>
+                            <td>Precio</td>
+                            <td>$999.999.999</td>
+                        </tr>
+                        <tr>
+                            <td>Stock</td>
+                            <td>52</td>
+                        </tr>
+                        <tr>
+                            <td>Descripción</td>
+                            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel mi ante. Cras vehicula orci vitae nisi aliquet tristique ac vel justo.</td>
+                        </tr>
+                    </table>
+                </div>
+
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>Cerrar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE ELEMENT MODAL -->
+<div id="delete-element-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>
+                    Advertencia
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Está seguro/a que desea Eliminar este {Producto/Servicio} del pedido?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    <span>Cancelar</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-red" data-dismiss="modal">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    <span>Eliminar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    WaitForJquery(function(){
+
+        // En Modal:add-element Selecciona una fila al hacerle click
+        $(document).on('click', '.modal-add-prod-row', function () {
+            let row = $(this);
+            let modal = row.closest('.modal-content');
+
+            let otherRows = row.closest('tbody').find('tr');
+            $.each(otherRows, function (i, row) {
+                $(row).removeClass('row-active');
+            });
+
+            row.addClass('row-active');
+
+            let submitBnt = modal.find('button[type="submit"]');
+            submitBnt.prop('disabled', false)
+
+            console.log(modal)
+        })
+
+        // Resetea el Modal:add-element
+        $(document).on('show.bs.modal', '#add-element', function () {
+            let modal = $(this);
+
+            modal.find('tbody tr').removeClass('row-active');
+            modal.find('button[type="submit"]').prop('disabled', true);
+            modal.find('input[name="sell-quatity"]').val("");
+        });
+
+    });
+</script>
+
+<style>
+    /* Para poner de otro color e identificar una row seleccionada */
+    .row-active{
+        background: var(--yellow-1) !important;
+    }
+
+    /* Textbox para cantidad en Modal:add-element */
+    .quatity-box{
+        width: 5rem !important;
+        min-width: unset;
+    }
+</style>

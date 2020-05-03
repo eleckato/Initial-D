@@ -7,25 +7,25 @@ using System.Linq;
 
 namespace initial_d.APICallers
 {
-    public class ProductosCaller : CallerBase
+    public class ServiciosCaller : CallerBase
     {
         private readonly string prefix = "supply-adm";
-        private readonly string fullPrefix = "supply-adm/product";
+        private readonly string fullPrefix = "supply-adm/service";
 
         /* ---------------------------------------------------------------- */
-        /* PRODUCTOS CALLER */
+        /* SERVICES CALLER */
         /* ---------------------------------------------------------------- */
 
         // TODO Pagination
         /// <summary>
-        /// API call to list all Products
+        /// API call to list all Services
         /// </summary>
-        public IEnumerable<Producto> GetAllProd(string brand, string name, string product_status, bool deleted = false)
+        public IEnumerable<Servicio> GetAllServ(string name, string serv_status, bool deleted = false)
         {
             try
             {
                 var delString = deleted ? "&deleted=true" : "";
-                var url = $"{fullPrefix}?brand={brand}&name={name}&product_status={product_status}{delString}";
+                var url = $"{fullPrefix}?name={name}&serv_status={serv_status}{delString}";
 
                 // Request Base
                 var request = new RestRequest(url, Method.GET)
@@ -34,7 +34,7 @@ namespace initial_d.APICallers
                 };
 
                 // Ejecutar request y guardar la respuesta
-                var response = client.Execute<List<Producto>>(request);
+                var response = client.Execute<List<Servicio>>(request);
 
                 // Levanta una excepción si el status code es diferente de 200
                 CheckStatusCode(response);
@@ -50,12 +50,12 @@ namespace initial_d.APICallers
         }
 
         /// <summary>
-        /// API call to get a Product
+        /// API call to get a Service
         /// </summary>
-        /// <param name="prodId"> Product Id </param>
-        public Producto GetProd(string prodId)
+        /// <param name="servId"> Service Id </param>
+        public Servicio GetServ(string servId)
         {
-            if (string.IsNullOrEmpty(prodId))
+            if (string.IsNullOrEmpty(servId))
             {
                 ErrorWriter.InvalidArgumentsError();
                 return null;
@@ -63,14 +63,14 @@ namespace initial_d.APICallers
 
             try
             {
-                var request = new RestRequest($"{fullPrefix}/{prodId}", Method.GET)
+                var request = new RestRequest($"{fullPrefix}/{servId}", Method.GET)
                 {
                     RequestFormat = DataFormat.Json
                 };
 
-                var response = client.Execute<Producto>(request);
+                var response = client.Execute<Servicio>(request);
 
-                string notFoundMsg = "El Producto requerido no existe";
+                string notFoundMsg = "El Servicio requerido no existe";
                 CheckStatusCode(response, notFoundMsg);
 
                 return response.Data;
@@ -82,13 +82,14 @@ namespace initial_d.APICallers
             }
         }
 
+        // TODO API Call
         /// <summary>
-        /// API call to add a Product
+        /// API call to add a Service
         /// </summary>
-        /// <param name="newProd"> New Product </param>
-        public string AddProd(Producto newProd)
+        /// <param name="newServ"> New Service </param>
+        public string AddServ(Servicio newServ)
         {
-            if (newProd == null)
+            if (newServ == null)
             {
                 ErrorWriter.InvalidArgumentsError();
                 return null;
@@ -101,7 +102,7 @@ namespace initial_d.APICallers
                     RequestFormat = DataFormat.Json
                 };
 
-                request.AddJsonBody(newProd);
+                request.AddJsonBody(newServ);
 
                 var response = client.Execute(request);
 
@@ -117,12 +118,12 @@ namespace initial_d.APICallers
         }
 
         /// <summary>
-        /// API call to update a Product
+        /// API call to update a Service
         /// </summary>
-        /// <param name="newProd"> New Product </param>
-        public bool UpdateProd(Producto newProd)
+        /// <param name="newServ"> New Service </param>
+        public bool UpdateServ(Servicio newServ)
         {
-            if (newProd == null)
+            if (newServ == null)
             {
                 ErrorWriter.InvalidArgumentsError();
                 return false;
@@ -130,18 +131,18 @@ namespace initial_d.APICallers
 
             try
             {
-                var prodId = newProd.product_id;
+                var servId = newServ.serv_id;
 
-                var request = new RestRequest($"{fullPrefix}/{prodId}", Method.POST)
+                var request = new RestRequest($"{fullPrefix}/{servId}", Method.POST)
                 {
                     RequestFormat = DataFormat.Json
                 };
 
-                request.AddJsonBody(newProd);
+                request.AddJsonBody(newServ);
 
                 var response = client.Execute(request);
 
-                string notFoundMsg = "El Producto requerido no existe";
+                string notFoundMsg = "El Servicio requerido no existe";
                 CheckStatusCode(response, notFoundMsg);
 
                 return true;
@@ -154,12 +155,12 @@ namespace initial_d.APICallers
         }
 
         /// <summary>
-        /// API call to delete a Product
+        /// API call to delete a Service
         /// </summary>
-        /// <param name="prodId"> Product Id </param>
-        public bool DeleteProd(string prodId)
+        /// <param name="servId"> Service Id </param>
+        public bool DeleteServ(string servId)
         {
-            if (string.IsNullOrEmpty(prodId))
+            if (string.IsNullOrEmpty(servId))
             {
                 ErrorWriter.InvalidArgumentsError();
                 return false;
@@ -167,7 +168,7 @@ namespace initial_d.APICallers
 
             try
             {
-                var request = new RestRequest($"{fullPrefix}/{prodId}", Method.DELETE);
+                var request = new RestRequest($"{fullPrefix}/{servId}", Method.DELETE);
 
                 var response = client.Execute(request);
 
@@ -184,12 +185,12 @@ namespace initial_d.APICallers
         }
 
         /// <summary>
-        /// API call to restore a Product
+        /// API call to restore a Service
         /// </summary>
-        /// <param name="prodId"> Product Id </param>
-        public bool RestoreProd(string prodId)
+        /// <param name="servId"> Service Id </param>
+        public bool RestoreServ(string servId)
         {
-            if (string.IsNullOrEmpty(prodId))
+            if (string.IsNullOrEmpty(servId))
             {
                 ErrorWriter.InvalidArgumentsError();
                 return false;
@@ -197,7 +198,7 @@ namespace initial_d.APICallers
 
             try
             {
-                var request = new RestRequest($"{fullPrefix}/{prodId}/restore", Method.PUT);
+                var request = new RestRequest($"{fullPrefix}/{servId}/restore", Method.PUT);
 
                 var response = client.Execute(request);
 
@@ -214,13 +215,13 @@ namespace initial_d.APICallers
         }
 
         /// <summary>
-        /// API call to change the Status of a Product
+        /// API call to change the Status of a Service
         /// </summary>
-        /// <param name="prodId"> Product Id </param>
-        /// <param name="prodStatusId"> Product Status Id </param>
-        public bool ChangeProdStatus(string prodId, string prodStatusId)
+        /// <param name="servId"> Service Id </param>
+        /// <param name="servStatusId"> Service Status Id </param>
+        public bool ChangeServStatus(string servId, string servStatusId)
         {
-            if (string.IsNullOrEmpty(prodId) || string.IsNullOrEmpty(prodStatusId))
+            if (string.IsNullOrEmpty(servId) || string.IsNullOrEmpty(servStatusId))
             {
                 ErrorWriter.InvalidArgumentsError();
                 return false;
@@ -228,7 +229,7 @@ namespace initial_d.APICallers
 
             try
             {
-                var request = new RestRequest($"{fullPrefix}/{prodId}/change-status?product_status={prodStatusId}", Method.POST);
+                var request = new RestRequest($"{fullPrefix}/{servId}/change-status?serv_status={servStatusId}", Method.POST);
 
                 var response = client.Execute(request);
 
@@ -243,83 +244,24 @@ namespace initial_d.APICallers
                 throw e;
             }
         }
-
 
         /* ---------------------------------------------------------------- */
         /* GET SECONDARY DATA */
         /* ---------------------------------------------------------------- */
 
         /// <summary>
-        /// API call to get all Product Status, with name and ID
+        /// API call to get all Service Status, with name and ID
         /// </summary>
-        public IEnumerable<ProdStatus> GetAllStatus()
+        public IEnumerable<ServStatus> GetAllStatus()
         {
             try
             {
-                var request = new RestRequest($"{prefix}/product-status", Method.GET)
+                var request = new RestRequest($"{prefix}/serv_status", Method.GET)
                 {
                     RequestFormat = DataFormat.Json
                 };
 
-                var response = client.Execute<List<ProdStatus>>(request);
-
-                CheckStatusCode(response);
-
-                return response.Data;
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                throw e;
-            }
-        }
-
-        /// <summary>
-        /// API call to get all the Product Units
-        /// </summary>
-        public IEnumerable<ProdUnit> GetAllUnits()
-        {
-            try
-            {
-                var request = new RestRequest($"{prefix}/units", Method.GET)
-                {
-                    RequestFormat = DataFormat.Json
-                };
-
-                var response = client.Execute<List<ProdUnit>>(request);
-
-                CheckStatusCode(response);
-
-                return response.Data;
-            }
-            catch (Exception e)
-            {
-                ErrorWriter.ExceptionError(e);
-                throw e;
-            }
-        }
-
-
-        /* ---------------------------------------------------------------- */
-        /* OTHERS */
-        /* ---------------------------------------------------------------- */
-
-        // TODO Pagination
-        /// <summary>
-        /// API call to list all Products with low Stock (<10)
-        /// </summary>
-        public IEnumerable<Producto> GetProdLowStock()
-        {
-            try
-            {
-                var url = $"{fullPrefix}/low-stock";
-
-                var request = new RestRequest(url, Method.GET)
-                {
-                    RequestFormat = DataFormat.Json
-                };
-
-                var response = client.Execute<List<Producto>>(request);
+                var response = client.Execute<List<ServStatus>>(request);
 
                 CheckStatusCode(response);
 
@@ -339,21 +281,18 @@ namespace initial_d.APICallers
         /// <summary>
         /// Set all the secondary data ,like getting the status Name from the status Id
         /// </summary>
-        /// <param name="prod"> Product to process </param>
-        /// <param name="prodStatusList"> List with all Product Status </param>
-        /// <param name="prodUnitList"> List with all Product Units </param>
-        public Producto ProcessProd(Producto prod, List<ProdStatus> prodStatusList, List<ProdUnit> prodUnitList)
+        /// <param name="serv"> Service to process </param>
+        /// <param name="servStatusList"> List with all Service Status </param>
+        public Servicio ProcessServ(Servicio serv, List<ServStatus> servStatusList)
         {
-            if (prod == null || prodStatusList == null) return null;
+            if (serv == null || servStatusList == null) return null;
 
             // Set Status
-            var thisProdStatus = prodStatusList.FirstOrDefault(status => status.status_id.Equals(prod.product_status));
-            prod.status_name = thisProdStatus?.status ?? string.Empty;
-            // Set Unit data
-            var thisProdUnit = prodUnitList.FirstOrDefault(unit => unit.abbreviation.Equals(prod.unit_id));
-            prod.Unit = thisProdUnit;
+            var thisProdStatus = servStatusList.FirstOrDefault(status => status.status_id.Equals(serv.serv_status));
+            serv.status_name = thisProdStatus?.status ?? string.Empty;
 
-            return prod;
+            return serv;
         }
+
     }
 }

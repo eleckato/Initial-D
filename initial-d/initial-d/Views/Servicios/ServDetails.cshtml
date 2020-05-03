@@ -1,14 +1,13 @@
-﻿@model initial_d.Models.APIModels.Producto
-@using initial_d.Common.Extensions
+﻿@model initial_d.Models.APIModels.Servicio
 
 @{
-    ViewBag.Title = $"{Model.name} | Producto";
+    ViewBag.Title = $"{Model.name} | Servicio";
 
-    var prod = Model;
-    string prodStatus = Model.product_status;
+    var serv = Model;
+    string servStatus = Model.serv_status;
     bool isDeleted = Model.deleted;
 
-    string goBack_Url = Url.Action(isDeleted ? "DeletedProdList" : "ProdList", "Productos");
+    string goBack_Url = Url.Action(isDeleted ? "DeletedServList" : "ServList", "Servicios");
 
     // Ids to keep an eye on
     string actId = "ACT";
@@ -20,8 +19,8 @@
 
     <div class="header-title">
         <h2>
-            <i class="fa fa-box" aria-hidden="true"></i>
-            Producto
+            <i class="fa fa-tools" aria-hidden="true"></i>
+            Servicio
         </h2>
     </div>
 
@@ -32,7 +31,7 @@
         </a>
 
         <!-- ACTIONS DROPDOWN -->
-        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } })
+        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } } )
     </div>
 
 </div>
@@ -48,48 +47,36 @@
                 <!-- NOMBRE -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.name)</th>
-                    <td>@prod.name</td>
-                </tr>
-
-                <!-- PRECIO -->
-                <tr>
-                    <th>@Html.DisplayNameFor(m => m.priceString)</th>
-                    <td>@prod.priceString</td>
+                    <td>@serv.name</td>
                 </tr>
 
                 <!-- MARCA -->
                 <tr>
-                    <th>@Html.DisplayNameFor(m => m.brand)</th>
-                    <td>@prod.brand</td>
+                    <th>@Html.DisplayNameFor(m => m.priceString)</th>
+                    <td>@serv.priceString</td>
                 </tr>
                 
                 <!-- STOCK -->
                 <tr>
-                    <th>@Html.DisplayNameFor(m => m.stock)</th>
-                    <td>@prod.stockString</td>
-                </tr>
-                
-                <!-- ALERTA DE STOCK -->
-                <tr>
-                    <th>@Html.DisplayNameFor(m => m.stock_alert)</th>
-                    <td>@prod.stockAlertString</td>
+                    <th>@Html.DisplayNameFor(m => m.serv_desc)</th>
+                    <td>@serv.serv_desc</td>
                 </tr>
 
                 <!-- DESCRIPCIÓN -->
                 <tr>
-                    <th>@Html.DisplayNameFor(m => m.product_desc)</th>
-                    <td>@prod.product_desc</td>
+                    <th>@Html.DisplayNameFor(m => m.timeString)</th>
+                    <td>@serv.timeString</td>
                 </tr>
                 
                 <!-- STATUS -->
                 <tr>
-                    <th>@Html.DisplayNameFor(m => m.product_status)</th>
+                    <th>@Html.DisplayNameFor(m => m.serv_desc)</th>
                     <td>
-                        @if (prodStatus.Equals(inaId))
+                        @if (servStatus.Equals(inaId))
                         {<i class="fa fa-eye-slash mr-1 text-danger" aria-hidden="true"></i>}
-                        @if (prodStatus.Equals(actId))
+                        @if (servStatus.Equals(actId))
                         {<i class="fa fa-eye mr-1 color-green" aria-hidden="true"></i>}
-                        @prod.status_name
+                        @serv.status_name
                     </td>
                 </tr>
 
@@ -108,7 +95,7 @@
                 <div class="mt-4">
                     <p>
                         <i class="fa fa-trash-alt" aria-hidden="true" style="color:var(--red)"></i>
-                        Producto Eliminado
+                        Servicio Eliminado
                     </p>
                 </div>
             }
@@ -133,7 +120,6 @@
     </div>
 
 </div>
-
 
 <!-- MODALS -->
 @Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })

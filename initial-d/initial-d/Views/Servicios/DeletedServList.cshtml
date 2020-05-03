@@ -1,40 +1,33 @@
-﻿@model IEnumerable<initial_d.Models.APIModels.Producto>
+﻿@model IEnumerable<initial_d.Models.APIModels.Servicio>
 @using initial_d.Common.FilterBar;
 
 @{
-    ViewBag.Title = "Productos";
+    ViewBag.Title = "Servicios Eliminados";
 
     // Filters
-    string brand = ViewBag.brand ?? string.Empty;
     string name = ViewBag.name ?? string.Empty;
-    var prodStatusList = (SelectList)ViewBag.prodStatusList;
+    var servStatusLst = (SelectList)ViewBag.servStatusLst;
 
     string actId = "ACT";
 
     // Action URL
-    string delList = Url.Action("DeletedProdList", "Productos");
-    string addUrl = Url.Action("AddProd", "Productos");
+    string goBackUrl = Url.Action("ServList", "Servicios");
 }
 
 <!-- HEADER | ACTION BUTTONS -->
-<div class="header ">
-
+<div class="header">
     <div class="header-title">
         <h2>
-            <i class="fa fa-boxes" aria-hidden="true"></i>
+            <i class="fa fa-tools" aria-hidden="true"></i>
             @ViewBag.Title
         </h2>
     </div>
     
     <!-- BUTTONS -->
     <div class="header-buttons">
-        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-            Productos Eliminados
-        </a>
-        <a href="@addUrl" class="btn btn-sm btn-green" role="button">
-            <i class="fa fa-plus"></i>
-            Agregar Producto
+        <a href="@goBackUrl" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Servicios
         </a>
     </div>
 </div>
@@ -44,18 +37,16 @@
 @{ 
     var filterTemplate = new FilterBarTemplate()
     {
-        formAction = "ProdList",
-        formController = "Productos",
+        formAction = "ServList",
+        formController = "Servicios",
         filters = new List<MvcHtmlString>()
         {
             Html.TextBox("name", name, new { @class = "form-control form-control-sm h-100", @placeholder = "Nombre" }),
-            Html.TextBox("brand", brand, new { @class = "form-control form-control-sm h-100", @placeholder = "Marca" }),
-            Html.DropDownList("statusId", prodStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" }),
+            Html.DropDownList("statusId", servStatusLst, "Status", new { @class = "custom-select custom-select-sm form-control" }),
         }
     };
 }
 @Html.Partial("Partial/_FiltersCollapse", filterTemplate)
-
 
 
 <!-- DATA TABLE -->
@@ -66,25 +57,24 @@
             <tr>
                 <th>Actions</th>
                 <th>@Html.DisplayNameFor(m => m.name)</th>
-                <th>@Html.DisplayNameFor(m => m.brand)</th>
-                <th>@Html.DisplayNameFor(m => m.stock)</th>
-                <th>@Html.DisplayNameFor(m => m.priceString)</th>
-                <th class="cell-hidden-lg">@Html.DisplayNameFor(m => m.product_status)</th>
+                <th>@Html.DisplayNameFor(m => m.estimated_time)</th>
+                <th>@Html.DisplayNameFor(m => m.price)</th>
+                <th>@Html.DisplayNameFor(m => m.status_name)</th>
             </tr>
         </thead>
 
         <tbody>
 
-            @foreach (var prod in Model)
+            @foreach (var serv in Model)
             {
-                string detailsUrl = Url.Action("ProdDetails", "Productos", new { prodId = prod.product_id });
-                bool? isEnabled = prod?.product_status?.Equals(actId);
+                string detailsUrl = Url.Action("ServDetails", "Servicios", new { servId = serv.serv_id});
+                bool? isEnabled = serv?.serv_status?.Equals(actId);
 
                 <tr class="clickable-row" data-url="@detailsUrl">
                     
                     <!-- ACTION DROPDOWN -->
                     <td data-label="Actions" class="not-clickable cell-compact">
-                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(prod) { { "context", "list" } } )
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(serv) { { "context", "deleteList" } } )
                     </td>
                     
                     <!-- NOMBRE -->
@@ -94,29 +84,24 @@
                             var statClass = isEnabled == true ? "fa-eye color-green" : "fa-eye-slash text-danger";
                             <div class="w-max-content-sm">
                                 <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
-                                @prod.name
+                                @serv.name
                             </div>
                         }
                     </td>
                     
-                    <!-- MARCA -->
-                    <td data-label="@Html.DisplayNameFor(m => m.brand)">
-                        @prod.brand
-                    </td>
-                    
-                    <!-- STOCK -->
-                    <td data-label="@Html.DisplayNameFor(m => m.stock)">
-                        @prod.stockString
+                    <!-- TIEMPO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.estimated_time)">
+                        @serv.timeString
                     </td>
                     
                     <!-- PRECIO -->
                     <td data-label="@Html.DisplayNameFor(m => m.priceString)">
-                        @prod.priceString
+                        @(serv.priceString)
                     </td>
 
                     <!-- STATUS -->
-                    <td class="cell-hidden-lg" data-label="@Html.DisplayNameFor(m => m.product_status)">
-                        @prod.status_name
+                    <td data-label="@Html.DisplayNameFor(m => m.status_name)">
+                        @serv.status_name
                     </td>
 
                 </tr>
@@ -128,11 +113,13 @@
     </table>
 </div>
 
+
 <!-- MODALS -->
-@Html.Partial("Partial/_DeleteModalAndScript")
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", true } })
 @Html.Partial("Partial/_ToggleStatusModal")
 
 
 @section customScripts{
     @Scripts.Render("~/Content/JS/c_table.js")
 }
+

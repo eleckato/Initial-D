@@ -42,7 +42,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route]
-        public ActionResult UserList(string userName = null, string userEmail = null, string userTypeId = null, string userStatusId = null)
+        public ActionResult UserList(string userName = null, string userRut = null, string userTypeId = null, string userStatusId = null)
         {
             List<Usuario> usuarios;
             List<UserType> userTypeLst;
@@ -50,7 +50,7 @@ namespace initial_d.Controllers
 
             try
             {
-                usuarios = UP.GetAllUsers(userName, userEmail, userTypeId, userStatusId).ToList();
+                usuarios = UP.GetAllUsers(userName, userRut, userTypeId, userStatusId).ToList();
                 if (usuarios == null) return Error_FailedRequest();
 
                 // Remove Current User from the list
@@ -77,7 +77,7 @@ namespace initial_d.Controllers
 
             // To keep the state of the search filters when the user make a search
             ViewBag.userName = userName;
-            ViewBag.userEmail = userEmail;
+            ViewBag.userRut = userRut;
 
             ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", userTypeId);
             ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status", userStatusId);
@@ -91,7 +91,7 @@ namespace initial_d.Controllers
         /// <para> /usuarios-adm/eliminados </para>
         [HttpGet]
         [Route(deteledList)]
-        public ActionResult DeletedUserList(string userName = null, string userEmail = null, string userTypeId = null, string userStatusId = null)
+        public ActionResult DeletedUserList(string userName = null, string userRut = null, string userTypeId = null, string userStatusId = null)
         {
             List<Usuario> usuarios;
             List<UserType> userTypeLst;
@@ -99,7 +99,7 @@ namespace initial_d.Controllers
 
             try
             {
-                usuarios = UP.GetAllUsers(userName, userEmail, userTypeId, userStatusId, true)?.ToList();
+                usuarios = UP.GetAllUsers(userName, userRut, userTypeId, userStatusId, true)?.ToList();
                 if (usuarios == null) return Error_FailedRequest();
 
                 // Remove Current User from the list
@@ -125,7 +125,7 @@ namespace initial_d.Controllers
 
             // To keep the state of the search filters when the user make a search
             ViewBag.userName = userName;
-            ViewBag.userEmail = userEmail;
+            ViewBag.userRut = userRut;
             ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
             ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status");
 

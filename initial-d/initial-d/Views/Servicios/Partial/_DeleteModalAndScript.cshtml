@@ -1,0 +1,65 @@
+﻿@* Just make a button these attributes and done      
+   data-toggle="modal" href="#delete-modal" data-serv-id="{servId}" 
+*@
+@{ 
+    bool isDeleted = (bool?)ViewData["isDeleted"] ?? false;
+}
+
+<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    Advertencia
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @if (!isDeleted)
+                {
+                    <p>¿Estas seguro/a que quieres eliminar a este Servicio?</p>
+                }
+                else
+                {
+                    <p>¿Estas seguro/a que quieres restaurar a este Servicio?</p>
+                }
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <a id="modal-delete-btn" href="#" role="button" class="btn btn-sm @(isDeleted ? "btn-green" : "btn-red")">
+                    <i class="fa @(isDeleted ? "fa-trash-restore" : "fa-trash")" aria-hidden="true"></i>
+                    @(isDeleted ? "Restaurar" : "Eliminar")
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    WaitForJquery(function () {
+        $(document).on('show.bs.modal', '#delete-modal', function (event) {
+            // Button that triggered the modal
+            var button = $(event.relatedTarget)
+
+            // Extract the userId
+            var servId = button.data('serv-id')
+
+            // Get the actual delete button from the modal
+            var delbtn = $(this).find('#modal-delete-btn');
+
+            let url = '@Url.Action(isDeleted ? "RestoreServ" : "DeleteServ", "Servicios", new { servId = "replace_this_id" })'.replace('replace_this_id', servId);
+
+            delbtn.attr('href', value = url);
+        });
+    });
+</script>

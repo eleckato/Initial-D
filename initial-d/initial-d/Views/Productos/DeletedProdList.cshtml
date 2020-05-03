@@ -62,13 +62,13 @@
                 <th>@Html.DisplayNameFor(m => m.name)</th>
                 <th>@Html.DisplayNameFor(m => m.brand)</th>
                 <th>@Html.DisplayNameFor(m => m.stock)</th>
+                <th>@Html.DisplayNameFor(m => m.priceString)</th>
                 <th>@Html.DisplayNameFor(m => m.product_status)</th>
             </tr>
         </thead>
 
         <tbody>
 
-            @* Print one row by Publication *@
             @foreach (var prod in Model)
             {
                 string detailsUrl = Url.Action("ProdDetails", "Productos", new { prodId = prod.product_id });
@@ -78,7 +78,7 @@
                     
                     <!-- ACTION DROPDOWN -->
                     <td data-label="Actions" class="not-clickable">
-                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(prod) { { "context", "list" } } )
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(prod) { { "context", "deleteList" } } )
                     </td>
                     
                     <!-- NOMBRE -->
@@ -100,7 +100,12 @@
                     
                     <!-- STOCK -->
                     <td data-label="@Html.DisplayNameFor(m => m.stock)">
-                        @(prod.stock) @(prod.Unit.abbreviation).
+                        @prod.stockString
+                    </td>
+                    
+                    <!-- PRECIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.priceString)">
+                        @prod.priceString
                     </td>
 
                     <!-- STATUS -->

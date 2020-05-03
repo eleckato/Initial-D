@@ -1,7 +1,128 @@
-﻿@{
+﻿@model IEnumerable<initial_d.Models.APIModels.Servicio>
+@using initial_d.Common.FilterBar;
+
+@{
     ViewBag.Title = "Servicios";
+
+    // Filters
+    string name = ViewBag.name ?? string.Empty;
+    var servStatusLst = (SelectList)ViewBag.servStatusLst;
+
+    string actId = "ACT";
+
+    // Action URL
+    string delList = Url.Action("DeletedServList", "Servicios");
+    string addUrl = Url.Action("AddServ", "Servicios");
 }
 
-<h2>Servicios Disponibles</h2>
+<!-- HEADER | ACTION BUTTONS -->
+<div class="header ">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-tools" aria-hidden="true"></i>
+            @ViewBag.Title
+        </h2>
+    </div>
+    
+    <!-- BUTTONS -->
+    <div class="header-buttons">
+        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            Servicios Eliminados
+        </a>
+        <a href="@addUrl" class="btn btn-sm btn-green" role="button">
+            <i class="fa fa-plus"></i>
+            Agregar Producto
+        </a>
+    </div>
+</div>
 
 
+<!-- BUSCAR -->
+@{ 
+    var filterTemplate = new FilterBarTemplate()
+    {
+        formAction = "ServList",
+        formController = "Servicios",
+        filters = new List<MvcHtmlString>()
+        {
+            Html.TextBox("name", name, new { @class = "form-control form-control-sm h-100", @placeholder = "Nombre" }),
+            Html.DropDownList("statusId", servStatusLst, "Status", new { @class = "custom-select custom-select-sm form-control" }),
+        }
+    };
+}
+@Html.Partial("Partial/_FiltersCollapse", filterTemplate)
+
+
+<!-- DATA TABLE -->
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.name)</th>
+                <th>@Html.DisplayNameFor(m => m.estimated_time)</th>
+                <th>@Html.DisplayNameFor(m => m.price)</th>
+                <th class="cell-hidden-lg">@Html.DisplayNameFor(m => m.status_name)</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var serv in Model)
+            {
+                string detailsUrl = Url.Action("ServDetails", "Servicios", new { servId = serv.serv_id});
+                bool? isEnabled = serv?.serv_status?.Equals(actId);
+
+                <tr class="clickable-row" data-url="@detailsUrl">
+                    
+                    <!-- ACTION DROPDOWN -->
+                    <td data-label="Actions" class="not-clickable cell-compact">
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(serv) { { "context", "list" } } )
+                    </td>
+                    
+                    <!-- NOMBRE -->
+                    <td data-label="@Html.DisplayNameFor(m => m.name)">
+                        @if (isEnabled != null)
+                        {
+                            var statClass = isEnabled == true ? "fa-eye color-green" : "fa-eye-slash text-danger";
+                            <div class="w-max-content-sm">
+                                <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
+                                @serv.name
+                            </div>
+                        }
+                    </td>
+                    
+                    <!-- TIEMPO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.estimated_time)">
+                        @serv.timeString
+                    </td>
+                    
+                    <!-- PRECIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.priceString)">
+                        @(serv.priceString)
+                    </td>
+
+                    <!-- STATUS -->
+                    <td class="cell-hidden-lg" data-label="@Html.DisplayNameFor(m => m.status_name)">
+                        @serv.status_name
+                    </td>
+
+                </tr>
+
+            }
+
+        </tbody>
+
+    </table>
+</div>
+
+<!-- MODALS -->
+@Html.Partial("Partial/_DeleteModalAndScript")
+@Html.Partial("Partial/_ToggleStatusModal")
+
+@section customScripts{
+    @Scripts.Render("~/Content/JS/c_table.js")
+}

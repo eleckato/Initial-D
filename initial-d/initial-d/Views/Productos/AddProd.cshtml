@@ -24,10 +24,9 @@
 @using (Html.BeginForm("AddProd", "Productos"))
 {
     @Html.HiddenFor(m => m.product_id);
-    @Html.HiddenFor(m => m.create_at);
-    @Html.HiddenFor(m => m.update_at);
+    @Html.HiddenFor(m => m.created_at);
+    @Html.HiddenFor(m => m.updated_at);
     @Html.HiddenFor(m => m.deleted);
-    @Html.HiddenFor(m => m.product_status);
 
     @* FORM CONTAINER *@
     <div class="row justify-content-start mb-4">
@@ -36,7 +35,8 @@
             <div class="c-jumbotron">
                 <h3 class="mb-4"> Información General </h3>
 
-                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive">
+                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive table-th-compact">
+                    <!-- NOMBRE -->
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.name)</th>
                         <td>
@@ -44,6 +44,18 @@
                             @Html.ValidationMessageFor(x => x.name)
                         </td>
                     </tr>
+
+                    <!-- PRECIO -->
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.price)</th>
+                        <td>
+                            @Html.TextBox("exposedPrice", "", new { @class = "form-control money-editor", data_og_editor="price" })
+                            @Html.HiddenFor(m => m.price)
+                            @Html.ValidationMessageFor(x => x.price)
+                        </td>
+                    </tr>
+
+                    <!-- MARCA -->
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.brand)</th>
                         <td>
@@ -51,16 +63,32 @@
                             @Html.ValidationMessageFor(x => x.brand)
                         </td>
                     </tr>
+
+                    <!-- STOCK -->
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.stock)</th>
                         <td>
                             <div class="row ">
-                                @Html.TextBoxFor(m => m.stock, new { @class = "form-control mr-3 ", @style="min-width: 0px; width: 4.6rem" })
+                                @Html.TextBoxFor(m => m.stock, new { @class = "form-control mr-3 no-spinner", @style="min-width: 0px; width: 4.6rem", type="number", min="0" })
                                 @Html.DropDownListFor(m => m.unit_id, prodUnitList, new { @class = "custom-select custom-select-sm form-control w-auto",  style="min-width: 0px;" })
                             </div>
                             @Html.ValidationMessageFor(x => x.stock)
                         </td>
                     </tr>
+
+                    <!-- ALERTA DE STOCK -->
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.stock_alert)</th>
+                        <td>
+                            <div class="row ">
+                                @Html.TextBoxFor(m => m.stock_alert, new { @class = "form-control no-spinner mr-3", @style="min-width: 0px; width: 4.6rem", type="number", min="0" })
+                                <label class="unit-name">Litros</label>
+                            </div>
+                            @Html.ValidationMessageFor(x => x.stock_alert)
+                        </td>
+                    </tr>
+
+                    <!-- DESCRIPCIÓN -->
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.product_desc)</th>
                         <td>
@@ -68,13 +96,15 @@
                             @Html.ValidationMessageFor(x => x.product_desc)
                         </td>
                     </tr>
+
+                    <!-- STATUS -->
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.product_status)</th>
                         <td>
                             <div class="row ">
                                 @Html.DropDownListFor(m => m.product_status, prodStatusList, new { @class = "custom-select custom-select-sm form-control w-auto",  style="min-width: 0px;" })
                             </div>
-                            @Html.ValidationMessageFor(x => x.stock)
+                            @Html.ValidationMessageFor(x => x.product_status)
                         </td>
                     </tr>
                 </table>
@@ -96,4 +126,15 @@
         </button>
     </div>
 
+}
+
+@section customScripts{
+    @Scripts.Render("~/Content/JS/money-editor.js")
+
+    <script>
+        $(document).on('change', '#unit_id', function () {
+            let val = $('#unit_id option:selected').html();
+            $('.unit-name').html(val);
+        });
+    </script>
 }

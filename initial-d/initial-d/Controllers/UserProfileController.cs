@@ -119,6 +119,7 @@ namespace initial_d.Controllers
                 
                 oldUser.name = newUser.name;
                 oldUser.last_names = newUser.last_names;
+                oldUser.rut = newUser.rut;
                 oldUser.adress = newUser.adress;
                 oldUser.email = newUser.email;
                 oldUser.phone = newUser.phone;

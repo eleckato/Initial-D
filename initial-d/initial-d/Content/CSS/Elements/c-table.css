@@ -1,11 +1,22 @@
 ﻿/* ---------------------------------------------------
     INFO TABLE        |        c-info-table
 ----------------------------------------------------- */
-
+/* Make a cell just wide enough fo fit its content */
+.cell-compact {
+    width: 1%;
+    white-space: nowrap;
+    padding-right: 1rem !important;
+}
 /* Make it small */
 .c-info-table td, 
 .c-info-table th {
 	padding: .4rem;
+}
+
+.table-th-compact tr th {
+    width: 1%;
+    white-space: nowrap;
+    padding-right: 1rem !important;
 }
 
 .c-info-table th div {
@@ -36,7 +47,7 @@
     background-color: var(--yellow-0);
 }
 /* ---------------------------------------------------
-    Cutstom Bordered      |      .c-table-bordered
+    Custom Bordered      |      .c-table-bordered
 ----------------------------------------------------- */
 
 .c-table-bordered td, 
@@ -65,7 +76,7 @@
 }
 
 /* ---------------------------------------------------
-    Cutstom Bordered for DataResume      |      .c-data-table-bordered
+    Custom Bordered for DataResume      |      .c-data-table-bordered
 ----------------------------------------------------- */
 /* Clean the boostrap style */
 .c-data-table-bordered td, 

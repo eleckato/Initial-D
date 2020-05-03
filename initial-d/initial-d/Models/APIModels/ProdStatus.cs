@@ -9,8 +9,8 @@ namespace initial_d.Models.APIModels
     {
         public string status_id { get; set; }
         public string status { get; set; }
-        public DateTime create_at { get; set; }
-        public DateTime update_at { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime updated_at { get; set; }
         public bool deleted { get; set; }
 
         public ProdStatus()

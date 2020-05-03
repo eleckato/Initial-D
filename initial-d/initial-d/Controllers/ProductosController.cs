@@ -197,7 +197,6 @@ namespace initial_d.Controllers
             return View(prodTemplate);
         }
 
-        // TODO API CALL
         /// <summary>
         /// POST  |  API call to add a Product
         /// <para> /productos/agregar </para>
@@ -224,9 +223,6 @@ namespace initial_d.Controllers
 
             string successMsg = "El Producto fue agregado con éxito";
             SetSuccessMsg(successMsg);
-
-            // TODO BORRAR CUANDO SE IMPLEMENTE API
-            prodId = "295BF2387866480D80450573D8A80107";
 
             return RedirectToAction("ProdDetails", new { prodId });
         }
@@ -342,7 +338,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// POST  |  API call to restore a deleted Product
-        /// <para> /Product/RestoreProd </para>
+        /// <para> /productos/{id}/restaurar </para>
         /// </summary>
         [HttpGet]
         [Route(restoreRoute)]
@@ -362,7 +358,7 @@ namespace initial_d.Controllers
             }
 
 
-            string successMsg = "El Product fue restaurado con éxito";
+            string successMsg = "El Producto fue restaurado con éxito";
             SetSuccessMsg(successMsg);
 
             return RedirectToAction("DeletedProdList");
@@ -375,7 +371,7 @@ namespace initial_d.Controllers
 
         /// <summary>
         /// POST  |  API call to update the Status of a Product
-        /// <para> /Productos/ChangeProdStatus </para>
+        /// <para> /productos/change-status </para>
         /// </summary>
         /// <param name="prodId"> Id of the Product to update </param>
         /// <param name="prodStatusId"> Id of the new Status for the Product </param>
@@ -396,12 +392,12 @@ namespace initial_d.Controllers
                 return Error_CustomError(e.Message);
             }
 
-            string deactivateMsg = "El Producto fue activado con éxito";
-            string activateMsg = "El Producto fue desactivado con éxito";
+            string deactivateMsg = "El Producto fue desactivado con éxito";
+            string activateMsg = "El Producto fue activado con éxito";
             string genericMsg = "El Status del Producto fue actualizado con éxito";
 
             string msg;
-            if (prodStatusId.Equals("DEA"))
+            if (prodStatusId.Equals("INA"))
                 msg = deactivateMsg;
             else if ((prodStatusId.Equals("ACT")))
                 msg = activateMsg;

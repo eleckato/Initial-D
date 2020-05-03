@@ -1,15 +1,15 @@
 ﻿@* Just make a button these attributes and done
-    data-toggle="modal" href="#status-modal" data-prod-id="{prodId}" data-new-state="{prodState}"
+    data-toggle="modal" href="#status-modal" data-serv-id="{servId}" data-new-state="{servState}"
 *@
 
 <div id="status-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered " role="document">
         <div class="modal-content">
-            @using (Html.BeginForm("ChangeProdStatus", "Productos", FormMethod.Post))
+            @using (Html.BeginForm("ChangeServStatus", "Servicios", FormMethod.Post))
             {
                 @* Update with JS *@
-                @Html.Hidden("prodId", "", new { @class = "prodId" })
-                @Html.Hidden("prodStatusId", "", new { id = "prodStatusId" })
+                @Html.Hidden("servId", "", new { @class = "servId" })
+                @Html.Hidden("servStatusId", "", new { id = "servStatusId" })
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -50,23 +50,23 @@
                 var button = $(event.relatedTarget)
                 var modal = $(this);
 
-                // Extract the prodId
-                var prodId = button.data('prod-id')
-                // Change the prodId of the hidden input
-                $('#status-modal .prodId').val(prodId);
+                // Extract the servId
+                var servId = button.data('serv-id')
+                // Change the servId of the hidden input
+                $('#status-modal .servId').val(servId);
             
-                // Extract the prodId
-                var prodState = button.data('new-state')
-                // Change the prodId of the hidden input
-                modal.find('#prodStatusId').val(prodState);
+                // Extract the servId
+                var servState = button.data('new-state')
+                // Change the servId of the hidden input
+                modal.find('#servStatusId').val(servState);
 
                 var main_msg = modal.find('.modal-body p');
                 var btn_submit = modal.find(':submit');
                 var submit_icon = btn_submit.find('i.fa');
                 var submit_span = btn_submit.find('span');
 
-                if (prodState == 'INA') {
-                    main_msg.text('¿Seguro/a que desea dehabilitar este Producto?');
+                if (servState == 'INA') {
+                    main_msg.text('¿Seguro/a que desea dehabilitar este Servicio?');
 
                     submit_icon.removeClass('fa-unlock-alt fa-lock');
                     submit_icon.addClass('fa-lock');
@@ -76,8 +76,8 @@
                     btn_submit.removeClass('btn-red btn-green');
                     btn_submit.addClass('btn-red');
                 }
-                else if (prodState == 'ACT') {
-                    main_msg.text('¿Seguro/a que desea habilitar este Producto?');
+                else if (servState == 'ACT') {
+                    main_msg.text('¿Seguro/a que desea habilitar este Servicio?');
 
                     submit_icon.removeClass('fa-unlock-alt fa-lock');
                     submit_icon.addClass('i.fa').addClass('fa-unlock-alt');

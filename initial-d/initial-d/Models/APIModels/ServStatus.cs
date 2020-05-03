@@ -9,8 +9,8 @@ namespace initial_d.Models.APIModels
     {
         public string status_id { get; set; }
         public string status { get; set; }
-        public DateTime create_at { get; set; }
-        public DateTime update_at { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime updated_at { get; set; }
         public bool deleted { get; set; }
 
         public ServStatus()
@@ -22,8 +22,8 @@ namespace initial_d.Models.APIModels
         {
             status_id = string.Empty;
             status = string.Empty;
-            create_at = DateTime.Now;
-            update_at = DateTime.Now;
+            created_at = DateTime.Now;
+            updated_at = DateTime.Now;
             deleted = false;
         }
     }

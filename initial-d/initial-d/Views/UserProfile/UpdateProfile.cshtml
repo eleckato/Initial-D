@@ -30,7 +30,7 @@
             <div class="c-jumbotron">
                 <h3 class="mb-4"> Información Personal </h3>
 
-                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive">
+                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive table-th-compact">
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.name)</th>
                         <td>
@@ -43,6 +43,13 @@
                         <td>
                             @Html.TextBoxFor(m => m.last_names, new { @class = "form-control" })
                             @Html.ValidationMessageFor(x => x.last_names)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.rut)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.rut, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.rut)
                         </td>
                     </tr>
                     <tr>

@@ -6,7 +6,7 @@
 
     // To Keep an State on the Search Filters
     string userName = ViewBag.userName ?? string.Empty;
-    string userEmail = ViewBag.userEmail ?? string.Empty;
+    string userRut = ViewBag.userRut ?? string.Empty;
     var userTypeList = (SelectList)ViewBag.userTypeLst;
     var userStatusList = (SelectList)ViewBag.userStatusLst;
     
@@ -15,7 +15,7 @@
     // Action Url
     string addUrl = Url.Action("AddUser", "Usuarios");
     string delList = Url.Action("DeletedUserList", "Usuarios");
-    // detailsUrl on Document
+    // detailsUrl on HTML
 }
 
 <!-- HEADER | ACTION BUTTONS -->
@@ -51,7 +51,7 @@
         filters = new List<MvcHtmlString>()
         {
             Html.TextBox("userName", userName, new { @class = "form-control form-control-sm h-100", @placeholder = "Nombre de Usuario" }),
-            Html.TextBox("userEmail", userEmail, new { @class = "form-control form-control-sm h-100", @placeholder = "Email" }),
+            Html.TextBox("userRut", userRut, new { @class = "form-control form-control-sm h-100", @placeholder = "Rut" }),
             Html.DropDownList("userTypeId", userTypeList, "Tipo", new { @class = "custom-select custom-select-sm form-control" }),
             Html.DropDownList("userStatusId", userStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" })
         }
@@ -68,11 +68,7 @@
                 <th>Actions</th>
                 <th>@Html.DisplayNameFor(m => m.username)</th>
                 <th class="cell-hidden-lg">@Html.DisplayNameFor(m => m.fullName)</th>
-                <th>
-                    <div>
-                        @Html.DisplayNameFor(m => m.email)
-                    </div>
-                </th>
+                <th>@Html.DisplayNameFor(m => m.rut)</th>
                 <th>@Html.DisplayNameFor(m => m.user_type_id)</th>
                 <th>@Html.DisplayNameFor(m => m.status_id)</th>
             </tr>
@@ -89,7 +85,7 @@
                 <tr class="clickable-row" data-url="@detailsUrl">
 
                     <!-- ACTION DROPDOWN -->
-                    <td data-label="Actions" class="not-clickable">
+                    <td data-label="Actions" class="not-clickable cell-compact">
                         @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(user) { { "context", "list" } } )
                     </td>
 
@@ -110,9 +106,9 @@
                         @Html.DisplayFor(m => user.fullName)
                     </td>
 
-                    <!-- EMAIL -->
-                    <td data-label="@Html.DisplayNameFor(m => m.email)">
-                        @Html.ValueFor(m => user.email)
+                    <!-- RUT -->
+                    <td data-label="@Html.DisplayNameFor(m => m.rut)">
+                        @Html.ValueFor(m => user.rut)
                     </td>
 
                     <!-- USER TYPE -->

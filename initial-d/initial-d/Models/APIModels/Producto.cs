@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace initial_d.Models.APIModels
 {
@@ -15,9 +16,50 @@ namespace initial_d.Models.APIModels
         [Display(Name = "Descripción")]
         public string product_desc { get; set; }
 
+
+        [Required]
+        [Display(Name = "Precio")]
+        public int price { get; set; }
+
+        [Required]
+        [Display(Name = "Precio")]
+        public string priceString
+        {
+            get
+            {
+                return price.ToString("C", CultureInfo.CreateSpecificCulture("es-CL"));
+            }
+        }
+
         [Required]
         [Display(Name = "Stock")]
         public int stock { get; set; }
+
+        public string stockString { 
+            get 
+            {
+                string unitName = Unit?.name ?? "";
+                string unitPruralName = Unit?.plural_name ?? "";
+
+                string str = $"{stock} {(stock == 1 ? unitName : unitPruralName)}";
+                return str;
+            } 
+        }
+
+        [Required]
+        [Display(Name = "Alerta de Stock")]
+        public int stock_alert { get; set; }
+
+        public string stockAlertString {
+            get
+            {
+                string unitName = Unit?.name ?? "";
+                string unitPruralName = Unit?.plural_name ?? "";
+
+                string str = $"{stock_alert} {(stock_alert == 1 ? unitName : unitPruralName)}";
+                return str;
+            }
+        }
 
         [Required]
         [Display(Name = "Marca")]
@@ -25,11 +67,11 @@ namespace initial_d.Models.APIModels
 
         [Required]
         [Display(Name = "Fecha de Creación")]
-        public DateTime create_at { get; set; }
+        public DateTime created_at { get; set; }
 
         [Required]
         [Display(Name = "Ultima Actualización")]
-        public DateTime update_at { get; set; }
+        public DateTime updated_at { get; set; }
 
         [Required]
         [Display(Name = "Eliminado")]
@@ -57,12 +99,14 @@ namespace initial_d.Models.APIModels
             product_id = string.Empty;
             name = string.Empty;
             product_desc = string.Empty;
+            price = 0;
             stock = 0;
+            stock_alert = 0;
             brand = string.Empty;
             unit_id = string.Empty;
             product_status = string.Empty;
-            create_at = DateTime.Now;
-            update_at = DateTime.Now;
+            created_at = DateTime.Now;
+            updated_at = DateTime.Now;
             deleted = false;
 
             status_name = string.Empty;

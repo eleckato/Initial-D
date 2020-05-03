@@ -29,8 +29,8 @@
     --blue: #5ab1cc;
     --blue-dark: #3b98b4;
 
-    --sidebar-width: 260px;
-    --sidebar-width-closed: 80px;
+    --sidebar-width: 208px;
+    --sidebar-width-closed: 64px;
     --transition-speed: 0.2s;
 }
 
@@ -51,14 +51,15 @@
     GENERAL
 ----------------------------------------------------- */
 
+body {
+    font-size: 0.8rem;
+    font-family: 'Open Sans', sans-serif;
+    background: rgb(252, 250, 246);
+}
+
 footer p {
     font-size: 0.7em;
     margin: 0;
-}
-
-body {
-    font-family: 'Open Sans', sans-serif;
-    background: rgb(252, 250, 246);
 }
 
 input, select{
@@ -90,7 +91,7 @@ p, li, a, td, input  {
         }
 
 
-input[type="text"]
+input[type="text"], input[type="number"]
 {
     font-size: 0.8em;
     height: 2.1em;
@@ -99,6 +100,15 @@ input[type="password"]
 {
     font-size: 1em;
     height: 2.1em;
+}
+/* Input[number] without spinner */
+.no-spinner {
+    -moz-appearance: textfield;
+}
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .row {
@@ -149,13 +159,20 @@ h5.modal-title .fa {
 
 .w-max-content {
     width: max-content;
+    min-width: unset !important;
 }
 
 /* SCREEN WIDTH > 579px */
 @media (min-width: 579px) {
     .w-max-content-sm {
         width: max-content;
+        min-width: unset !important;
     }
+}
+
+.w-5rem {
+    width: 5rem;
+    min-width: 1px;
 }
 
 
@@ -278,7 +295,7 @@ h5.modal-title .fa {
         font-size: inherit;
     }
 
-    button, a:not(.small), td, input[type="text"], textarea, select {
+    button, a:not(.small), td, input[type="text"], input[type="number"], textarea, select {
         font-size: 100% !important;
     }
 

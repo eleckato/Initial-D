@@ -61,12 +61,12 @@ namespace initial_d.APICallers
         /// <summary>
         /// API call to list all Users
         /// </summary>
-        public IEnumerable<Usuario> GetAllUsers(string userName, string userEmail, string userTypeId, string userStatusId, bool deleted = false)
+        public IEnumerable<Usuario> GetAllUsers(string userName, string userRut, string userTypeId, string userStatusId, bool deleted = false)
         {
             try
             {
                 var delString = deleted ? "&deleted=true" : "";
-                var url = $"{prefix}/users?username={userName}&email={userEmail}&user_type_id={userTypeId}&status_id={userStatusId}{delString}";
+                var url = $"{prefix}/users?username={userName}&rut={userRut}&user_type_id={userTypeId}&status_id={userStatusId}{delString}";
 
                 var request = new RestRequest(url, Method.GET)
                 {

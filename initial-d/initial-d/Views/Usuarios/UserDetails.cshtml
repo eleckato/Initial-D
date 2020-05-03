@@ -57,7 +57,7 @@
                 </div>
             }
 
-            <table class="table table-borderless c-info-table">
+            <table class="table table-borderless c-info-table table-th-compact">
                 <!-- USERNAME -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.username)</th>
@@ -121,7 +121,11 @@
         <div class="c-jumbotron">
             <h3 class="mb-4"> Información Personal </h3>
 
-            <table class="table table-borderless c-info-table">
+            <table class="table table-borderless c-info-table table-th-compact">
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.rut)</th>
+                    <td>@Html.DisplayFor(m => m.rut)</td>
+                </tr>
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.name)</th>
                     <td>@Html.DisplayFor(m => m.name)</td>

@@ -29,6 +29,10 @@ namespace initial_d.Models.APIModels
         public string last_names { get; set; }
 
         [Required]
+        [Display(Name = "RUT")]
+        public string rut { get; set; }
+
+        [Required]
         [Display(Name = "Dirección")]
         public string adress { get; set; }
 
@@ -96,6 +100,7 @@ namespace initial_d.Models.APIModels
             email = string.Empty;
             name = string.Empty;
             last_names = string.Empty;
+            rut = string.Empty;
             adress = string.Empty;
             phone = string.Empty;
             lastlogin = DateTime.Today;

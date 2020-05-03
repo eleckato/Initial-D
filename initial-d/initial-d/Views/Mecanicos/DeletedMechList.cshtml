@@ -4,9 +4,8 @@
     ViewBag.Title = "Admin. de Mecánicos";
 
     // Filters
-    // TODO Esto depende de que filtros se deciden poner
     string userName = ViewBag.userName ?? string.Empty;
-    string userEmail = ViewBag.userEmail ?? string.Empty;
+    string userRut = ViewBag.userRut ?? string.Empty;
     var userStatusList = (SelectList)ViewBag.userStatusLst;
     // var hasDebt
     // var hasPublicationPending
@@ -50,7 +49,7 @@
         filters = new List<MvcHtmlString>()
         {
             Html.TextBox("userName", userName, new { @class = "form-control form-control-sm h-100", @placeholder = "Nombre de Usuario" }),
-            Html.TextBox("userEmail", userEmail, new { @class = "form-control form-control-sm h-100", @placeholder = "Email" }),
+            Html.TextBox("userRut", userRut, new { @class = "form-control form-control-sm h-100", @placeholder = "Rut" }),
             Html.DropDownList("userStatusId", userStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" }),
         }
     };
@@ -84,7 +83,7 @@
                 <tr class="clickable-row" data-url="@detailsUrl">
 
                     <!-- ACTION DROPDOWN -->
-                    <td data-label="Actions" class="not-clickable">
+                    <td data-label="Actions" class="not-clickable cell-compact">
                         @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(mech) { { "context", "deleteList" } } )
                     </td>
 
@@ -107,8 +106,8 @@
                     </td>
 
                     <!-- EMAIL -->
-                    <td data-label="@Html.DisplayNameFor(m => m.email)">
-                        @Html.ValueFor(m => mech.email)
+                    <td data-label="@Html.DisplayNameFor(m => m.rut)">
+                        @Html.ValueFor(m => mech.rut)
                     </td>
 
                     <!-- STATUS -->

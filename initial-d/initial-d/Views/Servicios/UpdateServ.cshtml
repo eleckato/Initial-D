@@ -1,18 +1,19 @@
 ﻿@model initial_d.Models.APIModels.Servicio
+
 @{
-    ViewBag.Title = "Agregar Servicio";
+    ViewBag.Title = $"{Model.name} | Actualizar Datos";
 
     var servStatusList = (SelectList)ViewBag.servStatusList;
 
-    string GoBack_Url = Url.Action("ServList", "Servicios");
+    string GoBack_Url = Url.Action("ServDetails", "Servicios", new { servId = Model.serv_id});
 }
 
 <div class="header">
     
     <div class="header-title">
         <h2>
-            <i class="fa fa-box" aria-hidden="true"></i>
-            @ViewBag.Title
+            <i class="fa fa-edit" aria-hidden="true"></i>
+            Actualizar Datos
         </h2>
     </div>
 
@@ -44,7 +45,7 @@
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.price)</th>
                         <td>
-                            @Html.TextBox("exposedMoneyEditor", "", new { @class = "form-control money-editor", data_og_editor="price" })
+                            @Html.TextBox("exposedPrice", "", new { @class = "form-control money-editor", data_og_editor="price" })
                             @Html.HiddenFor(m => m.price)
                             @Html.ValidationMessageFor(x => x.price)
                         </td>
@@ -95,6 +96,7 @@
     </div>
 
 }
+
 
 @section customScripts{
     @Scripts.Render("~/Content/JS/money-editor.js")

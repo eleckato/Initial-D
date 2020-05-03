@@ -106,20 +106,17 @@ namespace initial_d.APICallers
         /// <summary>
         /// API call to list all Mechanics
         /// </summary>
-        public IEnumerable<Mecanico> GetAllMech(string userName, string userEmail, string userStatusId, bool deleted = false)
+        public IEnumerable<Mecanico> GetAllMech(string userName, string userRut, string userStatusId, bool deleted = false)
         {
             try
             {
                 var delString = deleted ? "&deleted=true" : "";
-                var url = $"{prefix}/mechanics?username={userName}&email={userEmail}&status_id={userStatusId}{delString}";
+                var url = $"{prefix}/mechanics?username={userName}&rut={userRut}&status_id={userStatusId}{delString}";
 
                 var request = new RestRequest(url, Method.GET)
                 {
                     RequestFormat = DataFormat.Json
                 };
-                // For pagination
-                //request.AddParameter("page", "1", ParameterType.UrlSegment);
-                //request.AddParameter("size", "1", ParameterType.UrlSegment);
 
                 var response = client.Execute<List<Mecanico>>(request);
 

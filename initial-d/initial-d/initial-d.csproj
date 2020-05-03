@@ -183,6 +183,7 @@
     <Compile Include="APICallers\ProductosCaller.cs" />
     <Compile Include="APICallers\PublicacionesMecCaller.cs" />
     <Compile Include="APICallers\CallerBase.cs" />
+    <Compile Include="APICallers\ServiciosCaller.cs" />
     <Compile Include="APICallers\UsuariosCaller.cs" />
     <Compile Include="App_GlobalResources\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -256,6 +257,7 @@
     <Content Include="Content\JS\common.js" />
     <Content Include="Content\JS\c_table.js" />
     <Content Include="Content\JS\head.util.js" />
+    <Content Include="Content\JS\money-editor.js" />
     <Content Include="Content\JS\_layout.js" />
     <Content Include="Content\FontAwesome\regular.css" />
     <Content Include="Content\FontAwesome\regular.min.css" />
@@ -500,12 +502,17 @@
     <Content Include="Views\Productos\UpdateProd.cshtml" />
     <Content Include="Views\Productos\Partial\_DeleteModalAndScript.cshtml" />
     <Content Include="Views\Productos\Partial\_ToggleStatusModal.cshtml" />
+    <Content Include="Views\Servicios\Partial\_ContextualActionDropdown.cshtml" />
+    <Content Include="Views\Servicios\DeletedServList.cshtml" />
+    <Content Include="Views\Servicios\ServDetails.cshtml" />
+    <Content Include="Views\Servicios\UpdateServ.cshtml" />
+    <Content Include="Views\Servicios\Partial\_DeleteModalAndScript.cshtml" />
+    <Content Include="Views\Servicios\Partial\_ToggleStatusModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\Viewmodels\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Servicios\Partial\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
