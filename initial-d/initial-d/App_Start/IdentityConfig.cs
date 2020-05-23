@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -11,7 +8,6 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using initial_d.Models;
-using System.Diagnostics;
 using System.Configuration;
 using Newtonsoft.Json.Linq;
 
@@ -112,7 +108,7 @@ namespace initial_d
 
 
         /*
-         * No tenemos suficientes SignInStatus asi que voy a usar estos dos para otra cosa
+         * No tenemos suficientes SignInStatus así que voy a usar estos dos para otra cosa
          * LockedOut                Invalid Username
          * RequiresVerification     Invalid Credentials
          */
@@ -178,5 +174,6 @@ namespace initial_d
             }
 
         }
+    
     }
 }

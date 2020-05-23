@@ -325,7 +325,7 @@ namespace initial_d.APICallers
             pub.status_name = thisUserType?.status_name ?? string.Empty;
 
             var thisMech = mechList.FirstOrDefault(x => x.appuser_id.Equals(pub.appuser_id));
-            pub.mech_name = thisMech.fullName;
+            pub.mech_name = thisMech?.fullName ?? "Usuario Eliminado";
 
             return pub;
         }

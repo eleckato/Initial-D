@@ -49,7 +49,7 @@
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.hash)</th>
                         <td>
-                            @Html.TextBoxFor(m => m.hash, new { @class = "form-control" })
+                            @Html.PasswordFor(m => m.hash, new { @class = "form-control" })
                             @Html.ValidationMessageFor(x => x.hash)
                         </td>
                     </tr>

@@ -139,7 +139,7 @@ namespace initial_d.Controllers
                 return Error_CustomError(e.Message, false);
             }
 
-            return View("ForgotPasswordConfirmation");            
+            return View("ForgotPasswordConfirmation");
         }
 
 

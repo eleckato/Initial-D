@@ -1,5 +1,5 @@
 ﻿/*
- * Sitewide JS, with utilities, global definitions and Layot specific code
+ * Site-wide JS, with utilities, global definitions and Layout specific code
  */
 
 $(document).ready(function () {
@@ -13,12 +13,12 @@ $(document).ready(function () {
 });
 
 
-/** Togle the status of the Sidebar between Open and Closed */
+/** Toggle the status of the Sidebar between Open and Closed */
 function toggleSidebar() {
     let sd = $('#sidebar');
 
     if (sd.hasClass('closed')) {
-        // whithout this it looks weird
+        // without this it looks weird
         sd.addClass('pre-open');
 
         setTimeout(function () {
