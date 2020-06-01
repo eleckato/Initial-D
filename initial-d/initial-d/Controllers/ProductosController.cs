@@ -50,21 +50,12 @@ namespace initial_d.Controllers
 
                 prodStatusLst = PC.GetAllStatus().ToList();
                 if (prodStatusLst == null) return Error_FailedRequest();
-
-                var prodUnitLst = PC.GetAllUnits().ToList();
-                if (prodUnitLst == null) return Error_FailedRequest();
-
-                prods.ForEach(pub =>
-                {
-                    pub = PC.ProcessProd(pub, prodStatusLst, prodUnitLst);
-                });
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
                 return Error_CustomError(e.Message);
             }
-
 
             // To keep the state of the search filters when the user make a search
             ViewBag.brand = brand;
@@ -94,13 +85,6 @@ namespace initial_d.Controllers
                 prodStatusLst = PC.GetAllStatus().ToList();
                 if (prodStatusLst == null) return Error_FailedRequest();
 
-                var prodUnitLst = PC.GetAllUnits().ToList();
-                if (prodUnitLst == null) return Error_FailedRequest();
-
-                prods.ForEach(pub =>
-                {
-                    pub = PC.ProcessProd(pub, prodStatusLst, prodUnitLst);
-                });
             }
             catch (Exception e)
             {
@@ -133,20 +117,11 @@ namespace initial_d.Controllers
             if (string.IsNullOrEmpty(prodId)) return Error_InvalidUrl();
 
             Producto prod;
-            List<ProdStatus> prodStatusLst;
 
             try
             {
                 prod = PC.GetProd(prodId);
                 if (prod == null) return Error_FailedRequest();
-
-                prodStatusLst = PC.GetAllStatus().ToList();
-                if (prodStatusLst == null) return Error_FailedRequest();
-
-                var prodUnitLst = PC.GetAllUnits().ToList();
-                if (prodUnitLst == null) return Error_FailedRequest();
-
-                prod = PC.ProcessProd(prod, prodStatusLst, prodUnitLst);
             }
             catch (Exception e)
             {

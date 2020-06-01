@@ -1,0 +1,64 @@
+﻿@model initial_d.Models.Viewmodels.PointOfSaleVM
+
+@if (Model.userList.Any())
+{
+
+    <!-- DESC -->
+    <p>Seleccione un Usuario para asociar a la venta</p>
+
+    <!-- SEARCH BOXES -->
+    <div class="row mb-3">
+
+        <div class="col-5 mr-3">
+            <input type="text" name="" value="" class="form-control" placeholder="Nombre"/>
+        </div>
+
+        <button role="button" class="btn btn-sm btn-yellow">
+            <i class="fa fa-search mx-3" aria-hidden="true"></i>
+        </button>
+
+    </div>
+                
+    <!-- DATA LIST -->
+    <div class=" d-flex justify-content-center" id="prod-data-list">
+                    
+        <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Nombre</th>
+                    <th>RUT</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var user in Model.userList)
+                {
+                    <tr class="modal-add-item-row cursor-pointer" data-id="@user.appuser_id">
+                        <!-- USERNAME -->
+                        <td data-label="Username">
+                            @user.username
+                        </td>
+                        <!-- NOMBRE -->
+                        <td data-label="Nombre">
+                            @user.fullName
+                        </td>
+                        <!-- RUT -->
+                        <td data-label="RUT">
+                            @user.rut
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+
+}
+else
+{
+    <h5>No hay usuarios para mostrar</h5>
+}

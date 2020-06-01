@@ -1,0 +1,64 @@
+﻿@model initial_d.Models.Viewmodels.PointOfSaleVM
+
+
+@if (Model.prodList.Any())
+{
+
+    <!-- DESC -->
+    <p>Seleccione un Producto para agregar</p>
+
+    <!-- SEARCH BOXES -->
+    <div class="row mb-3">
+
+        <div class="col-5 mr-3">
+            <input type="text" name="" value="" class="form-control" placeholder="Nombre"/>
+        </div>
+
+        <button role="button" class="btn btn-sm btn-yellow">
+            <i class="fa fa-search mx-3" aria-hidden="true"></i>
+        </button>
+
+    </div>
+                
+    <!-- DATA LIST -->
+    <div class=" d-flex justify-content-center" id="prod-data-list">
+                    
+        <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Stock</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var prod in Model.prodList)
+                {
+                    <tr class="modal-add-item-row cursor-pointer" data-id="@prod.product_id">
+                        <!-- NOMBRE -->
+                        <td data-label="">
+                            @prod.name
+                        </td>
+                        <!-- STOCK -->
+                        <td data-label="">
+                            @prod.stockString
+                        </td>
+                        <!-- PRECIO -->
+                        <td data-label="">
+                            @prod.priceString
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+
+}
+else
+{
+    <h5>No hay productos para mostrar</h5>
+}

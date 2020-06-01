@@ -1,0 +1,303 @@
+﻿@model initial_d.Models.Viewmodels.PointOfSaleVM
+
+@using initial_d.Common.Extensions
+
+@{
+    ViewBag.Title = "Index";
+
+
+}
+
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+            Generar Pedido
+        </h2>
+    </div>
+</div>
+
+<!-- ACTIONN BUTTONS -->
+<div class="mb-3">
+    <a href="#" class="btn btn-sm btn-yellow mr-3" role="button" data-toggle="modal" data-target="#add-prod">
+        <i class="fa fa-plus"></i>
+        Agregar Producto
+    </a>
+
+    <a href="#" class="btn btn-sm btn-yellow mr-3" role="button" data-toggle="modal" data-target="#add-serv">
+        <i class="fa fa-plus"></i>
+        Agregar Servicio
+    </a>
+</div>
+
+<!-- ITEM LISTS -->
+@using (Html.BeginForm("Index", "PointOfSale"))
+{
+    <div id="item-list">
+    
+            @Html.PartialFor(m => m, "Partial/_itemList")
+
+    </div>
+}
+
+
+<!--!? MODALS  -->
+
+<!-- MODAL AGREGAR PRODUCTO AL CARRO -->
+<div id="add-prod" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+
+            <!-- TITLE -->
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-cart-plus mr-2 " aria-hidden="true"></i> 
+                    Buscar Producto
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body px-5">
+
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="modal-footer justify-content-start">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+
+                <div class="row ml-auto">
+                    <label class="m-0 mr-2 my-auto">Cantidad</label>
+                    <input type="number" min="1" name="sell-quantity" value="1" class="form-control mr-4 quantity-box"/>
+                    
+                    <button type="submit" role="button" class="btn btn-sm btn-green" disabled="disabled">
+                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL AGREGAR SERVICIO AL CARRO -->
+<div id="add-serv" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            
+            <!-- TITLE -->
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-cart-plus mr-2 " aria-hidden="true"></i> 
+                    Buscar Servicio
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body px-5">
+
+            </div>
+            
+            <!-- ACTION BUTTONS -->
+            <div class="modal-footer justify-content-start">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <div class="row ml-auto">
+                    <button type="submit" role="button" class="btn btn-sm btn-green" disabled="disabled">
+                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DETALLES DE ELEMENT -->
+<div id="details-item-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-bars mr-2" aria-hidden="true"></i>
+                    Detalles
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>Cerrar</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- DELETE ITEM MODAL -->
+<div id="delete-item-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>
+                    Advertencia
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Está seguro/a que desea Eliminar este {Producto/Servicio} del pedido?</p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    <span>Cancelar</span>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-red" id="modal-delete-btn" data-dismiss="modal">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    <span>Eliminar</span>
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL AGREGAR USUARIO A LA VENTA -->
+<div id="add-user" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            
+            <!-- TITLE -->
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-cart-plus mr-2 " aria-hidden="true"></i> 
+                    Buscar Usuario
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body px-5">
+
+            </div>
+            
+            <!-- ACTION BUTTONS -->
+            <div class="modal-footer justify-content-start">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <div class="row ml-auto">
+                    <button type="submit" role="button" class="btn btn-sm btn-green" disabled="disabled">
+                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- DELETE USER MODAL -->
+<div id="remove-user-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>
+                    Advertencia
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Está seguro/a que desea Quitar este usuario del pedido?</p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    <span>Cancelar</span>
+                </button>
+
+                <button type="submit" class="btn btn-sm btn-red" data-dismiss="modal">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    <span>Quitar</span>
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@section customScripts{
+
+    <script>
+        var URL_AddProd = '@Url.Action("AddProd", "PointOfSale")';
+        var URL_AddServ = '@Url.Action("AddServ", "PointOfSale")';
+        var URL_ChangeAmount = '@Url.Action("ChangeAmount", "PointOfSale")';
+        var URL_DeleteItem = '@Url.Action("DeleteItem", "PointOfSale")';
+        var URL_GetDetailHtml = '@Url.Action("GetDetailHtml", "PointOfSale")';
+        var URL_GetAllProdList = '@Url.Action("GetAllProdList", "PointOfSale")';
+        var URL_GetAllServList = '@Url.Action("GetAllServList", "PointOfSale")';
+        var URL_GetAllUserList = '@Url.Action("GetAllUserList", "PointOfSale")';
+        var URL_AddUser = '@Url.Action("AddUser", "PointOfSale")';
+        var URL_RemoveUser = '@Url.Action("RemoveUser", "PointOfSale")';
+    </script>
+
+    @Scripts.Render("~/Content/JS/PoS/index.js")
+}
+
+<style>
+    /* Para poner de otro color e identificar una row seleccionada */
+    .row-active{
+        background: var(--yellow-1) !important;
+    }
+
+    /* Textbox para cantidad en Modal:add-element */
+    .quantity-box{
+        width: 5rem !important;
+        min-width: unset;
+    }
+</style>

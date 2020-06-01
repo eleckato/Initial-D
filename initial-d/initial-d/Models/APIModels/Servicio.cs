@@ -84,11 +84,14 @@ namespace initial_d.Models.APIModels
         {
             serv_id = string.Empty;
             name = string.Empty;
-            price = 0;
             serv_desc = string.Empty;
+
+            price = 0;
             estimated_time = 0;
+
             serv_status = string.Empty;
             status_name = string.Empty;
+
             created_at = DateTime.Now;
             updated_at = DateTime.Now;
             deleted = false;

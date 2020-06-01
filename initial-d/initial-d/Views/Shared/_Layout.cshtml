@@ -15,6 +15,8 @@
     string success = (string)TempData["SuccessMessage"] ?? "";
 
     // URLs
+    string posURL = Url.Action("Index", "PointOfSale");
+    string salesURL = Url.Action("SaleList", "Sales");
     string ProdUrl = Url.Action("ProdList", "Productos");
     string ServUrl = Url.Action("ServList", "Servicios");
     string MechUrl = Url.Action("MechList", "Mecanicos");
@@ -57,6 +59,18 @@
 
             <ul class="list-unstyled components">
                 @* Active or deactivate the button depending on the controller *@
+                <li class="@(controller.Equals("PointOfSale") ? "active" : "")">
+                    <a href="@posURL">
+                        <i class="fas fa-cart-arrow-down"></i>
+                        <span>Ventas</span>
+                    </a>
+                </li>
+                <li class="@(controller.Equals("Sales") ? "active" : "")">
+                    <a href="@salesURL">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Adm. de Ventas</span>
+                    </a>
+                </li>
                 <li class="@(controller.Equals("Productos") ? "active" : "")">
                     <a href="@ProdUrl">
                         <i class="fas fa-boxes"></i>
@@ -150,10 +164,10 @@
         {
             //! Automatic Alert System: Get the error message and show an alert with it
             let err = '@error.Replace("\r\n", " ")';
-            if (err) ShowAlert(err, 'alert-danger', 3);
+            if (err) ShowAlert(err, 'alert-danger', 10);
 
             let success = '@success.Replace("\r\n", " ")';
-            if (success) ShowAlert(success, 'alert-success', 1);
+            if (success) ShowAlert(success, 'alert-success', 6);
         }
     </script>
 </body>

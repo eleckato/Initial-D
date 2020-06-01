@@ -9,13 +9,6 @@ namespace initial_d.Controllers
 {
     public class BaseController : Controller
     {
-
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-
         public void SetErrorMsg(string errroMessage)
         {
             TempData["ErrorMessage"] = errroMessage;

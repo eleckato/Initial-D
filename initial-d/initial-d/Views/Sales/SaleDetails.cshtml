@@ -1,0 +1,265 @@
+﻿@model initial_d.Models.APIModels.SaleVM
+
+@{
+    ViewBag.Title = "Detalles de Venta";
+
+    var sale = Model;
+    string servStatus = Model.sale_status_id;
+    bool isDeleted = Model.deleted;
+
+
+    string goBack_Url = Url.Action(isDeleted ? "DeletedSaleList" : "SaleList", "Sales");
+
+    // Ids to keep an eye on
+    string penId = "PEN"; // Pendiente
+    string pagId = "PAG"; // Pagado
+    string canId = "CAN"; // Cancelado
+}
+
+
+<!-- TITULO  |  BUTTONS -->
+<div class="header">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            Venta
+        </h2>
+    </div>
+
+    <div class="header-buttons">
+        <a href="@goBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Volver
+        </a>
+
+        <!-- ACTIONS DROPDOWN -->
+        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } } )
+    </div>
+
+</div>
+
+<!-- DATOS DE LA VETNA -->
+<div class="c-jumbotron row mb-3">
+    
+    <h4 class="col-12 mb-3">Datos de la Venta</h4>
+
+    <!-- CODIGO / ELIMINADA -->
+    <div class="w-100 mb-3 d-md-flex flex-md-row justify-content-md-between">
+        
+        <!-- CODIGO -->
+        <div class="w-100 @(isDeleted ? "mr-md-3 mb-2 mb-md-0" : "")">
+            <table class="table c-info-table c-data-table-bordered mb-0  table-th-compact">
+
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.code)</th>
+                    <td>@sale.code</td>
+                </tr>
+
+            </table>
+        </div>
+        
+        @if (isDeleted)
+        {
+            <!-- PUBLICACIÓN ELIMINADA -->
+            <div style="flex-basis: 0px">
+                <table class="table c-info-table c-data-table-bordered mb-0  table-th-compact w-max-content-md">
+                        <tr>
+                            <td colspan="2" class="text-center px-4">
+                                <i class="fa fa-trash-alt mr-2" aria-hidden="true" style="color:var(--red)"></i>
+                                Venta Eliminada
+                            </td>
+                        </tr>
+                </table>
+            </div>
+        }
+
+    </div>
+
+    <!-- DATOS BÁSICOS COL 1 -->
+    <div class="col-12 col-lg-6 pr-lg-3">
+
+        <table class="table c-info-table c-data-table-bordered mb-0 table-th-compact">
+            
+            <!-- VENDEDOR -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.seller)</th>
+                <td>@(sale.seller?.fullName ?? "-")</td>
+            </tr>
+            
+            <!-- CAJERO -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.cashier)</th>
+                <td>@(sale.cashier?.fullName ?? "-")</td>
+            </tr>
+            
+            <!-- USUARIO -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.user)</th>
+                <td>@(sale.user?.fullName ?? "-")</td>
+            </tr>
+            
+            <!-- STATUS -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.sale_status_name)</th>
+                <td>
+                    @if (Model.sale_status_id != null)
+                    {
+                        var status = Model.sale_status_id;
+
+                        var statClass = "fa-exclamation-triangle color-red";
+
+                        if (status.Equals(penId))       { statClass = "fa-clock color-yellow"; }
+                        else if (status.Equals(pagId))  { statClass = "fa-check color-green"; }
+                        else if (status.Equals(canId))  { statClass = "fa-ban text-secondary"; }
+
+
+                        <div class="w-max-content-sm text-">
+                            <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
+                            @Model.sale_status_name
+                        </div>
+                    }
+            </tr>
+
+            @* Responsive Hell *@
+            @* This is dumb, but this is a copy of the second column so it can integrate into this table in responsive *@
+            
+            <!-- METODO DE PAGO -->
+            <tr class="d-table-row d-lg-none">
+                <th>@Html.DisplayNameFor(m => m.payment_method)</th>
+                <td>@Model.payment_method</td>
+            </tr>
+
+            <!-- TOTAL -->
+            <tr class="d-table-row d-lg-none">
+                <th>@Html.DisplayNameFor(m => m.total)</th>
+                <td>@Model.totalString</td>
+            </tr>
+            
+            <!-- FECHA DE LA ORDEN -->
+            <tr class="d-table-row d-lg-none">
+                <th>@Html.DisplayNameFor(m => m.date_order)</th>
+                <td>@(sale.dateOrderString ?? "-")</td>
+            </tr>
+            
+            <!-- FECHA DE VENTA -->
+            <tr class="d-table-row d-lg-none">
+                <th>@Html.DisplayNameFor(m => m.sale_date)</th>
+                <td>@(sale.saleDateString ?? "-")</td>
+            </tr>
+
+            <!-- ULTIMA EDICIÓN -->
+            <tr class="d-table-row d-lg-none">
+                <th>@Html.DisplayNameFor(m => m.updated_at)</th>
+                <td>@Model.updated_at.ToString("dd/MM/yyyy hh:mm")</td>
+            </tr>
+
+        </table>
+    </div>
+    
+    <!-- DATOS BÁSICOS COL 2 -->
+    <div class="col-12 col-lg-6 d-none d-lg-block"> 
+        <table class="table c-info-table c-data-table-bordered mb-0 table-th-compact">
+
+            <!-- METODO DE PAGO -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.payment_method)</th>
+                <td>@Model.payment_method</td>
+            </tr>
+
+            <!-- TOTAL -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.total)</th>
+                <td>@Model.totalString</td>
+            </tr>
+
+            <!-- FECHA DE LA ORDEN -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.date_order)</th>
+                <td>@(sale.dateOrderString ?? "-")</td>
+            </tr>
+
+            <!-- FECHA DE VENTA -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.sale_date)</th>
+                <td>@(sale.saleDateString ?? "-")</td>
+            </tr>
+
+            <!-- ULTIMA EDICIÓN -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.updated_at)</th>
+                <td>@Model.updated_at.ToString("dd/MM/yyyy hh:mm")</td>
+            </tr>
+
+        </table>
+    </div>
+
+</div>
+
+<!-- SALE ITEMS -->
+<div class="c-jumbotron row mb-3">
+    
+    <h4 class="col-12 mb-3">Items de la Venta</h4>
+
+    <!-- TABLA CON LOS ITEMS -->
+    <div class="col-12 d-flex justify-content-center ">
+        <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model.saleItems)
+                {
+                    <tr class="clickable-row" data-id="@item.provision_id">
+                    
+                        <!-- TIPO -->
+                        <td data-label="Tipo">
+                            @(item.type ?? "-")
+                        </td>
+
+                        <!-- NOMBRE -->
+                        <td data-label="Nombre">
+                            @(item.prod?.name ?? item.serv?.name ?? "-")
+                        </td>
+                    
+                        <!-- PRECIO -->
+                        <td data-label="Precio">
+                            @(item.prod?.priceString ?? item.serv?.priceString ?? "-")
+                        </td>
+                    
+                        <!-- CANTIDAD -->
+                        <td data-label="Cantidad">
+                            @(item.quantityString ?? "-")
+                        </td>
+
+                        <!-- STATUS -->
+                        <td data-label="Total">
+                            @item.totalString
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+<!-- MODAL SALE ITEM DETAILS -->
+
+
+<!-- MODALS -->
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })
+@Html.Partial("Partial/_CancelSaleModal")

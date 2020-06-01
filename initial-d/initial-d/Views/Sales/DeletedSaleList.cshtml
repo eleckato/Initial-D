@@ -1,0 +1,137 @@
+﻿@model IEnumerable<initial_d.Models.APIModels.SaleVM>
+@using initial_d.Common.FilterBar;
+
+@{
+    ViewBag.Title = "Ventas Eliminadas";
+    
+    // Filters
+    var salesStatusList = (SelectList)ViewBag.salesStatusList;
+    var code = (string)ViewBag.code;
+
+    string penId = "PEN"; // Pendiente
+    string pagId = "PAG"; // Pagado
+    string canId = "CAN"; // Cancelado
+
+    
+    // Action URL
+    string goBackUrl = Url.Action("SaleList", "Sales");
+}
+
+<!-- HEADER | ACTION BUTTONS -->
+<div class="header">
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-tools" aria-hidden="true"></i>
+            @ViewBag.Title
+        </h2>
+    </div>
+    
+    <!-- BUTTONS -->
+    <div class="header-buttons">
+        <a href="@goBackUrl" class="btn btn-sm btn-secondary" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Ventas
+        </a>
+    </div>
+</div>
+
+
+<!-- BUSCAR -->
+@{ 
+    var filterTemplate = new FilterBarTemplate()
+    {
+        formAction = "DeletedSaleList",
+        formController = "Sales",
+        filters = new List<MvcHtmlString>()
+        {
+            Html.TextBox("code", code, new { @class = "form-control form-control-sm h-100", @placeholder = "Código" }),
+            Html.DropDownList("statusId", salesStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" }),
+        }
+    };
+}
+@Html.Partial("Partial/_FiltersCollapse", filterTemplate)
+
+
+<!-- DATA TABLE -->
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.code)</th>
+                <th>@Html.DisplayNameFor(m => m.sale_status_name)</th>
+                <th>@Html.DisplayNameFor(m => m.total)</th>
+                <th class="cell-hidden-xl">@Html.DisplayNameFor(m => m.user)</th>
+                <th>@Html.DisplayNameFor(m => m.date_order)</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var sale in Model)
+            {
+                string detailsUrl = Url.Action("SaleDetails", "Sales", new { saleId = sale.sale_id});
+                string status = sale?.sale_status_id;
+
+                <tr class="clickable-row" data-url="@detailsUrl">
+                    
+                    <!-- ACTION DROPDOWN -->
+                    <td data-label="Actions" class="not-clickable cell-compact">
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(sale) { { "context", "deleteList" } } )
+                    </td>
+                    
+                    <!-- CODIGO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.code)">
+                        @(sale.code)
+                    </td>
+
+                    <!-- STATUS -->
+                    <td data-label="@Html.DisplayNameFor(m => m.sale_status_name)">
+                        @if (status != null)
+                        {
+                            var statClass = "fa-exclamation-triangle color-red";
+
+                            if (status.Equals(penId))       { statClass = "fa-clock color-yellow"; }
+                            else if (status.Equals(pagId))  { statClass = "fa-check color-green"; }
+                            else if (status.Equals(canId))  { statClass = "fa-ban text-secondary"; }
+
+
+                            <div class="w-max-content-sm text-">
+                                <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
+                                @sale.sale_status_name
+                            </div>
+                        }
+                    </td>
+                    
+                    <!-- TOTAL -->
+                    <td data-label="@Html.DisplayNameFor(m => m.total)">
+                        @sale.totalString
+                    </td>
+
+                    <!-- USUARIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.user)" class="cell-hidden-xl">
+                        @(sale.user?.fullName ?? "Sin Usuario")
+                    </td>
+                    
+                    <!-- FECHA DEL PEDIDO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.date_order)">
+                        @(sale.dateOrderString)
+                    </td>
+
+                </tr>
+
+            }
+
+        </tbody>
+
+    </table>
+</div>
+
+<!-- MODALS -->
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", true } })
+
+
+@section customScripts{
+    @Scripts.Render("~/Content/JS/c_table.js")
+}

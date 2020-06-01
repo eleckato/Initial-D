@@ -169,6 +169,21 @@ h5.modal-title .fa {
         min-width: unset !important;
     }
 }
+/* SCREEN WIDTH > 768px */
+@media (min-width: 768px) {
+    .w-max-content-md {
+        width: max-content;
+        min-width: unset !important;
+    }
+}
+/* SCREEN WIDTH > 992px */
+@media (min-width: 992px) {
+    .w-max-content-lg {
+        width: max-content;
+        min-width: unset !important;
+    }
+}
+
 
 .w-5rem {
     width: 5rem;
@@ -238,6 +253,12 @@ h5.modal-title .fa {
 }
 .color-green{
     color: var(--green);
+}
+.color-yellow {
+    color: var(--yellow-5);
+}
+.color-red {
+    color: var(--red);
 }
 
 /* ---------------------------------------------------

@@ -99,18 +99,21 @@ namespace initial_d.Models.APIModels
             product_id = string.Empty;
             name = string.Empty;
             product_desc = string.Empty;
+
             price = 0;
             stock = 0;
             stock_alert = 0;
             brand = string.Empty;
-            unit_id = string.Empty;
+
             product_status = string.Empty;
+            status_name = string.Empty;
+
+            unit_id = string.Empty;
+            Unit = new ProdUnit();
+
             created_at = DateTime.Now;
             updated_at = DateTime.Now;
             deleted = false;
-
-            status_name = string.Empty;
-            Unit = new ProdUnit();
         }
     }
 }

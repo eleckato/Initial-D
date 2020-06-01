@@ -1,0 +1,198 @@
+﻿@model initial_d.Models.Viewmodels.PointOfSaleVM
+
+@Html.HiddenFor(m => m.id, new { @Id="sale-id" })
+
+@if (Model.soldItems.Any())
+{
+    <!-- PRODUCTOS EN CARRO -->
+    <div class=" d-flex justify-content-center mb-3" id="item-list">
+
+        <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+            <thead>
+                <tr>
+                    <th>Acciones</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @for (int i = 0; i < Model.soldItems.Count; i++)
+                {
+
+                    var item = Model.soldItems[i];
+
+                    var isProd = item.prod != null;
+
+                    <tr data-url="#" data-id="@item.id">
+                    
+                        <!-- ACTION DROPDOWN -->
+                        <td data-label="Acciones" class="not-clickable">
+                            <div class="row">
+
+                                <a role="button" class="btn btn-sm btn-yellow mr-2" data-target="#details-item-modal" data-toggle="modal" data-id="@item.id">
+                                    <i class="fa fa-bars m-0"></i>
+                                </a>
+
+                                <a role="button" class="btn btn-sm btn-red mr-2" data-target="#delete-item-modal" data-toggle="modal" data-id="@item.id">
+                                    <i class="fa fa-trash m-0"></i>
+                                </a>
+
+                            </div>
+                    
+                        </td>
+                    
+                        <!-- NOMBRE -->
+                        <td data-label="Nombre">
+                            @item.name
+                        </td>
+                    
+                        <!-- TIPO -->
+                        <td data-label="Tipo">
+                            @item.type
+                        </td>
+                    
+                        <!-- PRECIO -->
+                        <td data-label="Precio">
+                            @item.priceString
+                        </td>
+                    
+                        <!-- CANTIDAD -->
+                        <td data-label="Cantidad">
+                            <div class="row w-max-content ml-auto ml-md-0">
+
+                                @if (isProd)
+                                {
+                                    <a role="button" class="btn btn-sm btn-yellow ml-3 mr-0 amount-btn" data-plus="false">
+                                        <i class="fa fa-minus m-0"></i>
+                                    </a>
+                                }
+
+                                <div class="col text-center" style="width: 120px;">
+                                    @item.amountString
+                                </div>
+                        
+                                @if (isProd)
+                                {
+                                    <a role="button" class="btn btn-sm btn-yellow ml-auto mr-2 amount-btn" data-plus="true">
+                                        <i class="fa fa-plus m-0"></i>
+                                    </a>
+                                }
+
+                            </div>
+                        </td>
+                    
+                        <!-- TOTAL -->
+                        <td data-label="Total">
+                            @item.totalString
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- USUARIO | TOTAL -->
+    <div class="row">
+        
+        <!-- USUARIO -->
+        <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+            <div class="c-jumbotron">
+                <div class="mx-0 mx-lg-2">
+
+                    @if (Model.user != null)
+                    {
+                        <h5>Usuario Seleccionado</h5>
+                        
+                        <div>
+                            <table class="c-info-table mb-3 w-100">
+                                <tr>
+                                    <th class="">Username</th>
+                                    <td>@Model.user.username</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <td>@Model.user.fullName</td>
+                                </tr>
+                                <tr>
+                                    <th>RUT</th>
+                                    <td>@Model.user.rut</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <a role="button" class="btn btn-sm btn-yellow mx-auto" data-toggle="modal" data-target="#add-user">
+                                        <i class="fa fa-user"></i>
+                                        Cambiar Usuario
+                                    </a>
+                                </div>
+                                <div class="row">
+                                    <a role="button" class="btn btn-sm btn-red mx-auto" data-toggle="modal" data-target="#remove-user-modal">
+                                        <i class="fa fa-user"></i>
+                                        Quitar Usuario
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <h5 class="mb-3">No hay ningún Usuario seleccionado</h5>
+                        <div class="row">
+                            <a role="button" class="btn btn-sm btn-green mx-auto" data-toggle="modal" data-target="#add-user">
+                                <i class="fa fa-user"></i>
+                                Agregar Usuario
+                            </a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TOTAL -->
+        <div class="col-12 col-lg-6">
+            <div class="c-jumbotron w-max-content-lg ml-auto">
+                <div class="mx-0 mx-lg-2 mx-xl-5">
+
+                    <div class="row mb-3">
+                        <h5 class="mr-4">Total</h5>
+                        <h4 class="font-weight-bold">@Model.totalString</h4>
+                    </div>
+
+                    <div class="row">
+                        <a href="#" class="btn btn-sm btn-red mr-3 mb-3" role="button">
+                            <i class="fa fa-times"></i>
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-sm btn-green  mb-3">
+                            <i class="fa fa-shopping-cart"></i>
+                            Confirmar Pedido
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+} 
+else
+{
+    <div>
+        <h4>Agregue un item en el pedido</h4>
+    </div>
+}

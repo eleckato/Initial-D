@@ -1,0 +1,89 @@
+﻿@model initial_d.Models.APIModels.SaleVM
+@{ 
+    // Product data needed to perform the Actions or make decisions about the menu
+    string saleId = Model.sale_id;
+    string saleStatus = Model.sale_status_id;
+    bool isDeleted = Model.deleted;
+
+    // Context to decide what to show
+    string ctx = (string)ViewData["context"] ?? string.Empty;
+    bool isList = ctx.Equals("list");
+    bool isDetails = ctx.Equals("details");
+    bool isdeleteList = ctx.Equals("deleteList");
+
+    // Ids to keep an eye on
+    //string actId = "ACT";
+    //string inaId = "INA";
+    string penId = "PEN"; // Pendiente
+    string pagId = "PAG"; // Pagado
+    string canId = "CAN"; // Cancelado
+
+    bool isAdmin = User.IsInRole("ADM");
+
+    // Action URLs
+    string detailsUrl = Url.Action("SaleDetails", "Sales", new { saleId });
+    string update_Url = Url.Action("UpdateSale", "Sales", new { saleId });
+}
+
+<div class="dropdown">
+
+	<button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<i class="fa fa-cog mr-1 " aria-hidden="true"></i>
+		Acciones
+	</button>
+
+	<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+		<div class="d-flex flex-column">
+			@if(isList || isdeleteList)
+            {
+                <!-- DETALLES -->
+                <a href="@detailsUrl" class="dropdown-item small">
+                    <i class="fa fa-bars mr-1 " aria-hidden="true"></i>
+                    Detalles
+                </a>
+			}
+
+            @if (isDetails && !isDeleted)
+            {
+                <!-- ACTUALIZAR DATOS -->
+				<a href="@update_Url" class="dropdown-item small">
+					<i class="fa fa-edit" aria-hidden="true"></i>
+					Actualizar Datos
+				</a>
+            }
+
+			@if ((isDetails || isList) && !isDeleted)
+            {
+
+				<!-- CANCELAR VENTA PENDIENTE -->
+                if (saleStatus.Equals(penId))
+                {
+					<a class="dropdown-item small"
+					   data-toggle="modal" href="#cancel-modal" data-sale-id="@saleId">
+						<i class="fa fa-ban" aria-hidden="true"></i>
+						Cancelar
+					</a>
+				}
+
+				<!-- ELIMINAR -->
+				<a class="dropdown-item small" role="button" data-toggle="modal" data-sale-id="@saleId" href="#delete-modal">
+					<i class="fa fa-trash" aria-hidden="true"></i>
+					Eliminar
+				</a>
+			}
+
+			@if(isDeleted)
+			{
+				<!-- RESTAURAR -->
+				<a class="dropdown-item small" role="button" data-toggle="modal" data-sale-id="@saleId" href="#delete-modal">
+					<i class="fa fa-trash-restore" aria-hidden="true"></i>
+					Restaurar
+				</a>
+			}
+
+		</div>
+
+	</div>
+
+</div>

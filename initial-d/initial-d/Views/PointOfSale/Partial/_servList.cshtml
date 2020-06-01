@@ -1,0 +1,62 @@
+﻿@model initial_d.Models.Viewmodels.PointOfSaleVM
+
+
+@if (Model.servList.Any())
+{
+    <!-- DESC -->
+    <p>Seleccione un Servicio para agregar</p>
+                
+    <!-- SEARCH BOXES -->
+    <div class="row mb-3">
+
+        <div class="col-5 mr-3">
+            <input type="text" name="" value="" class="form-control" placeholder="Nombre"/>
+        </div>
+
+        <button role="button" class="btn btn-sm btn-yellow">
+            <i class="fa fa-search mx-3" aria-hidden="true"></i>
+        </button>
+
+    </div>
+                
+    <!-- DATA LIST -->
+    <div class=" d-flex justify-content-center ">
+        <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tiempo</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var serv in Model.servList)
+                {
+                    <tr class="modal-add-item-row cursor-pointer" data-id="@serv.serv_id">
+                        <!-- NOMBRE -->
+                        <td data-label="">
+                            @serv.name
+                        </td>
+                        <!-- STOCK -->
+                        <td data-label="">
+                            @serv.timeString
+                        </td>
+                        <!-- PRECIO -->
+                        <td data-label="">
+                            @serv.priceString
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+    
+}
+else
+{
+    <h5>No hay servicios para mostrar</h5>
+}

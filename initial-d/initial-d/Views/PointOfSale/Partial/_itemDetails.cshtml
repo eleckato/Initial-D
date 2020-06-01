@@ -1,0 +1,37 @@
+﻿@model initial_d.Models.Viewmodels.Prestacion
+
+@{ 
+    var isProd = Model.prod != null;
+}
+
+<div class="px-5">
+    <table class="table c-info-table c-data-table-bordered mb-3">
+        <tr>
+            <td>Id</td>
+            <td>@Model.id</td>
+        </tr>
+        <tr>
+            <td>Nombre</td>
+            <td>@Model.name</td>
+        </tr>
+        <tr>
+            <td>Tipo</td>
+            <td>@Model.type</td>
+        </tr>
+        <tr>
+            <td>Precio</td>
+            <td>@Model.priceString</td>
+        </tr>
+        @if (isProd)
+        {
+            <tr>
+                <td>Stock</td>
+                <td>@Model.prod.stockString</td>
+            </tr>
+        }
+        <tr>
+            <td>Descripción</td>
+            <td>@Model.desc</td>
+        </tr>
+    </table>
+</div>

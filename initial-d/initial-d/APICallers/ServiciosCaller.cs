@@ -39,8 +39,18 @@ namespace initial_d.APICallers
                 // Levanta una excepción si el status code es diferente de 200
                 CheckStatusCode(response);
 
+                var servs = response.Data;
+
+                var servStatusLst = GetAllStatus().ToList();
+                if (servStatusLst == null) return null;
+
+                servs.ForEach(pub =>
+                {
+                    pub = ProcessServ(pub, servStatusLst);
+                });
+
                 // Retorna el producto
-                return response.Data;
+                return servs;
             }
             catch (Exception e)
             {
@@ -73,7 +83,15 @@ namespace initial_d.APICallers
                 string notFoundMsg = "El Servicio requerido no existe";
                 CheckStatusCode(response, notFoundMsg);
 
-                return response.Data;
+
+                var serv = response.Data;
+
+                var servStatusLst = GetAllStatus().ToList();
+                if (servStatusLst == null) return null;
+
+                serv = ProcessServ(serv, servStatusLst);
+
+                return serv;
             }
             catch (Exception e)
             {
@@ -82,7 +100,6 @@ namespace initial_d.APICallers
             }
         }
 
-        // TODO API Call
         /// <summary>
         /// API call to add a Service
         /// </summary>
@@ -245,6 +262,7 @@ namespace initial_d.APICallers
             }
         }
 
+
         /* ---------------------------------------------------------------- */
         /* GET SECONDARY DATA */
         /* ---------------------------------------------------------------- */
@@ -273,6 +291,7 @@ namespace initial_d.APICallers
                 throw e;
             }
         }
+
 
         /* ---------------------------------------------------------------- */
         /* HELPERS */

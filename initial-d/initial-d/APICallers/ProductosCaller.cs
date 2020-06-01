@@ -39,8 +39,21 @@ namespace initial_d.APICallers
                 // Levanta una excepción si el status code es diferente de 200
                 CheckStatusCode(response);
 
+                var prods = response.Data;
+
+                var prodStatusLst = GetAllStatus().ToList();
+                if (prodStatusLst == null) return null;
+
+                var prodUnitLst = GetAllUnits().ToList();
+                if (prodUnitLst == null) return null;
+
+                prods.ForEach(pub =>
+                {
+                    pub = ProcessProd(pub, prodStatusLst, prodUnitLst);
+                });
+
                 // Retorna el producto
-                return response.Data;
+                return prods;
             }
             catch (Exception e)
             {
@@ -73,7 +86,17 @@ namespace initial_d.APICallers
                 string notFoundMsg = "El Producto requerido no existe";
                 CheckStatusCode(response, notFoundMsg);
 
-                return response.Data;
+                var prod = response.Data;
+
+                var prodStatusLst = GetAllStatus().ToList();
+                if (prodStatusLst == null) return null;
+
+                var prodUnitLst = GetAllUnits().ToList();
+                if (prodUnitLst == null) return null;
+
+                prod = ProcessProd(prod, prodStatusLst, prodUnitLst);
+
+                return prod;
             }
             catch (Exception e)
             {

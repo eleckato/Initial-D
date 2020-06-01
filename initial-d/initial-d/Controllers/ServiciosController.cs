@@ -50,19 +50,13 @@ namespace initial_d.Controllers
 
                 servStatusLst = SC.GetAllStatus().ToList();
                 if (servStatusLst == null) return Error_FailedRequest();
-
-                serv.ForEach(pub =>
-                {
-                    pub = SC.ProcessServ(pub, servStatusLst);
-                });
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
                 return Error_CustomError(e.Message);
             }
-
-
+            
             // To keep the state of the search filters when the user make a search
             ViewBag.name = name;
             ViewBag.servStatusLst = new SelectList(servStatusLst, "status_id", "status", statusId);
@@ -89,18 +83,12 @@ namespace initial_d.Controllers
 
                 servStatusLst = SC.GetAllStatus().ToList();
                 if (servStatusLst == null) return Error_FailedRequest();
-
-                serv.ForEach(pub =>
-                {
-                    pub = SC.ProcessServ(pub, servStatusLst);
-                });
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
                 return Error_CustomError(e.Message);
             }
-
 
             // To keep the state of the search filters when the user make a search
             ViewBag.name = name;
@@ -125,17 +113,11 @@ namespace initial_d.Controllers
             if (string.IsNullOrEmpty(servId)) return Error_InvalidUrl();
 
             Servicio serv;
-            List<ServStatus> servStatusLst;
 
             try
             {
                 serv = SC.GetServ(servId);
                 if (serv == null) return Error_FailedRequest();
-
-                servStatusLst = SC.GetAllStatus().ToList();
-                if (servStatusLst == null) return Error_FailedRequest();
-
-                serv = SC.ProcessServ(serv, servStatusLst);
             }
             catch (Exception e)
             {
@@ -286,7 +268,7 @@ namespace initial_d.Controllers
 
 
         /* ---------------------------------------------------------------- */
-        /* DELETE USER */
+        /* DELETE SERVICE */
         /* ---------------------------------------------------------------- */
 
         /// <summary>

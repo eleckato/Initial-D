@@ -78,7 +78,7 @@
 /* ---------------------------------------------------
     Custom Bordered for DataResume      |      .c-data-table-bordered
 ----------------------------------------------------- */
-/* Clean the boostrap style */
+/* Clean the Bootstrap style */
 .c-data-table-bordered td, 
 .c-data-table-bordered th {
     border: 0px !important;

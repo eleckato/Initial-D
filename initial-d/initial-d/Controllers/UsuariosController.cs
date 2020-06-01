@@ -15,7 +15,7 @@ namespace initial_d.Controllers
     [RoutePrefix("usuarios-adm")]
     public class UsuariosController : BaseController
     {
-        readonly UsuariosCaller UP = new UsuariosCaller();
+        readonly UsuariosCaller UC = new UsuariosCaller();
         public string currentUserId = "";
 
         private const string addRoute = "agregar";
@@ -50,7 +50,7 @@ namespace initial_d.Controllers
 
             try
             {
-                usuarios = UP.GetAllUsers(userName, userRut, userTypeId, userStatusId).ToList();
+                usuarios = UC.GetAllUsers(userName, userRut, userTypeId, userStatusId).ToList();
                 if (usuarios == null) return Error_FailedRequest();
 
                 // Remove Current User from the list
@@ -58,15 +58,15 @@ namespace initial_d.Controllers
                 var cUser = usuarios.SingleOrDefault(x => x.appuser_id.Equals(currentUserId));
                 if (cUser != null) usuarios.Remove(cUser);
 
-                userTypeLst = UP.GetAllTypes().ToList();
+                userTypeLst = UC.GetAllTypes().ToList();
                 if (userTypeLst == null) return Error_FailedRequest();
 
-                userStatusLst = UP.GetAllStatus().ToList();
+                userStatusLst = UC.GetAllStatus().ToList();
                 if (userStatusLst == null) return Error_FailedRequest();
 
                 usuarios.ForEach(user =>
                 {
-                    user = UP.ProcessUser(user, userTypeLst, userStatusLst);
+                    user = UC.ProcessUser(user, userTypeLst, userStatusLst);
                 });
             }
             catch (Exception e)
@@ -99,7 +99,7 @@ namespace initial_d.Controllers
 
             try
             {
-                usuarios = UP.GetAllUsers(userName, userRut, userTypeId, userStatusId, true)?.ToList();
+                usuarios = UC.GetAllUsers(userName, userRut, userTypeId, userStatusId, true)?.ToList();
                 if (usuarios == null) return Error_FailedRequest();
 
                 // Remove Current User from the list
@@ -107,15 +107,15 @@ namespace initial_d.Controllers
                 var cUser = usuarios.SingleOrDefault(x => x.appuser_id.Equals(currentUserId));
                 if (cUser != null) usuarios.Remove(cUser);
 
-                userTypeLst = UP.GetAllTypes().ToList();
+                userTypeLst = UC.GetAllTypes().ToList();
                 if (userTypeLst == null) return Error_FailedRequest();
 
-                userStatusLst = UP.GetAllStatus().ToList();
+                userStatusLst = UC.GetAllStatus().ToList();
                 if (userStatusLst == null) return Error_FailedRequest();
 
                 usuarios.ForEach(user =>
                 {
-                    user = UP.ProcessUser(user, userTypeLst, userStatusLst);
+                    user = UC.ProcessUser(user, userTypeLst, userStatusLst);
                 });
             }
             catch (Exception e)
@@ -153,16 +153,16 @@ namespace initial_d.Controllers
 
             try
             {
-                usuario = UP.GetUser(userId);
+                usuario = UC.GetUser(userId);
                 if (usuario == null) return Error_FailedRequest();
 
-                userTypeLst = UP.GetAllTypes().ToList();
+                userTypeLst = UC.GetAllTypes().ToList();
                 if (userTypeLst == null) return Error_FailedRequest();
 
-                var userStatusLst = UP.GetAllStatus().ToList();
+                var userStatusLst = UC.GetAllStatus().ToList();
                 if (userStatusLst == null) return Error_FailedRequest();
 
-                usuario = UP.ProcessUser(usuario, userTypeLst, userStatusLst);
+                usuario = UC.ProcessUser(usuario, userTypeLst, userStatusLst);
             }
             catch (Exception e)
             {
@@ -197,13 +197,13 @@ namespace initial_d.Controllers
 
             try
             {
-                usuario = UP.GetUser(userId);
+                usuario = UC.GetUser(userId);
                 if (usuario == null) return Error_FailedRequest();
 
-                userTypeLst = UP.GetAllTypes().ToList();
+                userTypeLst = UC.GetAllTypes().ToList();
                 if (userTypeLst == null) return Error_FailedRequest();
 
-                userStatusLst = UP.GetAllStatus().ToList();
+                userStatusLst = UC.GetAllStatus().ToList();
                 if (userStatusLst == null) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -231,7 +231,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = UP.UpdateUser(newUser);
+                var res = UC.UpdateUser(newUser);
 
                 if (!res)
                 {
@@ -276,10 +276,10 @@ namespace initial_d.Controllers
 
                 if (userTemplate == null) return Error_FailedRequest();
 
-                userTypeLst = UP.GetAllTypes().ToList();
+                userTypeLst = UC.GetAllTypes().ToList();
                 if (userTypeLst == null) return Error_FailedRequest();
 
-                userStatusLst = UP.GetAllStatus().ToList();
+                userStatusLst = UC.GetAllStatus().ToList();
                 if (userStatusLst == null) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -309,7 +309,7 @@ namespace initial_d.Controllers
 
             try
             {
-                userId = UP.RegisterUser(newUser);
+                userId = UC.RegisterUser(newUser);
 
                 if (userId == null) return Error_FailedRequest();
             }
@@ -347,7 +347,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = UP.DeleteUser(userId);
+                var res = UC.DeleteUser(userId);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -375,7 +375,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = UP.RestoreUser(userId);
+                var res = UC.RestoreUser(userId);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -408,7 +408,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = UP.ChangeUserType(userId, userTypeId);
+                var res = UC.ChangeUserType(userId, userTypeId);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -438,7 +438,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = UP.ChangeUserStatus(userId, userStatusId);
+                var res = UC.ChangeUserStatus(userId, userStatusId);
 
                 if (!res) return Error_FailedRequest();
             }
