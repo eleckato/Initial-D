@@ -210,6 +210,7 @@
     <Compile Include="Common\NavbarItems.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CashierController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MecanicosController.cs" />
@@ -240,6 +241,7 @@
     <Compile Include="Models\APIModels\Usuario.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Viewmodels\CashierVM.cs" />
     <Compile Include="Models\Viewmodels\PointOfSaleVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\JwtProvider.cs" />
@@ -547,6 +549,7 @@
     <Content Include="Views\Sales\DeletedSaleList.cshtml" />
     <Content Include="Views\Sales\Partial\_DeleteModalAndScript.cshtml" />
     <Content Include="Views\Sales\Partial\_CancelSaleModal.cshtml" />
+    <Content Include="Views\Cashier\CashierIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -130,6 +130,13 @@ namespace initial_d.Models.APIModels
             }
         }
 
+        public string itemName { 
+            get
+            {
+                var res = prod?.name ?? serv?.name ?? "No Data";
+                return res;
+            }
+        }
 
         public SaleItemVM()
         {

@@ -7,13 +7,14 @@
     string servStatus = Model.sale_status_id;
     bool isDeleted = Model.deleted;
 
-
-    string goBack_Url = Url.Action(isDeleted ? "DeletedSaleList" : "SaleList", "Sales");
-
     // Ids to keep an eye on
     string penId = "PEN"; // Pendiente
     string pagId = "PAG"; // Pagado
     string canId = "CAN"; // Cancelado
+
+
+    string goBackURL = Url.Action(isDeleted ? "DeletedSaleList" : "SaleList", "Sales");
+    string cashSaleURL = Url.Action("CashierIndex", "Cashier", new { saleId = sale.sale_id });
 }
 
 
@@ -28,10 +29,18 @@
     </div>
 
     <div class="header-buttons">
-        <a href="@goBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">
+        <a href="@goBackURL" class="btn btn-sm btn-secondary mr-3" role="button">
             <i class="fa fa-caret-left" aria-hidden="true"></i>
             Volver
         </a>
+
+        @if (servStatus.Equals(penId))
+        {
+            <a href="@cashSaleURL" class="btn btn-sm btn-green mr-3" role="button">
+                <i class="fa fa-money-bill-wave" aria-hidden="true"></i>
+                Facturar
+            </a>
+        }
 
         <!-- ACTIONS DROPDOWN -->
         @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } } )

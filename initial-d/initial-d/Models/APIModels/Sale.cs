@@ -74,27 +74,6 @@ namespace initial_d.Models.APIModels
 
         }
 
-        public Sale(bool isTemplate)
-        {
-            sale_id = string.Empty;
-
-            seller_id = string.Empty;
-            cashier_id = string.Empty;
-            appuser_id = string.Empty;
-
-            sale_status_id = string.Empty;
-
-            date_order = null;
-            sale_date = null;
-            code = 0;
-            payment_method = string.Empty;
-            subtotal = 0;
-            total = 0;
-
-            updated_at = DateTime.Now;
-            created_at = DateTime.Now;
-            deleted = false;
-        }
     }
 
     public class SaleVM : Sale

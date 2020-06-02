@@ -1,0 +1,241 @@
+﻿@model initial_d.Models.APIModels.SaleVM
+@using initial_d.Common.Extensions
+
+@{
+    ViewBag.Title = "Facturar Venta";
+
+    var payMethodList = (SelectList)ViewBag.payMethodList;
+    var goBackURL = Url.Action("SaleDetails", "Sales", new { saleId = Model.sale_id });
+}
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-money-bill-wave" aria-hidden="true"></i>
+            Facturar Venta
+        </h2>
+    </div>
+</div>
+
+
+@using (Html.BeginForm())
+{
+
+<div class="row">
+    @Html.HiddenFor(m => m.sale_id)
+    <!-- SALE ITEMS TABLE -->
+    <div class="col-12 col-lg-6 pr-0 pr-lg-3">
+
+        <div class=" d-flex justify-content-center" id="item-list">
+            
+            <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+                
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+
+                    @for (int i = 0; i < Model.saleItems.Count; i++)
+                    {
+                        var item = Model.saleItems[i];
+                        var isProd = item.prod != null;
+                        
+                        <tr data-url="#" data-id="@item.provision_id">
+                            
+                            <!-- NOMBRE -->
+                            <td data-label="Nombre">
+                                <div class="">
+                                    <i class="fa @(isProd ? "fa-box" : "fa-tools") mr-2"></i>
+                                    @item.itemName
+                                </div>
+                            </td>
+                            
+                            <!-- PRECIO -->
+                            <td data-label="Precio">
+                                @item.unit_priceString
+                            </td>
+                            
+                            <!-- CANTIDAD -->
+                            <td data-label="Cantidad">
+                                <div class="w-max-content">
+                                    @item.quantityString
+                                </div>
+                            </td>
+                            
+                            <!-- CANTIDAD -->
+                            <td data-label="Total">
+                                @item.totalString
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+    
+    <!-- USUARIO / TOTAL -->
+    <div class="col-12 col-lg-6 row">
+        
+        <!-- USUARIO -->
+        <div class="col-12 mb-3">
+
+            <div class="c-jumbotron">
+                
+                <div class="mx-0 mx-lg-2">
+
+                    @if (Model.user != null)
+                    {
+                        <h5><strong>Usuario Asociado</strong></h5>
+                        
+                        <div>
+                            <table class="c-info-table mb-3 w-100">
+                                <tr>
+                                    <th class="">Username</th>
+                                    <td>@Model.user.username</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <td>@Model.user.fullName</td>
+                                </tr>
+                                <tr>
+                                    <th>RUT</th>
+                                    <td>@Model.user.rut</td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <h5 class="mb-3">No hay ningún Usuario seleccionado</h5>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TOTAL -->
+        <div class="col-12">
+
+            <div class="c-jumbotron">
+                <div class="mx-0 mx-lg-2 mx-xl-5">
+
+                    <div class="row mb-2 justify-content-center">
+                        <h5 class="mr-4 my-0 d-inline" style="vertical-align: middle">Total</h5>
+                        <h4 class="font-weight-bold">@Model.totalString</h4>
+                    </div>
+
+                    <div class="row mb-3 justify-content-center">
+                        @Html.DropDownListFor(m => m.payment_method, payMethodList, new { @class="form-control" })
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <a class="btn btn-sm btn-red mr-3 mb-3" role="button" data-toggle="modal" data-target="#cancel-modal">
+                            <i class="fa fa-times"></i>
+                            Cancelar
+                        </a>
+                        <a class="btn btn-sm btn-green  mb-3" role="button" data-toggle="modal" data-target="#cash-modal">
+                            <i class="fa fa-shopping-cart"></i>
+                            Facturar Venta
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CANCELAR MODAL -->
+<div id="cancel-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>
+                    Advertencia
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Está seguro/a que desea cancelar el proceso?</p>
+            </div>
+
+            <div class="modal-footer">
+
+                <a role="button" class="btn btn-sm btn-secondary" data-dismiss="modal" href="#">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    <span>Volver</span>
+                </a>
+
+                <a class="btn btn-sm btn-red" id="modal-delete-btn" href="@goBackURL">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>Cancelar</span>
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- FACTURAR MODAL -->
+<div id="cash-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>
+                    Advertencia
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>¿Está seguro/a que desea Facturar está venta?</p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-backspace" aria-hidden="true"></i>
+                    <span>Volver</span>
+                </button>
+
+                <button type="submit" class="btn btn-sm btn-green" id="modal-delete-btn">
+                    <i class="fa fa-money-bill-wave" aria-hidden="true"></i>
+                    <span>Facturar</span>
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+}

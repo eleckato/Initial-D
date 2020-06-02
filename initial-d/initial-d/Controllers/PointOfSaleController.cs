@@ -51,15 +51,8 @@ namespace initial_d.Controllers
 
                 model.venId = User.Identity.GetUserId();
 
-                model.user = userList.First();
-
-
-
                 string saleId = model.id;
                 Session[$"sale_{saleId}"] = model;
-
-
-                AddProd(prodList.First().product_id, 1, model.id);
             }
             catch (Exception e)
             {
@@ -298,7 +291,7 @@ namespace initial_d.Controllers
             }
 
             Producto newProd;
-            Prestacion newPrest;
+            PoSSaleItem newPrest;
             string html;
 
             try
@@ -311,7 +304,7 @@ namespace initial_d.Controllers
                     return error;
                 }
 
-                newPrest = new Prestacion()
+                newPrest = new PoSSaleItem()
                 {
                     amount = quantity ?? 0,
                     prod = newProd,
@@ -348,7 +341,7 @@ namespace initial_d.Controllers
             }
 
             Servicio newServ;
-            Prestacion newPrest;
+            PoSSaleItem newPrest;
             string html;
 
             try
@@ -361,7 +354,7 @@ namespace initial_d.Controllers
                     return error;
                 }
 
-                newPrest = new Prestacion()
+                newPrest = new PoSSaleItem()
                 {
                     amount = 1,
                     serv = newServ,

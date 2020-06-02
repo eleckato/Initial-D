@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 using initial_d.Models.APIModels;
 
 namespace initial_d.Models.Viewmodels
@@ -12,7 +10,7 @@ namespace initial_d.Models.Viewmodels
     {
         public string id { get; set; }
 
-        public List<Prestacion> soldItems { get; set; }
+        public List<PoSSaleItem> soldItems { get; set; }
 
         public string venId { get; set; }
 
@@ -46,7 +44,7 @@ namespace initial_d.Models.Viewmodels
         public PointOfSaleVM()
         {
             id = Guid.NewGuid().ToString().Replace("-", "");
-            soldItems = new List<Prestacion>();
+            soldItems = new List<PoSSaleItem>();
             user = null;
             venId = string.Empty;
             prodList = new List<Producto>();
@@ -55,7 +53,7 @@ namespace initial_d.Models.Viewmodels
         }
     }
 
-    public class Prestacion
+    public class PoSSaleItem
     {
         [Required]
         [Display(Name = "Id")]
@@ -174,7 +172,7 @@ namespace initial_d.Models.Viewmodels
         public Servicio serv { get; set; }
 
 
-        public Prestacion()
+        public PoSSaleItem()
         {
             amount = 0;
 
