@@ -183,6 +183,7 @@
     <Compile Include="APICallers\ProductosCaller.cs" />
     <Compile Include="APICallers\PublicacionesMecCaller.cs" />
     <Compile Include="APICallers\CallerBase.cs" />
+    <Compile Include="APICallers\BookingCaller.cs" />
     <Compile Include="APICallers\ServiciosCaller.cs" />
     <Compile Include="APICallers\UsuariosCaller.cs" />
     <Compile Include="APICallers\SalesCaller.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Controllers\PointOfSaleController.cs" />
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\PublicacionesMecController.cs" />
+    <Compile Include="Controllers\ReservaController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
@@ -225,12 +227,16 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\APIModels\HorarioTienda.cs" />
     <Compile Include="Models\APIModels\Mecanico.cs" />
     <Compile Include="Models\APIModels\ProdStatus.cs" />
     <Compile Include="Models\APIModels\Producto.cs" />
     <Compile Include="Models\APIModels\ProdUnit.cs" />
     <Compile Include="Models\APIModels\PublicacionMec.cs" />
     <Compile Include="Models\APIModels\PublicStatus.cs" />
+    <Compile Include="Models\APIModels\Reserva.cs" />
+    <Compile Include="Models\APIModels\ReservaRestriccion.cs" />
+    <Compile Include="Models\APIModels\ReservaStatus.cs" />
     <Compile Include="Models\APIModels\Sale.cs" />
     <Compile Include="Models\APIModels\SaleItem.cs" />
     <Compile Include="Models\APIModels\SaleStatus.cs" />
@@ -241,7 +247,6 @@
     <Compile Include="Models\APIModels\Usuario.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Viewmodels\CashierVM.cs" />
     <Compile Include="Models\Viewmodels\PointOfSaleVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\JwtProvider.cs" />
@@ -553,6 +558,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Reserva\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

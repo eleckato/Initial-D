@@ -379,7 +379,7 @@ namespace initial_d.Controllers
 
             try
             {
-                var res = MP.ChangeUserStatus(mechId, userStatusId);
+                var res = MP.ChangeMechStatus(mechId, userStatusId);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)

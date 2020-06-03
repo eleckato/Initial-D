@@ -23,7 +23,6 @@ namespace initial_d.APICallers
             {
                 var delString = deleted ? "&deleted=true" : "";
                 var url = $"{salesPrefix}?code={code}&id_cashier={id_cashier}&id_seller={id_seller}&id_appuser={id_appuser}&sale_status_id={sale_status_id}{delString}";
-                //var url = $"{salesPrefix}?id_cashier={id_cashier}&id_seller={id_seller}&id_appuser={id_appuser}&sale_status_id={sale_status_id}{delString}";
 
                 // Request Base
                 var request = new RestRequest(url, Method.GET)

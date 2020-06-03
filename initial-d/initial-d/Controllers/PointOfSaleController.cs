@@ -13,7 +13,7 @@ using System.Web.Mvc;
 namespace initial_d.Controllers
 {
     [Authorize]
-    [RoutePrefix("servicios")]
+    [RoutePrefix("point-of-sale")]
     public class PointOfSaleController : BaseController
     {
 

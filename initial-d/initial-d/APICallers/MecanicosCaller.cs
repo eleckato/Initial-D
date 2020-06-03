@@ -4,7 +4,6 @@ using initial_d.Providers;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 
 namespace initial_d.APICallers
@@ -266,7 +265,7 @@ namespace initial_d.APICallers
         /// </summary>
         /// <param name="mechId"> User Id </param>
         /// <param name="statusId"> User Status Id </param>
-        public bool ChangeUserStatus(string mechId, string statusId)
+        public bool ChangeMechStatus(string mechId, string statusId)
         {
             if (string.IsNullOrEmpty(mechId) || string.IsNullOrEmpty(statusId))
             {
