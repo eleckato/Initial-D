@@ -65,16 +65,7 @@ namespace initial_d.Controllers
                 SaleVM sale = (SaleVM)Session[$"cash_sale_{model.sale_id}"];
                 if (sale == null) return Error_FailedRequest();
 
-                var apisale = SaC.GetSale(model.sale_id);
-                if (apisale == null) return Error_FailedRequest();
-
-                apisale.cashier_id = sale.cashier_id;
-                apisale.sale_status_id = "PAG";
-                apisale.sale_date = DateTime.Now;
-                apisale.payment_method = model.payment_method;
-                apisale.updated_at = DateTime.Now;
-
-                var res = SaC.UpdateSale(apisale);
+                var res = SaC.CashSale(model, sale.cashier_id);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)

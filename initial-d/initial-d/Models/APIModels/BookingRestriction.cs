@@ -5,7 +5,7 @@ using System.Web;
 
 namespace initial_d.Models.APIModels
 {
-    public class ReservaRestriccion
+    public class BookingRestriction
     {
         public string restriction_id { get; set; }
         public string serv_id { get; set; }
@@ -15,13 +15,13 @@ namespace initial_d.Models.APIModels
         public DateTime? created_at { get; set; }
         public bool deleted { get; set; }
 
-        public ReservaRestriccion()
+        public BookingRestriction()
         {
 
         }
     }
 
-    public class ReservaRestriccionVM : ReservaRestriccion
+    public class BookingRestVM : BookingRestriction
     {
         private readonly string dateFormat = "dd/MM/yyyy HH:mm";
 
@@ -34,7 +34,7 @@ namespace initial_d.Models.APIModels
         public string updatedAtString { get { return updated_at?.ToString(dateFormat) ?? "-"; } }
         public string createdAtString { get { return created_at?.ToString(dateFormat) ?? "-"; } }
 
-        public ReservaRestriccionVM()
+        public BookingRestVM()
         {
 
         }

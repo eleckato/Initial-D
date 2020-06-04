@@ -1,0 +1,133 @@
+﻿@model initial_d.Models.APIModels.BookingVM
+
+@{
+    ViewBag.Title = "Detalled de Reserva";
+
+    var book = Model;
+    string statusId = Model.status_booking_id;
+    bool isDeleted = Model.deleted;
+
+    // Ids to keep an eye on
+    string actId = "ACT"; // Activa
+    string reaId = "REA"; // Realizada
+    string perId = "PER"; // Hora Perdida
+    string canId = "CAN"; // Cancelada
+
+    string goBack_Url = Url.Action(isDeleted ? "DeletedBookList" : "BookList", "Booking");
+    string userURL = Url.Action("UserDetails", "Usuarios", new { userId = Model.appuser_id } );
+    string servURL = Url.Action("ServDetails", "Servicios", new { servId = Model.serv_id });
+}
+
+<!-- TITULO  |  BUTTONS -->
+<div class="header">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-calendar-day" aria-hidden="true"></i>
+            Reserva de Servicio
+        </h2>
+    </div>
+
+    <div class="header-buttons">
+        <a href="@goBack_Url" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-caret-left" aria-hidden="true"></i>
+            Volver
+        </a>
+
+        <!-- ACTIONS DROPDOWN -->
+        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } } )
+    </div>
+
+</div>
+
+
+<div class="row justify-content-around">
+
+    <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
+        <div class="c-jumbotron"> 
+            <h3 class="mb-4"> Información General </h3>
+
+            <table class="table table-borderless c-info-table table-th-compact">
+                <!-- USUARIO -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.userName)</th>
+                    <td><a href="@userURL">@book.userName</a></td>
+                </tr>
+
+                <!-- SERVICIO -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.servName)</th>
+                    <td><a href="@servURL">@book.servName</a></td>
+                </tr>
+
+                <!-- HORARIO -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.schedule)</th>
+                    <td>@book.schedule</td>
+                </tr>
+                
+                <!-- STATUS -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.statusName)</th>
+                    <td>
+                        @{ 
+                            var statClass = "fa-exclamation-triangle color-red";
+
+                            if (statusId.Equals(actId))       { statClass = "fa-clock color-yellow"; }
+                            else if (statusId.Equals(reaId))  { statClass = "fa-check color-green"; }
+                            else if (statusId.Equals(perId))  { statClass = "fa-times color-red"; }
+                            else if (statusId.Equals(canId))  { statClass = "fa-ban text-secondary"; }
+                        }
+
+                        <div class="w-max-content-sm text-">
+                            <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
+                            @book.statusName
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+    <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
+        <div class="c-jumbotron">
+            <h3 class="@(isDeleted ? "" : "mb-4")"> Información de Sistema </h3>
+            
+            @* Mensaje de Producto Eliminado *@
+            @if (isDeleted)
+            {
+                <div class="mt-4">
+                    <p>
+                        <i class="fa fa-trash-alt" aria-hidden="true" style="color:var(--red)"></i>
+                        Reserva Eliminada
+                    </p>
+                </div>
+            }
+
+            <table class="table table-borderless c-info-table table-th-compact">
+                
+                <!-- UPDATED AT -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.updatedAtString)</th>
+                    <td>@Html.DisplayFor(m => m.updatedAtString)</td>
+                </tr>
+
+                <!-- CREATED AT -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.createdAtString)</th>
+                    <td>@Html.DisplayFor(m => m.createdAtString)</td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+<!-- MODALS -->
+@Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })
+@Html.Partial("Partial/_CancelBookingModal")

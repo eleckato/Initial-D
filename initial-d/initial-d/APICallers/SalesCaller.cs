@@ -1,8 +1,8 @@
-﻿using initial_d.Models.APIModels;
+﻿using initial_d.Common;
+using initial_d.Models.APIModels;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using initial_d.Common;
 using System.Linq;
 
 namespace initial_d.APICallers
@@ -268,6 +268,84 @@ namespace initial_d.APICallers
             }
         }
 
+        public bool CashSale(SaleVM model, string cashierId)
+        {
+            if (model == null || string.IsNullOrEmpty(cashierId))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return false;
+            }
+
+            try
+            {
+                // Get Sale desde por API
+                var apisale = GetSale(model.sale_id);
+                if (apisale == null)
+                {
+                    ErrorWriter.CustomError("Sale not found by API");
+                    return false;
+                }
+
+                // Cambiar datos relevantes
+                apisale.cashier_id = cashierId;
+                apisale.payment_method = model.payment_method;
+                apisale.sale_status_id = "PAG";
+                apisale.sale_date = DateTime.Now;
+                apisale.updated_at = DateTime.Now;
+
+                // Actualizar Sale 
+                var res = UpdateSale(apisale);
+                if (!res)
+                {
+                    ErrorWriter.CustomError("Error updating the Sale by API");
+                    return false;
+                }
+
+                // Conseguir la lista de items en la venta para cambiar el stock de los productos
+                var saleItems = GetSaleItems(model.sale_id).ToList();
+                if (saleItems == null)
+                {
+                    ErrorWriter.CustomError("Sale Items not found by API.");
+                    return false;
+                }
+
+                // Cambiar el stock de los productos
+                foreach (var prod in saleItems)
+                {
+                    if (!string.IsNullOrEmpty(prod.product_id))
+                    {
+                        var prodId = prod.product_id;
+                        var amount = prod.quantity;
+                        var pc = new ProductosCaller();
+
+                        var apiProd = pc.GetProd(prodId);
+                        if (apiProd == null)
+                        {
+                            ErrorWriter.CustomError("Product not found by API to change stock.");
+                            res = false;
+                            break;
+                        }
+
+                        apiProd.stock -= amount;
+
+                        var stockRes = pc.UpdateProd(apiProd);
+                        if(!stockRes)
+                        {
+                            ErrorWriter.CustomError("Error changing the stock of the Product by API");
+                            return false;
+                        }
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+
+            return true;
+        }
 
         /* ---------------------------------------------------------------- */
         /* SALE ITEM */

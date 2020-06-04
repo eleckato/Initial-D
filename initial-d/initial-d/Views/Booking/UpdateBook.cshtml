@@ -1,0 +1,66 @@
+﻿@model initial_d.Models.APIModels.BookingVM
+
+@{
+    ViewBag.Title = "Actualizar Reserva";
+}
+
+<div class="header">
+    
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-calendar-day" aria-hidden="true"></i>
+            Actualizar Reserva
+        </h2>
+    </div>
+
+</div>
+
+@using (Html.BeginForm())
+{ 
+    @Html.HiddenFor(m => m.booking_id)
+    @Html.HiddenFor(m => m.appuser_id)
+    @Html.HiddenFor(m => m.status_booking_id)
+    @Html.HiddenFor(m => m.updated_at)
+    @Html.HiddenFor(m => m.created_at)
+    @Html.HiddenFor(m => m.deleted)
+    
+    
+    <!-- FORM CONTAINER -->
+    <div class="row justify-content-start mb-4">
+
+        <div class="col-12 col-ms-11 col-md-10 col-lg-10 px-lg-2">
+            <div class="c-jumbotron">
+                <h3 class="mb-4"> Datos de la Reserva </h3>
+    
+                <table class="table table-borderless c-info-table c-table-left c-table-sm-responsive table-th-compact">
+                    
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.serv_id)</th>
+                        <td>
+                            @Html.HiddenFor(m => m.serv_id})
+                            @Html.ValidationMessageFor(x => x.serv_id)
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.start_date_hour)</th>
+                        <td>
+                            @Html.TextBoxFor(m => m.start_date_hour, new { @class = "form-control datepicker" })
+                            @Html.ValidationMessageFor(x => x.start_date_hour)
+                        </td>
+                    </tr>
+
+                </table>
+
+                
+            </div>
+        </div>
+
+    </div>
+}
+
+
+
+@section customScripts{
+    @Html.Partial("Partial/_DatePickerBoilerplate")
+}

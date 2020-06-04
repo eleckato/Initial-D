@@ -17,10 +17,11 @@
     // URLs
     string posURL = Url.Action("Index", "PointOfSale");
     string salesURL = Url.Action("SaleList", "Sales");
-    string ProdUrl = Url.Action("ProdList", "Productos");
-    string ServUrl = Url.Action("ServList", "Servicios");
-    string MechUrl = Url.Action("MechList", "Mecanicos");
-    string UserUrl = Url.Action("UserList", "Usuarios");
+    string prodURL = Url.Action("ProdList", "Productos");
+    string servURL = Url.Action("ServList", "Servicios");
+    string bookingURL = Url.Action("BookList", "Booking");
+    string mechURL = Url.Action("MechList", "Mecanicos");
+    string userURL = Url.Action("UserList", "Usuarios");
 
 }
 <!DOCTYPE html>
@@ -72,25 +73,31 @@
                     </a>
                 </li>
                 <li class="@(controller.Equals("Productos") ? "active" : "")">
-                    <a href="@ProdUrl">
+                    <a href="@prodURL">
                         <i class="fas fa-boxes"></i>
                         <span>Productos</span>
                     </a>
                 </li>
+                <li class="@(controller.Equals("Booking") ? "active" : "")">
+                    <a href="@bookingURL">
+                        <i class="fas fa-clock"></i>
+                        <span>Reservas</span>
+                    </a>
+                </li>
                 <li class="@(controller.Equals("Servicios") ? "active" : "")">
-                    <a href="@ServUrl">
+                    <a href="@servURL">
                         <i class="fas fa-tools"></i>
                         <span>Servicios</span>
                     </a>
                 </li>
                 <li class="@(controller.Equals("Mecanicos") || controller.Equals("PublicacionesMec") ? "active" : "")">
-                    <a href="@MechUrl">
+                    <a href="@mechURL">
                         <i class="fas fa-wrench"></i>
                         <span>Mecánicos</span>
                     </a>
                 </li>
                 <li class="@(controller.Equals("Usuarios") ? "active" : "")">
-                    <a href="@UserUrl">
+                    <a href="@userURL">
                         <i class="fas fa-user"></i>
                         <span>Usuarios</span>
                     </a>

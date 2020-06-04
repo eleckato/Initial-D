@@ -218,7 +218,7 @@
     <Compile Include="Controllers\PointOfSaleController.cs" />
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\PublicacionesMecController.cs" />
-    <Compile Include="Controllers\ReservaController.cs" />
+    <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
@@ -227,16 +227,16 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\APIModels\HorarioTienda.cs" />
+    <Compile Include="Models\APIModels\StoreSchedule.cs" />
     <Compile Include="Models\APIModels\Mecanico.cs" />
     <Compile Include="Models\APIModels\ProdStatus.cs" />
     <Compile Include="Models\APIModels\Producto.cs" />
     <Compile Include="Models\APIModels\ProdUnit.cs" />
     <Compile Include="Models\APIModels\PublicacionMec.cs" />
     <Compile Include="Models\APIModels\PublicStatus.cs" />
-    <Compile Include="Models\APIModels\Reserva.cs" />
-    <Compile Include="Models\APIModels\ReservaRestriccion.cs" />
-    <Compile Include="Models\APIModels\ReservaStatus.cs" />
+    <Compile Include="Models\APIModels\Booking.cs" />
+    <Compile Include="Models\APIModels\BookingRestriction.cs" />
+    <Compile Include="Models\APIModels\BookingStatus.cs" />
     <Compile Include="Models\APIModels\Sale.cs" />
     <Compile Include="Models\APIModels\SaleItem.cs" />
     <Compile Include="Models\APIModels\SaleStatus.cs" />
@@ -267,6 +267,9 @@
     <Content Include="Content\Bootstrap\bootstrap.min.css" />
     <Content Include="Content\CSS\Elements\c-table.css" />
     <Content Include="Content\CSS\mecanicos-general.css" />
+    <Content Include="Content\DatetimePicker\bootstrap-datetimepicker.css" />
+    <Content Include="Content\DatetimePicker\bootstrap-datetimepicker.js" />
+    <Content Include="Content\DatetimePicker\moment.js" />
     <Content Include="Content\FontAwesome\brands.css" />
     <Content Include="Content\FontAwesome\brands.min.css" />
     <Content Include="Content\CSS\Elements\buttons.css" />
@@ -555,10 +558,17 @@
     <Content Include="Views\Sales\Partial\_DeleteModalAndScript.cshtml" />
     <Content Include="Views\Sales\Partial\_CancelSaleModal.cshtml" />
     <Content Include="Views\Cashier\CashierIndex.cshtml" />
+    <Content Include="Views\Booking\BookList.cshtml" />
+    <Content Include="Views\Booking\Partial\_ContextualActionDropdown.cshtml" />
+    <Content Include="Views\Booking\DeletedBookList.cshtml" />
+    <Content Include="Views\Booking\BookDetails.cshtml" />
+    <Content Include="Views\Booking\UpdateBook.cshtml" />
+    <Content Include="Views\Booking\Partial\_CancelBookingModal.cshtml" />
+    <Content Include="Views\Booking\Partial\_DeleteModalAndScript.cshtml" />
+    <Content Include="Views\Booking\Partial\_updateStoreScheModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Reserva\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

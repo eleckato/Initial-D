@@ -1,0 +1,142 @@
+﻿@model IEnumerable<initial_d.Models.APIModels.BookingVM>
+@using initial_d.Common.FilterBar;
+@using initial_d.Models.APIModels;
+
+@{
+    ViewBag.Title = "Reservas de Servicios";
+
+    var storeSche = (StoreSchedule)ViewBag.storeSche;
+
+    // Filters
+    string userRut = ViewBag.userRut ?? string.Empty;
+    var bookStatusLst = (SelectList)ViewBag.bookStatusLst;
+
+    string actId = "ACT"; // Activa
+    string reaId = "REA"; // Realizada
+    string perId = "PER"; // Hora Perdida
+    string canId = "CAN"; // Cancelada
+
+    // Action URL
+    string delList = Url.Action("DeletedBookList", "Booking");
+}
+
+<!-- HEADER | ACTION BUTTONS -->
+<div class="header ">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-calendar-day" aria-hidden="true"></i>
+            @ViewBag.Title
+        </h2>
+    </div>
+    
+    <!-- BUTTONS -->
+    <div class="header-buttons">
+        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            Reservas Eliminadas
+        </a>
+        <a class="btn btn-sm btn-yellow mr-3" role="button" href="#update-store-sche-modal" data-toggle="modal" >
+            <i class="fa fa-history" aria-hidden="true"></i>
+            Cambiar Horario de la Tienda
+        </a>
+    </div>
+</div>
+
+
+<!-- BUSCAR -->
+@{ 
+    var filterTemplate = new FilterBarTemplate()
+    {
+        formAction = "BookList",
+        formController = "Booking",
+        filters = new List<MvcHtmlString>()
+        {
+            Html.TextBox("userRut", userRut, new { @class = "form-control form-control-sm h-100", @placeholder = "Rut Cliente" }),
+            Html.DropDownList("statusId", bookStatusLst, "Status", new { @class = "custom-select custom-select-sm form-control" }),
+        }
+    };
+}
+@Html.Partial("Partial/_FiltersCollapse", filterTemplate)
+
+
+<!-- DATA TABLE -->
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.statusName)</th>
+                <th>@Html.DisplayNameFor(m => m.userName)</th>
+                <th>@Html.DisplayNameFor(m => m.servName)</th>
+                <th>@Html.DisplayNameFor(m => m.schedule)</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var book in Model)
+            {
+                string detailsUrl = Url.Action("BookDetails", "Booking", new { bookId = book.booking_id});
+                string status = book?.status_booking_id;
+
+                <tr class="clickable-row" data-url="@detailsUrl">
+                    
+                    <!-- ACTION DROPDOWN -->
+                    <td data-label="Actions" class="not-clickable cell-compact">
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(book) { { "context", "list" } } )
+                    </td>
+                    
+                    <!-- STATUS -->
+                    <td data-label="@Html.DisplayNameFor(m => m.statusName)">
+                        @if (status != null)
+                        {
+                            var statClass = "fa-exclamation-triangle color-red";
+
+                            if (status.Equals(actId))       { statClass = "fa-clock color-yellow"; }
+                            else if (status.Equals(reaId))  { statClass = "fa-check color-green"; }
+                            else if (status.Equals(perId))  { statClass = "fa-times color-red"; }
+                            else if (status.Equals(canId))  { statClass = "fa-ban text-secondary"; }
+
+
+                            <div class="w-max-content-sm text-">
+                                <i class=" fa mr-1 @statClass" aria-hidden="true"></i>
+                                @book.statusName
+                            </div>
+                        }
+                    </td>
+                    
+                    <!-- USUARIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.userName)">
+                        @book.userName
+                    </td>
+                    
+                    <!-- SERVICIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.servName)">
+                        @(book.servName)
+                    </td>
+
+                    <!-- HORARIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.schedule)">
+                        @book.schedule
+                    </td>
+
+                </tr>
+
+            }
+
+        </tbody>
+
+    </table>
+</div>
+
+
+<!-- MODALS -->
+@Html.Partial("Partial/_DeleteModalAndScript")
+@Html.Partial("Partial/_CancelBookingModal")
+@Html.Partial("Partial/_updateStoreScheModal", storeSche)
+
+@section customScripts{
+    @Scripts.Render("~/Content/JS/c_table.js")
+}
