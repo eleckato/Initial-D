@@ -18,14 +18,6 @@ namespace initial_d.Models.APIModels
         public string appuser_id { get; set; }
 
         [Required]
-        [Display(Name = "Comienzo")]
-        public DateTime? start_date_hour { get; set; }
-
-        [Required]
-        [Display(Name = "Término")]
-        public DateTime? end_date_hour { get; set; }
-
-        [Required]
         [Display(Name = "Status")]
         public string status_booking_id { get; set; }
 
@@ -38,6 +30,18 @@ namespace initial_d.Models.APIModels
         public DateTime? created_at { get; set; }
 
         public bool deleted { get; set; }
+
+
+        [Required]
+        [Display(Name = "Comienzo")]
+        [DataType(DataType.DateTime)]
+        public DateTime? start_date_hour { get; set; }
+
+        [Required]
+        [Display(Name = "Término")]
+        [DataType(DataType.DateTime)]
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/MM/yyyy HH:mm}")]
+        public DateTime? end_date_hour { get; set; }
 
         public Booking()
         {
@@ -78,7 +82,6 @@ namespace initial_d.Models.APIModels
         public string servName { get { return serv?.name ?? Resources.Messages.StringNotFound; } }
 
 
-
         [Display(Name = "Comienzo")]
         public string startDateTimeString { get { return start_date_hour?.ToString("dd/MM/yyyy HH:mm") ?? "-"; } }
 
@@ -106,22 +109,10 @@ namespace initial_d.Models.APIModels
 
 
         [Display(Name = "Última Actualización")]
-        public string updatedAtString
-        {
-            get
-            {
-                return updated_at?.ToString("dd/MM/yyyy HH:mm") ?? "-";
-            }
-        }
+        public string updatedAtString { get { return updated_at?.ToString("dd/MM/yyyy HH:mm") ?? "-"; } }
 
         [Display(Name = "Fecha de Registro")]
-        public string createdAtString
-        {
-            get
-            {
-                return created_at?.ToString("dd/MM/yyyy HH:mm") ?? "-";
-            }
-        }
+        public string createdAtString { get { return created_at?.ToString("dd/MM/yyyy HH:mm") ?? "-"; } }
 
         [Display(Name = "Status")]
         public string statusName { get; set; }

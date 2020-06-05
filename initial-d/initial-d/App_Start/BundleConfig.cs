@@ -14,7 +14,9 @@ namespace initial_d
 
             // Jquery dependan library for form validation, it's used for ASP.NET build in validation
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"
+                        "~/Scripts/jquery.validate*",
+                        "~/Scripts/jquery.validate.unobtrusive.min.js",
+                        "~/Scripts/moment.js"
                         ));
 
             // This comment was auto generated

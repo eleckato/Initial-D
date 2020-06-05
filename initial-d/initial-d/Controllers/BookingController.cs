@@ -184,6 +184,41 @@ namespace initial_d.Controllers
         }
 
 
+        
+        /// <summary>
+        /// POST  |  API call to reschedule the data of a Booking
+        /// </summary>
+        [HttpPost]
+        public ActionResult RescheduleBook(BookingVM newBook)
+        {
+            if (newBook == null) return Error_InvalidUrl();
+            string bookId = newBook.booking_id;
+
+            try
+            {
+                Booking apiNewBook = newBook;
+
+                var res = BC.UpdateBooking(apiNewBook);
+
+                if (!res)
+                {
+                    Error_FailedRequest();
+                    return RedirectToAction("UpdateBook", new { bookId });
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                Error_CustomError(e.Message);
+                return RedirectToAction("UpdateBook", new { bookId });
+            }
+
+            string successMsg = "La Reserva fue reagendada con éxito";
+            SetSuccessMsg(successMsg);
+
+            return RedirectToAction("BookDetails", new { bookId });
+        }
+
         /////* UPDATE BOOKING */
         /////* ---------------------------------------------------------------- */
 

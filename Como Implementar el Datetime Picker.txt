@@ -1,0 +1,42 @@
+Setear los js y css
+	mtr-datepicker.min.js
+	mtr-datepicker.min.css
+	mtr-datepicker.default-theme
+	
+poner un hiddenFor para los input
+	@Html.Hidden("start_date_hour", Model.start_date_hour?.ToString("yyyy-MM-ddTHH:mm"))
+
+poner un div con un id asociado (start_date_time_view, por ejemplo) y darle formato
+	<div id="start_date_hour_view" class="row flex-row-reverse justify-content-end"></div>
+
+inicializar el datepicker
+	tomar el valor del hidden y sumarle 10 min
+		let t = moment($('#start_date_hour').val()).add(-10, 'minutes').format();
+
+	sacar timestamp de ahí
+		var timestamp = new Date(t).getTime();
+	
+	setear config
+        var config = {
+            target: 'start_date_hour_view',
+            disableAmPm: true,
+            future: true,
+            timestamp: timestamp
+        };
+
+	
+	initialize datepicker
+		var startDatePickerView = new MtrDatepicker(config);
+	
+	moder el dia antes del mes
+		$('#start_date_hour_view-input-months').insertAfter($('#start_date_hour_view-input-dates'));
+			
+Setear evento que cambie el hidden cada vez que el datetime picker cambie
+	startDatePickerView.onChange('all', function() {
+		let newTime = startDatePickerView.toISOString();
+
+		$('#start_date_hour').val(newTime);
+
+		let startTime = $('#start_date_hour').val();
+	}
+		

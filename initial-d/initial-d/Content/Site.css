@@ -62,9 +62,10 @@ footer p {
     margin: 0;
 }
 
-input, select{
+input, select:not(.hourselect):not(.minuteselect) {
     min-width: 250px;
 }
+
 
 p, li, a, td, input  {
     font-family: 'Open Sans', sans-serif;

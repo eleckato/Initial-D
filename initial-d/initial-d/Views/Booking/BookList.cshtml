@@ -17,7 +17,8 @@
     string canId = "CAN"; // Cancelada
 
     // Action URL
-    string delList = Url.Action("DeletedBookList", "Booking");
+    string delListURL = Url.Action("DeletedBookList", "Booking");
+    string rescheduleURL = Url.Action("", "");
 }
 
 <!-- HEADER | ACTION BUTTONS -->
@@ -32,7 +33,7 @@
     
     <!-- BUTTONS -->
     <div class="header-buttons">
-        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
+        <a href="@delListURL" class="btn btn-sm btn-secondary mr-3" role="button">
             <i class="fa fa-trash" aria-hidden="true"></i>
             Reservas Eliminadas
         </a>
@@ -45,7 +46,7 @@
 
 
 <!-- BUSCAR -->
-@{ 
+@{
     var filterTemplate = new FilterBarTemplate()
     {
         formAction = "BookList",
@@ -136,6 +137,7 @@
 @Html.Partial("Partial/_DeleteModalAndScript")
 @Html.Partial("Partial/_CancelBookingModal")
 @Html.Partial("Partial/_updateStoreScheModal", storeSche)
+
 
 @section customScripts{
     @Scripts.Render("~/Content/JS/c_table.js")

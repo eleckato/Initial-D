@@ -32,8 +32,12 @@
     <title>@ViewBag.Title - Initial-D</title>
 
     @Styles.Render("~/ContentCSS")
+    @Styles.Render("~/Content/mtr-datepicker.min.css")
+    @Styles.Render("~/Content/mtr-datepicker.default-theme.min.css")
+
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/HeadScrips")
+    @Scripts.Render("~/Scripts/mtr-datepicker.min.js")
 
 </head>
 
@@ -160,6 +164,9 @@
     @Scripts.Render("~/bundles/bootstrap")
     <!-- Jquery Validation 1.19.1 -->
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/moment.js")
+    
+
     <!-- Site wide custom Scripts  -->
     @Scripts.Render("~/MainScripts")
 
