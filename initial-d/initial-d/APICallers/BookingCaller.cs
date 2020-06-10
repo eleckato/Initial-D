@@ -18,12 +18,12 @@ namespace initial_d.APICallers
         /// <summary>
         /// API call to list all Bookings 
         /// </summary>
-        public IEnumerable<BookingVM> GetAllBookings(string status_reserve_id = "", string appuser_id = "", string serv_id = "", bool deleted = false)
+        public IEnumerable<BookingVM> GetAllBookings(string status_booking_id = "", string appuser_id = "", string serv_id = "", bool deleted = false)
         {
             try
             {
                 var delString = deleted ? "&deleted=true" : "";
-                var url = $"{bookPrefix}?status_reserve_id={status_reserve_id}&serv_id={serv_id}&appuser_id={appuser_id}{delString}";
+                var url = $"{bookPrefix}?status_booking_id={status_booking_id}&serv_id={serv_id}&appuser_id={appuser_id}{delString}";
 
                 // Request Base
                 var request = new RestRequest(url, Method.GET)
@@ -112,7 +112,6 @@ namespace initial_d.APICallers
             }
         }
 
-        // TODO API CALL
         /// <summary>
         /// API call to add a Booking
         /// </summary>
@@ -127,20 +126,18 @@ namespace initial_d.APICallers
 
             try
             {
-                return "7087D8C3A17F48FF961A23EB4575B519";
+                var request = new RestRequest($"{bookPrefix}", Method.POST)
+                {
+                    RequestFormat = DataFormat.Json
+                };
 
-                //var request = new RestRequest($"{bookPrefix}", Method.POST)
-                //{
-                //    RequestFormat = DataFormat.Json
-                //};
+                request.AddJsonBody(newBook);
 
-                //request.AddJsonBody(newBook);
+                var response = client.Execute(request);
 
-                //var response = client.Execute(request);
+                CheckStatusCode(response);
 
-                //CheckStatusCode(response);
-
-                //return response.Content;
+                return response.Content;
             }
             catch (Exception e)
             {
@@ -218,7 +215,6 @@ namespace initial_d.APICallers
             }
         }
 
-        //TODO API CALL. COMPROBAR URL
         /// <summary>
         /// API call to restore a Booking
         /// </summary>
@@ -233,8 +229,6 @@ namespace initial_d.APICallers
 
             try
             {
-                return true;
-
                 var request = new RestRequest($"{bookPrefix}/{bookId}/restore", Method.PUT);
 
                 var response = client.Execute(request);
@@ -371,12 +365,11 @@ namespace initial_d.APICallers
             }
         }
 
-        // TODO API CALL
         /// <summary>
         /// API call to add a Booking Restriction
         /// </summary>
         /// <param name="newRest"> New Booking Restriction</param>
-        public string AddBookRest(BookingRestVM newRest)
+        public string AddBookRest(BookingRestriction newRest)
         {
             if (newRest == null)
             {
@@ -386,20 +379,38 @@ namespace initial_d.APICallers
 
             try
             {
-                return "DCD286FE94C045669CBD7B921A3EEE71";
+                // Cancelar todas las reservas que hagan conflicto con la nueva restricción
+                var bookList = GetAllBookings("ACT", string.Empty, newRest.serv_id).ToList();
+                foreach (var book in bookList)
+                {
+                    DateTime start = book?.start_date_hour ?? default;
+                    DateTime end = book?.end_date_hour ?? default;
+                    DateTime restStart = newRest?.start_date_hour ?? default;
+                    DateTime restEnd = newRest?.end_date_hour ?? default;
 
-                //var request = new RestRequest($"{restPrefix}", Method.POST)
-                //{
-                //    RequestFormat = DataFormat.Json
-                //};
+                    if (CheckTimeConflict(start, end, restStart, restEnd))
+                    {
+                        var res = ChangeBookStatus(book.booking_id, "CAN");
+                        if (!res) return null;
+                    }
+                }
 
-                //request.AddJsonBody(newRest);
+                // 
+                newRest.updated_at = DateTime.Now;
+                newRest.created_at = DateTime.Now;
 
-                //var response = client.Execute(request);
+                var request = new RestRequest($"{restPrefix}", Method.POST)
+                {
+                    RequestFormat = DataFormat.Json
+                };
 
-                //CheckStatusCode(response);
+                request.AddJsonBody(newRest);
 
-                //return response.Content;
+                var response = client.Execute(request);
+
+                CheckStatusCode(response);
+
+                return response.Content;
             }
             catch (Exception e)
             {
@@ -412,7 +423,7 @@ namespace initial_d.APICallers
         /// API call to update a Booking Restriction
         /// </summary>
         /// <param name="newRest"> New Booking Restriction </param>
-        public bool UpdateBookRest(BookingRestVM newRest)
+        public bool UpdateBookRest(BookingRestriction newRest)
         {
             if (newRest == null)
             {
@@ -423,6 +434,7 @@ namespace initial_d.APICallers
             try
             {
                 var restId = newRest.restriction_id;
+                newRest.updated_at = DateTime.Now;
 
                 var request = new RestRequest($"{restPrefix}/{restId}", Method.POST)
                 {
@@ -475,7 +487,6 @@ namespace initial_d.APICallers
             }
         }
 
-        //TODO API CALL. COMPROBAR URL
         /// <summary>
         /// API call to restore a Booking Restriction
         /// </summary>
@@ -490,8 +501,6 @@ namespace initial_d.APICallers
 
             try
             {
-                return true;
-
                 var request = new RestRequest($"{restPrefix}/{restId}/restore", Method.PUT);
 
                 var response = client.Execute(request);
@@ -513,7 +522,7 @@ namespace initial_d.APICallers
         /* STORE SCHEDULE */
         /* ---------------------------------------------------------------- */
 
-        //TODO QUE LA API DEVUELVA UN SOLO OBJETO EN VEZ DE UNA LISTA
+        //TODO (A) Que la API devuelva un solo objeto en vez de una lista
         /// <summary>
         /// API call to get the Store Schedule
         /// </summary>
@@ -542,10 +551,13 @@ namespace initial_d.APICallers
             }
         }
 
-        //TODO API CALL
-        public bool UpdateStoreSche(StoreSchedule model)
+        /// <summary>
+        /// API call to update the Store Schedule
+        /// </summary>
+        /// <param name="newShe"> Object with the new schedule </param>
+        public bool UpdateStoreSche(StoreSchedule newShe)
         {
-            if (model == null)
+            if (newShe == null)
             {
                 ErrorWriter.InvalidArgumentsError();
                 return false;
@@ -553,25 +565,21 @@ namespace initial_d.APICallers
 
             try
             {
-                model.updated_at = DateTime.Now;
+                newShe.updated_at = DateTime.Now;
+
+                var request = new RestRequest($"{prefix}/store_schedule/update", Method.POST)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                request.AddJsonBody(newShe);
+
+                var response = client.Execute(request);
+
+                string notFoundMsg = "No se pudo encontrar el horario de la tienda, contacte a soporte.";
+                CheckStatusCode(response, notFoundMsg);
 
                 return true;
-
-                ////var bookId = newBook.booking_id;
-
-                ////var request = new RestRequest($"{bookPrefix}/{bookId}", Method.POST)
-                ////{
-                ////    RequestFormat = DataFormat.Json
-                ////};
-
-                ////request.AddJsonBody(newBook);
-
-                ////var response = client.Execute(request);
-
-                ////string notFoundMsg = "La Reserva requerida no existe";
-                ////CheckStatusCode(response, notFoundMsg);
-
-                ////return true;
             }
             catch (Exception e)
             {
@@ -648,11 +656,27 @@ namespace initial_d.APICallers
         {
             if (rest == null || servList == null) return null;
 
-            var thisServ = servList.FirstOrDefault(serv => serv.serv_id.Equals(serv.serv_id));
+            var thisServ = servList.FirstOrDefault(serv => serv.serv_id.Equals(rest.serv_id));
             rest.serv = thisServ ?? null;
 
             return rest;
         }
 
+
+        private bool CheckTimeConflict(DateTime start, DateTime end, DateTime chStart, DateTime chFinish)
+        {
+            int st_st = DateTime.Compare(start, chStart);
+            int st_en = DateTime.Compare(start, chFinish);
+            int en_st = DateTime.Compare(end, chFinish);
+            int en_en = DateTime.Compare(end, chStart);
+
+            var lst = new List<int>() { st_st, st_en, en_st, en_en };
+
+            var checkMinus = lst.All(x => x <= 0);
+            var checkPlus = lst.All(x => x >= 0);
+
+            if (checkMinus || checkPlus) return true;
+            else return false;
+        }
     }
 }

@@ -40,7 +40,7 @@
 
 </div>
 
-
+<!-- DATA -->
 <div class="row justify-content-around">
 
     <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
@@ -128,7 +128,6 @@
 </div>
 
 
-
 <!-- MODALS -->
 @Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })
 @Html.Partial("Partial/_CancelBookingModal")
@@ -137,5 +136,16 @@
 
 
 @section customScripts{
-    @Html.Partial("Partial/_DatePickerBoilerplate")
+    @*@Html.Partial("Partial/_DatePickerBoilerplate")*@
+
+    
+    <script type="text/javascript">
+
+        //$('#datetimepicker1').datetimepicker();
+
+    </script>
 }
+
+
+<style>
+</style>

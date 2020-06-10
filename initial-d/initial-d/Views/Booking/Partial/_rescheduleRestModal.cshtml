@@ -1,0 +1,68 @@
+﻿@model initial_d.Models.APIModels.BookingRestVM
+
+              
+@using (Html.BeginForm("RescheduleRest", "Booking", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.restriction_id)
+    @Html.HiddenFor(m => m.serv_id)
+
+    @Html.HiddenFor(m => m.updated_at)
+    @Html.HiddenFor(m => m.created_at)
+    @Html.HiddenFor(m => m.deleted)
+
+    <div class="modal-header">
+        <h5 class="modal-title">
+            <i class="fa fa-history" aria-hidden="true"></i>
+            Reagendar Restricción
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+
+            <p>Selecciona el nuevo lapsus para la reserva</p>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.start_date_hour)
+
+                <div class="input-group date" id="start_date_hour_cont" data-target-input="nearest">
+                    @Html.TextBoxFor(m => m.start_date_hour, new { @class = "form-control datetimepicker-input h-100", data_target="#start_date_hour_cont" })
+                    <div class="input-group-append" data-target="#start_date_hour_cont" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+
+                @Html.ValidationMessageFor(m => m.start_date_hour)
+            </div>
+                    
+            <div class="form-group">
+                @Html.LabelFor(m => m.end_date_hour)
+
+                <div class="input-group date" id="end_date_hour_cont" data-target-input="nearest">
+                    @Html.TextBoxFor(m => m.end_date_hour, new { @class = "form-control datetimepicker-input h-100", data_target="#end_date_hour_cont" })
+                    <div class="input-group-append" data-target="#end_date_hour_cont" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+
+                @Html.ValidationMessageFor(m => m.end_date_hour)
+            </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <a role="button" href="#" class="btn btn-sm btn-secondary" data-dismiss="modal">
+            <i class="fa fa-backspace" aria-hidden="true"></i>
+            <span>Volver</span>
+        </a>
+
+        <button type="submit" class="btn btn-sm btn-green">
+            <i class="fa fa-history" aria-hidden="true"></i>
+            Reagendar
+        </button>
+    </div>
+
+}
+

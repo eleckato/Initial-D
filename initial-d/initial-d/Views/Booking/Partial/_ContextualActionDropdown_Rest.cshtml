@@ -1,0 +1,58 @@
+﻿@model initial_d.Models.APIModels.BookingRestVM
+@{ 
+    // Product data needed to perform the Actions or make decisions about the menu
+    string restId = Model.restriction_id;
+
+    // Context to decide what to show
+    string ctx = (string)ViewData["context"] ?? string.Empty;
+    bool isList = ctx.Equals("list");
+    bool isdeleteList = ctx.Equals("deleteList");
+    bool isexpiredList = ctx.Equals("expiredList");
+
+    bool isAdmin = User.IsInRole("ADM");
+}
+
+<div class="dropdown">
+
+	<button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<i class="fa fa-cog mr-1 " aria-hidden="true"></i>
+		Acciones
+	</button>
+
+	<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+		<div class="d-flex flex-column">
+
+
+			@if (isList)
+            {
+                <!-- ACTUALIZAR DATOS -->
+				<a class="dropdown-item small" role="button" data-toggle="modal" data-rest-id="@restId" href="#update-rest-modal">
+					<i class="fa fa-history" aria-hidden="true"></i>
+					Reagendar Restricción
+				</a>
+            }
+
+			@if (isexpiredList || isList)
+            {
+				<!-- ELIMINAR -->
+				<a class="dropdown-item small" role="button" data-toggle="modal" data-rest-id="@restId" href="#delete-rest-modal">
+					<i class="fa fa-trash" aria-hidden="true"></i>
+					Eliminar
+				</a>
+            }
+
+			@if (isdeleteList)
+            {
+				<!-- RESTAURAR -->
+				<a class="dropdown-item small" role="button" data-toggle="modal" data-rest-id="@restId" href="#delete-rest-modal">
+					<i class="fa fa-trash-restore" aria-hidden="true"></i>
+					Restaurar
+				</a>
+            }
+
+		</div>
+
+	</div>
+
+</div>

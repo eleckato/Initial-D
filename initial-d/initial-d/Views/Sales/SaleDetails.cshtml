@@ -87,7 +87,6 @@
 
     <!-- DATOS BÁSICOS COL 1 -->
     <div class="col-12 col-lg-6 pr-lg-3">
-
         <table class="table c-info-table c-data-table-bordered mb-0 table-th-compact">
             
             <!-- VENDEDOR -->
@@ -96,17 +95,30 @@
                 <td>@(sale.seller?.fullName ?? "-")</td>
             </tr>
             
-            <!-- CAJERO -->
-            <tr>
-                <th>@Html.DisplayNameFor(m => m.cashier)</th>
-                <td>@(sale.cashier?.fullName ?? "-")</td>
-            </tr>
-            
             <!-- USUARIO -->
             <tr>
                 <th>@Html.DisplayNameFor(m => m.user)</th>
                 <td>@(sale.user?.fullName ?? "-")</td>
             </tr>
+            
+            <!-- CAJERO -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.cashier)</th>
+                <td>@(sale.cashier?.fullName ?? "-")</td>
+            </tr>
+
+            <!-- METODO DE PAGO -->
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.payment_method)</th>
+                <td>@Model.payment_method</td>
+            </tr>
+
+        </table>
+    </div>
+    
+    <!-- DATOS BÁSICOS COL 2 -->
+    <div class="col-12 col-lg-6 d-none d-lg-block"> 
+        <table class="table c-info-table c-data-table-bordered mb-0 table-th-compact">
             
             <!-- STATUS -->
             <tr>
@@ -128,52 +140,6 @@
                             @Model.sale_status_name
                         </div>
                     }
-            </tr>
-
-            @* Responsive Hell *@
-            @* This is dumb, but this is a copy of the second column so it can integrate into this table in responsive *@
-            
-            <!-- METODO DE PAGO -->
-            <tr class="d-table-row d-lg-none">
-                <th>@Html.DisplayNameFor(m => m.payment_method)</th>
-                <td>@Model.payment_method</td>
-            </tr>
-
-            <!-- TOTAL -->
-            <tr class="d-table-row d-lg-none">
-                <th>@Html.DisplayNameFor(m => m.total)</th>
-                <td>@Model.totalString</td>
-            </tr>
-            
-            <!-- FECHA DE LA ORDEN -->
-            <tr class="d-table-row d-lg-none">
-                <th>@Html.DisplayNameFor(m => m.date_order)</th>
-                <td>@(sale.dateOrderString ?? "-")</td>
-            </tr>
-            
-            <!-- FECHA DE VENTA -->
-            <tr class="d-table-row d-lg-none">
-                <th>@Html.DisplayNameFor(m => m.sale_date)</th>
-                <td>@(sale.saleDateString ?? "-")</td>
-            </tr>
-
-            <!-- ULTIMA EDICIÓN -->
-            <tr class="d-table-row d-lg-none">
-                <th>@Html.DisplayNameFor(m => m.updated_at)</th>
-                <td>@Model.updated_at.ToString("dd/MM/yyyy hh:mm")</td>
-            </tr>
-
-        </table>
-    </div>
-    
-    <!-- DATOS BÁSICOS COL 2 -->
-    <div class="col-12 col-lg-6 d-none d-lg-block"> 
-        <table class="table c-info-table c-data-table-bordered mb-0 table-th-compact">
-
-            <!-- METODO DE PAGO -->
-            <tr>
-                <th>@Html.DisplayNameFor(m => m.payment_method)</th>
-                <td>@Model.payment_method</td>
             </tr>
 
             <!-- TOTAL -->
@@ -228,7 +194,17 @@
 
                 @foreach (var item in Model.saleItems)
                 {
-                    <tr class="clickable-row" data-id="@item.provision_id">
+                    string itemURL = "#";
+                    if (!string.IsNullOrEmpty(item.product_id))
+                    {
+                        itemURL = Url.Action("ProdDetails", "Productos", new { prodId = item.product_id });
+                    }
+                    else if (!string.IsNullOrEmpty(item.serv_id))
+                    {
+                        itemURL = Url.Action("ServDetails", "Servicios", new { servId = item.serv_id });
+                    }
+
+                    <tr data-id="@item.provision_id">
                     
                         <!-- TIPO -->
                         <td data-label="Tipo">
@@ -237,7 +213,7 @@
 
                         <!-- NOMBRE -->
                         <td data-label="Nombre">
-                            @(item.prod?.name ?? item.serv?.name ?? "-")
+                            <a href="@itemURL">@(item.prod?.name ?? item.serv?.name ?? "-")</a>
                         </td>
                     
                         <!-- PRECIO -->

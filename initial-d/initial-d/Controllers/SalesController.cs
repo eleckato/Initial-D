@@ -246,7 +246,7 @@ namespace initial_d.Controllers
         {
             List<NavbarItems> InternalNavbar = new List<NavbarItems>()
             {
-                new NavbarItems("Sales", "SaleList", "Listado de Servicios"),
+                new NavbarItems("Sales", "SaleList", "Listado de Ventas"),
             };
 
             ViewBag.InternalNavbar = InternalNavbar;

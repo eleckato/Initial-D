@@ -72,17 +72,12 @@ namespace initial_d.APICallers
                 {
                     RequestFormat = DataFormat.Json
                 };
-                // For pagination
-                //request.AddParameter("page", "1", ParameterType.UrlSegment);
-                //request.AddParameter("size", "1", ParameterType.UrlSegment);
 
                 var response = client.Execute<List<Usuario>>(request);
 
                 CheckStatusCode(response);
 
                 return response.Data;
-
-                //// return mockData;
             }
             catch (Exception e)
             {
@@ -116,8 +111,6 @@ namespace initial_d.APICallers
                 CheckStatusCode(response, notFoundMsg);
 
                 return response.Data;
-
-                //// return mockData.SingleOrDefault(x => x.appuser_id.Equals(userId));
             }
             catch (Exception e)
             {

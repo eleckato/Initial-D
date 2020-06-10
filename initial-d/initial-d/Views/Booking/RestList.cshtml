@@ -1,0 +1,185 @@
+﻿@model IEnumerable<initial_d.Models.APIModels.BookingRestVM>
+@using initial_d.Common.FilterBar;
+@using initial_d.Models.APIModels;
+
+@{
+    ViewBag.Title = "Restricciones de Horario Para Servicios";
+
+    // Filters
+    string servId = ViewBag.servId ?? string.Empty;
+
+    var servList = (SelectList)ViewBag.servList;
+    var selItem = servList.FirstOrDefault(x => x.Value.Equals(servId));
+    if (selItem != null) { selItem.Selected = true; }
+
+    // Action URL
+    string delListURL = Url.Action("DeletedRestList", "Booking");
+    string expiredListURL = Url.Action("ExpiredRestList", "Booking");
+}
+
+<!-- HEADER | ACTION BUTTONS -->
+<div class="header">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-calendar-times" aria-hidden="true"></i>
+            @ViewBag.Title
+        </h2>
+    </div>
+    
+    <!-- BUTTONS -->
+    <div class="header-buttons">
+        <a class="btn btn-sm btn-yellow mr-3" role="button" href="#add-rest-modal" data-toggle="modal">
+            <i class="fa fa-calendar-plus" aria-hidden="true"></i>
+            Agregar Restricción
+        </a>
+        <a href="@expiredListURL" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-backward" aria-hidden="true"></i>
+            Restricciones Vencidas
+        </a>
+        <a href="@delListURL" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            Restricciones Eliminadas
+        </a>
+    </div>
+</div>
+
+
+<!-- BUSCAR -->
+@{
+    var filterTemplate = new FilterBarTemplate()
+    {
+        formAction = "RestList",
+        formController = "Booking",
+        filters = new List<MvcHtmlString>()
+        {
+            Html.DropDownList("servId", servList, "Servicio" , new { @class = "fstdropdown-select"}),
+        }
+    };
+}
+@Html.Partial("Partial/_FiltersCollapse", filterTemplate)
+
+
+
+<!-- DATA TABLE -->
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+        
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.servName)</th>
+                <th>@Html.DisplayNameFor(m => m.schedule)</th>
+                <th>@Html.DisplayNameFor(m => m.created_at)</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+
+            @foreach (var rest in Model)
+            {
+                var servURL = Url.Action("ServDetails", "Servicios", new { servId = rest.serv_id } );
+
+                <tr>
+                    
+                    <!-- ACTION DROPDOWN -->
+                    <td data-label="Actions" class="not-clickable cell-compact">
+                        @Html.Partial("Partial/_ContextualActionDropdown_Rest", new ViewDataDictionary(rest) { { "context", "list" } } )
+                    </td>
+                    
+                    <!-- SERVICIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.servName)">
+                        <a href="@servURL"> @(rest.servName) </a>
+                        
+                    </td>
+
+                    <!-- HORARIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.schedule)">
+                        @rest.schedule
+                    </td>
+
+                    <!-- ACTUALIZAR -->
+                    <td data-label="@Html.DisplayNameFor(m => m.createdAtString)">
+                        @rest.createdAtString
+                    </td>
+
+                </tr>
+
+            }
+
+        </tbody>
+
+        
+    </table>
+</div>
+
+
+<!-- MODALS -->
+@Html.Partial("Partial/_deleteRestModal", new ViewDataDictionary(ViewData) { { "isDeleted", false } })
+
+<div id="update-rest-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+                
+        </div>
+    </div>
+</div>
+
+
+@Html.Partial("Partial/_addRestModal", new BookingRestVM())
+
+
+<script>
+    
+    WaitForJquery(function () {
+        // Llena la lista de servicios sacando los items en el listado y preguntando a la API
+        $(document).on('show.bs.modal', '#update-rest-modal', function (event) {
+
+            var button = $(event.relatedTarget)
+
+            // Extract the userId
+            var restId = button.data('rest-id')
+
+            let cont = $('#update-rest-modal .modal-content');// Button that triggered the modal
+
+            let url = '@(Url.Action("GetUpdateModalHtml", "Booking", new { restId = "replace_this_id" } ))';
+
+            url = url.replace("replace_this_id", restId);
+            var data = {
+                "restId": restId
+            }
+
+            // Load HTML into the #item-list
+            var res = cont.load(url, data, function (responseText, textStatus, jqXHR) {
+                checkHtmlLoad(responseText, textStatus, res);
+            });
+
+        });
+    });
+
+    
+    // Check if the AJAX HTML load of an element is successful and take some actions
+    function checkHtmlLoad(responseText, textStatus, res, backup_item_list) {
+
+        // if the request fails
+        if (textStatus == "error") {
+            ShowMessage("Internal Error", [responseText]);
+            ShowAlert("Hubo un error comunicandose con el servidor, por favor intente de nuevo.",);
+        }
+        else {
+
+            // if something fail on server
+            if (responseText.startsWith('ERROR:')) {
+
+                ShowAlert("Internal Error", [responseText])
+
+            // if everything goes cool and dandy
+            } else {
+                
+            }
+        }
+
+    }
+
+</script>

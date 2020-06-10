@@ -1,0 +1,106 @@
+﻿@model IEnumerable<initial_d.Models.APIModels.BookingRestVM>
+@using initial_d.Common.FilterBar;
+
+@{
+    ViewBag.Title = "Restricciones de Horario Eliminadas";
+    
+    // Filters
+    string servId = ViewBag.servId ?? string.Empty;
+    
+    // Action URL
+    string listURL = Url.Action("RestList", "Booking");
+    string expiredListURL = Url.Action("ExpiredRestList", "Booking");
+}
+
+<!-- HEADER | ACTION BUTTONS -->
+<div class="header">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            @ViewBag.Title
+        </h2>
+    </div>
+    
+    <!-- BUTTONS -->
+    <div class="header-buttons">
+        <a href="@listURL" class="btn btn-sm btn-yellow mr-3" role="button">
+            <i class="fa fa-calendar-times" aria-hidden="true"></i>
+            Restricciones
+        </a>
+        <a href="@expiredListURL" class="btn btn-sm btn-secondary mr-3" role="button">
+            <i class="fa fa-backward" aria-hidden="true"></i>
+            Restricciones Vencidas
+        </a>
+    </div>
+</div>
+
+
+<!-- BUSCAR -->
+@{
+    //? Poner un DropDown para Servicio
+    var filterTemplate = new FilterBarTemplate()
+    {
+        formAction = "DeletedRestList",
+        formController = "Booking",
+        filters = new List<MvcHtmlString>()
+        {
+            Html.TextBox("servId", servId, new { @class = "form-control form-control-sm h-100", @placeholder = "Id del Servicio" }),
+        }
+    };
+}
+@Html.Partial("Partial/_FiltersCollapse", filterTemplate)
+
+
+
+<!-- DATA TABLE -->
+<div class=" d-flex justify-content-center ">
+    <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+        
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.servName)</th>
+                <th>@Html.DisplayNameFor(m => m.schedule)</th>
+                <th>@Html.DisplayNameFor(m => m.created_at)</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+
+            @foreach (var rest in Model)
+            {
+                <tr>
+                    
+                    <!-- ACTION DROPDOWN -->
+                    <td data-label="Actions" class="not-clickable cell-compact">
+                        @Html.Partial("Partial/_ContextualActionDropdown_Rest", new ViewDataDictionary(rest) { { "context", "deleteList" } } )
+                    </td>
+                    
+                    <!-- SERVICIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.servName)">
+                        @(rest.servName)
+                    </td>
+
+                    <!-- HORARIO -->
+                    <td data-label="@Html.DisplayNameFor(m => m.schedule)">
+                        @rest.schedule
+                    </td>
+
+                    <!-- ACTUALIZAR -->
+                    <td data-label="@Html.DisplayNameFor(m => m.createdAtString)">
+                        @rest.createdAtString
+                    </td>
+
+                </tr>
+
+            }
+
+        </tbody>
+
+        
+    </table>
+</div>
+
+
+@Html.Partial("Partial/_deleteRestModal", new ViewDataDictionary(ViewData) { { "isDeleted", true } })

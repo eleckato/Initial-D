@@ -68,7 +68,7 @@ namespace initial_d.Models.APIModels
         public DateTime created_at { get; set; }
 
         [Required]
-        [Display(Name = "última actualización")]
+        [Display(Name = "Última actualización")]
         public DateTime updated_at { get; set; }
 
         [Required]

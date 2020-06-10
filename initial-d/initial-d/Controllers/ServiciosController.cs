@@ -113,17 +113,28 @@ namespace initial_d.Controllers
             if (string.IsNullOrEmpty(servId)) return Error_InvalidUrl();
 
             Servicio serv;
+            List<BookingVM> bookList;
+            List<BookingRestVM> restList; 
 
             try
             {
                 serv = SC.GetServ(servId);
                 if (serv == null) return Error_FailedRequest();
+
+                bookList = new BookingCaller().GetAllBookings("ACT", string.Empty, servId).ToList();
+                if (bookList == null) return Error_FailedRequest();
+
+                restList = new BookingCaller().GetAllBookRest(servId).ToList();
+                if (restList == null) return Error_FailedRequest();
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
                 return Error_CustomError(e.Message);
             }
+
+            ViewBag.bookList = bookList;
+            ViewBag.restList = restList;
 
             return View(serv);
         }
@@ -373,6 +384,37 @@ namespace initial_d.Controllers
             return Redirect(referer);
         }
 
+
+        /* ---------------------------------------------------------------- */
+        /* ADD RESTRICTION */
+        /* ---------------------------------------------------------------- */
+
+        public ActionResult AddRest(BookingRestVM newRest)
+        {
+            if (newRest == null) return Error_InvalidUrl();
+
+            string restId;
+
+            try
+            {
+                BookingRestriction newRestApi = new BookingRestriction();
+                newRestApi = PropertyCopier.Copy(newRest, newRestApi);
+
+                restId = new BookingCaller().AddBookRest(newRestApi);
+                if (restId == null) return Error_FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                Error_CustomError(e.Message);
+                return RedirectToAction("ServList");
+            }
+
+            string successMsg = "La Restricción fue agregada con éxito";
+            SetSuccessMsg(successMsg);
+
+            return RedirectToAction("ServList");
+        }
 
         /* ---------------------------------------------------------------- */
         /* HELPERS */

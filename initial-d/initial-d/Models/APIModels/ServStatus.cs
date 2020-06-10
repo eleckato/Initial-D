@@ -27,4 +27,5 @@ namespace initial_d.Models.APIModels
             deleted = false;
         }
     }
+
 }

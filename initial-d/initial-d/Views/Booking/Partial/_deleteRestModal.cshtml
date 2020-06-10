@@ -1,12 +1,12 @@
 ﻿@* Just make a button these attributes and done      
-   data-toggle="modal" href="#delete-modal" data-book-id="{bookId}" 
+   data-toggle="modal" href="#delete-rest-modal" data-rest-id="{restId}" 
 *@
 @{ 
     bool isDeleted = (bool?)ViewData["isDeleted"] ?? false;
-    string deleteURL = Url.Action(isDeleted ? "RestoreBook" : "DeleteBook", "Booking", new { bookId = "replace_this_id" });
+    string deleteURL = Url.Action(isDeleted ? "RestoreRest" : "DeleteRest", "Booking", new { restId = "replace_this_id" });
 }
 
-<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog">
+<div id="delete-rest-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
@@ -23,13 +23,11 @@
             <div class="modal-body">
                 @if (!isDeleted)
                 {
-                    <p>¿Estas seguro/a que quieres eliminar a esta Reserva?</p>
-                    <strong class="text-danger">Advertencia</strong>
-                    <p>Al eliminar una Reserva, también se cancelará. Cancelar una Reserva es un proceso irreversible.</p>
+                    <p>¿Estas seguro/a que quieres eliminar a esta Restricción de Horario?</p>
                 }
                 else
                 {
-                    <p>¿Estas seguro/a que quieres restaurar a esta Reserva?</p>
+                    <p>¿Estas seguro/a que quieres restaurar a esta Restricción de Horario?</p>
                 }
             </div>
 
@@ -38,7 +36,7 @@
                     <i class="fa fa-backspace" aria-hidden="true"></i>
                     Cancelar
                 </button>
-                <a id="modal-delete-btn" href="#" role="button" class="btn btn-sm @(isDeleted ? "btn-green" : "btn-red")">
+                <a id="modal-delete-res-btn" href="#" role="button" class="btn btn-sm @(isDeleted ? "btn-green" : "btn-red")">
                     <i class="fa @(isDeleted ? "fa-trash-restore" : "fa-trash")" aria-hidden="true"></i>
                     @(isDeleted ? "Restaurar" : "Eliminar")
                 </a>
@@ -50,17 +48,17 @@
 
 <script>
     WaitForJquery(function () {
-        $(document).on('show.bs.modal', '#delete-modal', function (event) {
+        $(document).on('show.bs.modal', '#delete-rest-modal', function (event) {
             // Button that triggered the modal
             var button = $(event.relatedTarget)
 
             // Extract the userId
-            var bookId = button.data('book-id')
+            var restId = button.data('rest-id')
 
             // Get the actual delete button from the modal
-            var delbtn = $(this).find('#modal-delete-btn');
+            var delbtn = $(this).find('#modal-delete-res-btn');
 
-            let url = '@deleteURL'.replace('replace_this_id', bookId);
+            let url = '@deleteURL'.replace('replace_this_id', restId);
 
             delbtn.attr('href', value = url);
         });

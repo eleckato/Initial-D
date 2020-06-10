@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using initial_d.APICallers;
 using initial_d.Common;
+using initial_d.Common.Extensions;
 using initial_d.Models.APIModels;
 
 namespace initial_d.Controllers
@@ -14,6 +16,7 @@ namespace initial_d.Controllers
     {
         readonly BookingCaller BC = new BookingCaller();
         readonly UsuariosCaller UC = new UsuariosCaller();
+        readonly ServiciosCaller SC = new ServiciosCaller();
 
         private const string deteledList = "eliminadas";
         private const string detailsRoute = "{bookId}";
@@ -29,6 +32,7 @@ namespace initial_d.Controllers
             SetNavbar();
         }
 
+        /* ---------------------------------------------------------------- BOOKINGS ---------------------------------------------------------------- */
 
         /* ---------------------------------------------------------------- */
         /* BOOKING LIST */
@@ -77,6 +81,9 @@ namespace initial_d.Controllers
                 bookList = BC.GetAllBookings(statusId, userId).ToList();
                 if (bookList == null) return Error_FailedRequest();
 
+                bookList = bookList.OrderBy(x => x.status_booking_id).ToList();
+
+
                 bookStatusLst = BC.GetAllBookStatus().ToList();
                 if (bookStatusLst == null) return Error_FailedRequest();
             }
@@ -91,6 +98,7 @@ namespace initial_d.Controllers
             ViewBag.bookStatusLst = new SelectList(bookStatusLst, "status_booking_id", "name", statusId);
 
             ViewBag.storeSche = storeSche;
+
 
             return View(bookList);
         }
@@ -133,7 +141,7 @@ namespace initial_d.Controllers
             {
 
 
-                bookList = BC.GetAllBookings(statusId, userId, deleted : true).ToList();
+                bookList = BC.GetAllBookings(statusId, userId, deleted: true).ToList();
                 if (bookList == null) return Error_FailedRequest();
 
                 bookStatusLst = BC.GetAllBookStatus().ToList();
@@ -184,7 +192,12 @@ namespace initial_d.Controllers
         }
 
 
-        
+
+
+        /* ---------------------------------------------------------------- */
+        /* RESCHEDULE DETAILS */
+        /* ---------------------------------------------------------------- */
+
         /// <summary>
         /// POST  |  API call to reschedule the data of a Booking
         /// </summary>
@@ -196,6 +209,18 @@ namespace initial_d.Controllers
 
             try
             {
+                var isAvailable = CheckBookAvailability(newBook);
+                if (isAvailable == null)
+                { 
+                    Error_FailedRequest();
+                    return RedirectToAction("UpdateBook", new { bookId });
+                }
+                else if (isAvailable == false)
+                {
+                    SetErrorMsg("Ya hay una hora agendada para esa hora o hay conflicto con el horario de la tienda, por favor seleccione una diferente");
+                    return RedirectToAction("UpdateBook", new { bookId });
+                }
+                
                 Booking apiNewBook = newBook;
 
                 var res = BC.UpdateBooking(apiNewBook);
@@ -219,79 +244,9 @@ namespace initial_d.Controllers
             return RedirectToAction("BookDetails", new { bookId });
         }
 
-        /////* UPDATE BOOKING */
-        /////* ---------------------------------------------------------------- */
-
-        /////// <summary>
-        /////// GET  |  Show a form to update an existing Booking
-        /////// <para> /reservas/{id}/actualizar </para>
-        /////// </summary>
-        ////[HttpGet]
-        ////[Route(updateRoute)]
-        ////public ActionResult UpdateBook(string bookId)
-        ////{
-        ////    if (string.IsNullOrEmpty(bookId)) return Error_InvalidUrl();
-
-        ////    BookingVM book;
-        ////    List<BookingStatus> bookStatusList;
-
-        ////    try
-        ////    {
-        ////        book = BC.GetBook(bookId);
-        ////        if (book == null) return Error_FailedRequest();
-
-        ////        bookStatusList = BC.GetAllBookStatus().ToList();
-        ////        if (bookStatusList == null) return Error_FailedRequest();
-        ////    }
-        ////    catch (Exception e)
-        ////    {
-        ////        ErrorWriter.ExceptionError(e);
-        ////        return Error_CustomError(e.Message);
-        ////    }
-
-        ////    ViewBag.bookStatusLst = new SelectList(bookStatusList, "status_booking_id", "name", book.status_booking_id);
-
-        ////    return View(book);
-        ////}
-
-        /////// <summary>
-        /////// POST  |  API call to update the data of a Booking
-        /////// <para> /reservas/{id}/actualizar </para>
-        /////// </summary>
-        ////[HttpPost]
-        ////[Route(updateRoute)]
-        ////public ActionResult UpdateBook(BookingVM newBook)
-        ////{
-        ////    if (newBook == null) return Error_InvalidUrl();
-        ////    string bookId = newBook.booking_id;
-
-        ////    try
-        ////    {
-        ////        Booking apiNewBook = newBook;
-
-        ////        var res = BC.UpdateBooking(apiNewBook);
-
-        ////        if (!res)
-        ////        {
-        ////            Error_FailedRequest();
-        ////            return RedirectToAction("UpdateBook", new { bookId });
-        ////        }
-        ////    }
-        ////    catch (Exception e)
-        ////    {
-        ////        ErrorWriter.ExceptionError(e);
-        ////        Error_CustomError(e.Message);
-        ////        return RedirectToAction("UpdateBook", new { bookId });
-        ////    }
-
-        ////    string successMsg = "La Reserva fue actualizada con éxito";
-        ////    SetSuccessMsg(successMsg);
-
-        ////    return RedirectToAction("BookDetails", new { bookId });
-        ////}
 
         /* ---------------------------------------------------------------- */
-        /* DELETE BOOKING */
+        /* DELETE/RESTORE BOOKING */
         /* ---------------------------------------------------------------- */
 
         /// <summary>
@@ -325,9 +280,36 @@ namespace initial_d.Controllers
             return RedirectToAction("BookList");
         }
 
+        /// <summary>
+        /// POST  |  API call to delete a Booking
+        /// <para> /reservas/{id}/eliminar </para>
+        /// </summary>
+        [HttpGet]
+        [Route(restoreRoute)]
+        public ActionResult RestoreBook(string bookid)
+        {
+            if (string.IsNullOrEmpty(bookid)) return Error_InvalidUrl();
+
+            try
+            {
+                var res = BC.RestoreBooking(bookid);
+                if (!res) return Error_FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+
+            string successMsg = "La Reserva fue restaurada con éxito";
+            SetSuccessMsg(successMsg);
+
+            return RedirectToAction("DeletedBookList");
+        }
 
         /* ---------------------------------------------------------------- */
-        /* OTHER ACTIONS */
+        /* CANCEL BOOKING */
         /* ---------------------------------------------------------------- */
 
         /// <summary>
@@ -360,6 +342,292 @@ namespace initial_d.Controllers
         }
 
 
+        /* ---------------------------------------------------------------- RESTRICTIONS ---------------------------------------------------------------- */
+        private const string listRest = "restricciones";
+        private const string expiredListRest = "restricciones/expiradas";
+        private const string deteledListRest = "restricciones/eliminadas";
+        private const string updateRouteRest = "restricciones/{restId}/actualizar";
+        private const string deleteRouteRest = "restricciones/{restId}/eliminar";
+        private const string restoreRouteRest = "restricciones/{restId}/restaurar";
+
+        /* ---------------------------------------------------------------- */
+        /* RESTRICTION LIST */
+        /* ---------------------------------------------------------------- */
+
+        // TODO Pagination
+        /// <summary>
+        /// GET | Show a list of Restrictions for today onwards
+        /// <para> /restricciones </para>
+        /// </summary>
+        [HttpGet]
+        [Route(listRest)]
+        public ActionResult RestList(string servId)
+        {
+            List<BookingRestVM> restList;
+            SelectList servList;
+
+            try
+            {
+                restList = BC.GetAllBookRest(servId).ToList();
+                if (restList == null) return Error_FailedRequest();
+
+                restList = restList.Where(x => x.start_date_hour?.Date >= DateTime.Now.Date).ToList();
+
+
+                var servListApi = SC.GetAllServ(string.Empty, "ACT");
+                servList = new SelectList(servListApi, "serv_id", "name");
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+            // To keep the state of the search filters when the user make a search
+            ViewBag.servId = servId;
+            ViewBag.servList = servList;
+
+            return View(restList);
+        }
+
+        // TODO Pagination
+        /// <summary>
+        /// GET | Show a list of Restrictions Expired
+        /// <para> /restricciones </para>
+        /// </summary>
+        [HttpGet]
+        [Route(expiredListRest)]
+        public ActionResult ExpiredRestList(string servId)
+        {
+            List<BookingRestVM> restList;
+
+            try
+            {
+                restList = BC.GetAllBookRest(servId).ToList();
+                if (restList == null) return Error_FailedRequest();
+
+                restList = restList.Where(x => x.start_date_hour?.Date < DateTime.Now.Date).ToList();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+            // To keep the state of the search filters when the user make a search
+            ViewBag.servId = servId;
+
+            return View(restList);
+        }
+
+        // TODO Pagination
+        /// <summary>
+        /// GET | Show a list of Deleted Restrictions
+        /// <para> /restricciones/eliminadas </para>
+        /// </summary>
+        [HttpGet]
+        [Route(deteledListRest)]
+        public ActionResult DeletedRestList(string servId)
+        {
+            List<BookingRestVM> restList;
+
+            try
+            {
+                restList = BC.GetAllBookRest(servId, true).ToList();
+                if (restList == null) return Error_FailedRequest();
+
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+            // To keep the state of the search filters when the user make a search
+            ViewBag.servId = servId;
+
+            return View(restList);
+        }
+
+
+        /* ---------------------------------------------------------------- */
+        /* ADD RESTRICTION */
+        /* ---------------------------------------------------------------- */
+
+        public ActionResult AddRest(BookingRestVM newRest)
+        {
+            if (newRest == null) return Error_InvalidUrl();
+
+            string restId;
+
+            try
+            {
+                BookingRestriction newRestApi = new BookingRestriction();
+                newRestApi = PropertyCopier.Copy(newRest, newRestApi);
+
+                restId = BC.AddBookRest(newRestApi);
+                if (restId == null) return Error_FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                Error_CustomError(e.Message);
+                return RedirectToAction("RestList");
+            }
+
+            string successMsg = "La Restricción fue agregada con éxito";
+            SetSuccessMsg(successMsg);
+
+            return RedirectToAction("RestList");
+        }
+
+
+        /* ---------------------------------------------------------------- */
+        /* DELETE/RESTORE RESTRICTION */
+        /* ---------------------------------------------------------------- */
+
+        /// <summary>
+        /// POST  |  API call to delete a Restriction
+        /// <para> /reservas/restricciones/{id}/eliminar </para>
+        /// </summary>
+        [HttpGet]
+        [Route(deleteRouteRest)]
+        public ActionResult DeleteRest(string restId)
+        {
+            if (string.IsNullOrEmpty(restId)) return Error_InvalidUrl();
+
+            try
+            {
+                var res = BC.DeleteBookRest(restId);
+                if (!res) return Error_FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+            bool isExpired;
+            try
+            {
+                var rest = BC.GetBookRest(restId);
+                if (rest == null) isExpired = false;
+
+                if (rest.start_date_hour?.Date > DateTime.Now.Date) isExpired = false;
+                else isExpired = true;
+            }
+            catch
+            {
+                isExpired = false;
+            }
+
+
+            string successMsg = "La Restricción fue eliminada con éxito";
+            SetSuccessMsg(successMsg);
+
+
+            if (!isExpired) return RedirectToAction("RestList");
+            else return RedirectToAction("ExpiredRestList");
+        }
+
+        /// <summary>
+        /// POST  |  API call to delete a Restriction
+        /// <para> /reservas/restricciones/{restId}/restaurar </para>
+        /// </summary>
+        [HttpGet]
+        [Route(restoreRouteRest)]
+        public ActionResult RestoreRest(string restId)
+        {
+            if (string.IsNullOrEmpty(restId)) return Error_InvalidUrl();
+
+            try
+            {
+                var res = BC.RestoreBookRest(restId);
+                if (!res) return Error_FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
+
+
+            string successMsg = "La Restricción fue restaurada con éxito";
+            SetSuccessMsg(successMsg);
+
+            return RedirectToAction("DeletedRestList");
+        }
+
+
+        /* ---------------------------------------------------------------- */
+        /* RESCHEDULE DETAILS */
+        /* ---------------------------------------------------------------- */
+
+        /// <summary>
+        /// POST  |  API call to reschedule the data of a Restriction
+        /// </summary>
+        [HttpPost]
+        public ActionResult RescheduleRest(BookingRestVM newRest)
+        {
+            if (newRest == null) return Error_InvalidUrl();
+
+            try
+            {
+                BookingRestriction apiNewRest = new BookingRestriction();
+                apiNewRest = PropertyCopier.Copy(newRest, apiNewRest);
+
+                var res = BC.UpdateBookRest(apiNewRest);
+                if (!res)
+                {
+                    Error_FailedRequest();
+                    return RedirectToAction("RestList");
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                Error_CustomError(e.Message);
+                return RedirectToAction("RestList");
+            }
+
+            string successMsg = "La Restricción fue actualizada con éxito";
+            SetSuccessMsg(successMsg);
+
+            return RedirectToAction("RestList");
+        }
+
+        public string GetUpdateModalHtml(string restId)
+        {
+            if (string.IsNullOrEmpty(restId))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return Resources.Messages.Error_SolicitudFallida;
+            }
+
+            string html;
+
+            try
+            {
+                var item = BC.GetBookRest(restId);
+
+                html = PartialView("Partial/_rescheduleRestModal", item).RenderToString();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Resources.Messages.Error_SolicitudFallida;
+            }
+
+            return html;
+        }
+
+
+        /* ---------------------------------------------------------------- OTHERS ---------------------------------------------------------------- */
+
+        /* ---------------------------------------------------------------- */
+        /* OTHERS */
+        /* ---------------------------------------------------------------- */
+
         /// <summary>
         /// POST  |  API call to change the Store Schedule
         /// </summary>
@@ -387,10 +655,169 @@ namespace initial_d.Controllers
         }
 
 
-
         /* ---------------------------------------------------------------- */
         /* HELPERS */
         /* ---------------------------------------------------------------- */
+
+        /// <summary>
+        /// Revisa la disponibilidad para una reserva, comparando si hay conflicto con el horario de la tienda, otras reservas o restricciones de horario
+        /// </summary>
+        /// <param name="book"> Reserva a revisar </param>
+        [NonAction]
+        public bool? CheckBookAvailability(BookingVM book)
+        {
+            if (book == null || book.start_date_hour == null || book.end_date_hour == null) return null;
+
+            Debug.WriteLine($" ---------------- CHECKING BOOKING AVAILABILITY ---------------- ");
+
+            try
+            {
+                DateTime start = book.start_date_hour ?? default;
+                DateTime end = book.end_date_hour ?? default;
+                if (start == default || end == default) return null;
+
+                var servId = book.serv_id;
+
+                var bookDate = start.Date;
+
+                var startTime = start.TimeOfDay;
+                var endTime = end.TimeOfDay;
+
+                Debug.WriteLine("----------------------------------------------------------------");
+                Debug.WriteLine($"SERV : {book.servName}");
+                Debug.WriteLine($"CHEDULE : {book.schedule}");
+                Debug.WriteLine("----------------------------------------------------------------");
+
+                //!? GET STORE SCHEDULE
+                Debug.WriteLine($" ---------------- CHECKING STORE SCHEDULE ---------------- ");
+                var storeSche = BC.GetStoreSche();
+                if (storeSche == null) return null;
+
+                // Extraer la hora de apertura y cierre de la tienda
+                var scheSt = storeSche.start_hour.TimeOfDay;
+                var scheEn = storeSche.end_hour.TimeOfDay;
+                // Extraer el horario de almuerzo de la tienda
+                var scheLunchSt = storeSche.start_lunch_hour.TimeOfDay;
+                var scheLunchEn = storeSche.end_lunch_hour.TimeOfDay;
+
+                Debug.WriteLine($"SCHEDULE : {scheSt} - {scheLunchSt} / {scheLunchEn} - {scheEn}");
+
+                // Check por la apertura y cierre de la tienda
+                bool checkMorning = startTime >= scheSt && endTime > scheSt;
+                bool checkEvening = startTime < scheEn && endTime <= scheEn;
+                // Check la hora de almuerzo como una restricción
+                bool checkLunch = CheckTimeConflict(startTime, endTime, scheLunchSt, scheLunchEn);
+
+                // Si cualquiera fallo, conflicto
+                if (!checkMorning || !checkEvening || !checkLunch)
+                {
+                    Debug.WriteLine("> CONFLICT FOUND;");
+                    return false;
+                }
+
+
+                Debug.WriteLine($" ---------------- CHECKING RESTRICTIONS ---------------- ");
+                //!? GET RESTRICTIONS
+                var restList = BC.GetAllBookRest(servId).ToList();
+                if (restList == null) return null;
+
+                // Saca solo las reservas que son para el mismo día
+                restList = restList.Where(x =>
+                    x.start_date_hour?.Date == bookDate)
+                    .ToList();
+
+                foreach (var rest in restList)
+                {
+                    DateTime chStart = rest.start_date_hour ?? default;
+                    DateTime chEnd = rest.end_date_hour ?? default;
+                    if (chStart == default || chEnd == default) return null;
+
+                    Debug.WriteLine($"TIME : {chStart.Hour} - {chEnd.Hour}"); 
+
+                    var check = CheckTimeConflict(start, end, chStart, chEnd);
+
+                    if (!check)
+                    {
+                        Debug.WriteLine("> CONFLICT FOUND;");
+                        return false;
+                    }
+                }
+
+
+
+                Debug.WriteLine($" ---------------- CHECKING OTHER BOOKINGS ---------------- ");
+                //!? GET OTHERS BOOKING FROM THIS SERV
+                var otherBookList = BC.GetAllBookings(status_booking_id: "ACT", serv_id: servId);
+                if (otherBookList == null) return null;
+
+                // Saca solo las reservas que son para el mismo día
+                // Recordar sacar a book de la lista
+                otherBookList = otherBookList.Where(x =>
+                    x.start_date_hour?.Date == bookDate &&
+                    !x.booking_id.Equals(book.booking_id))
+                    .ToList();
+
+                // Revisar si hay conflicto con otras reservas
+                foreach (var bk in otherBookList)
+                {
+                    DateTime chStart = bk.start_date_hour ?? default;
+                    DateTime chEnd = bk.end_date_hour ?? default;
+                    if (chStart == default || chEnd == default) return null;
+
+                    Debug.WriteLine($"TIME : {chStart.Hour} - {chEnd.Hour}");
+
+                    var check = CheckTimeConflict(start, end, chStart, chEnd);
+
+                    if (!check)
+                    {
+                        Debug.WriteLine("> CONFLICT FOUND;");
+                        return false;
+                    }
+                }
+
+                // Si no hay conflicto, return true
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return null;
+            }
+        }
+
+        [NonAction]
+        private bool CheckTimeConflict(TimeSpan start, TimeSpan end, TimeSpan chStart, TimeSpan chFinish)
+        {
+            int st_st = TimeSpan.Compare(start, chStart);
+            int st_en = TimeSpan.Compare(start, chFinish);
+            int en_st = TimeSpan.Compare(end, chFinish);
+            int en_en = TimeSpan.Compare(end, chStart);
+
+            var lst = new List<int>() { st_st, st_en, en_st, en_en };
+
+            var checkMinus = lst.All(x => x <= 0);
+            var checkPlus = lst.All(x => x >= 0);
+
+            if (checkMinus || checkPlus) return true;
+            else return false;
+        }
+        [NonAction]
+        private bool CheckTimeConflict(DateTime start, DateTime end, DateTime chStart, DateTime chFinish)
+        {
+            int st_st = DateTime.Compare(start, chStart);
+            int st_en = DateTime.Compare(start, chFinish);
+            int en_st = DateTime.Compare(end, chFinish);
+            int en_en = DateTime.Compare(end, chStart);
+
+            var lst = new List<int>() { st_st, st_en, en_st, en_en };
+
+            var checkMinus = lst.All(x => x <= 0);
+            var checkPlus = lst.All(x => x >= 0);
+
+            if (checkMinus || checkPlus) return true;
+            else return false;
+        }
+
 
         /// <summary>
         /// Set and saves the data for the navbar in a ViewBag
@@ -399,10 +826,40 @@ namespace initial_d.Controllers
         {
             List<NavbarItems> InternalNavbar = new List<NavbarItems>()
             {
-                new NavbarItems("Reserva", "RestList", "Reservas"),
+                new NavbarItems("Booking", "BookList", "Reservas"),
+                new NavbarItems("Booking", "RestList", "Restricciones de Horario"),
             };
 
             ViewBag.InternalNavbar = InternalNavbar;
+        }
+
+        // Checkea horas de restricciones vs horas de booking para revisar conflicto.
+        public static void CheckTimeConflict_Testing(int restSt, int restEn, int bookSt, int bookEn)
+        {
+            restSt = 12;
+            restEn = 13;
+            bookSt = 10;
+            bookEn = 13;
+
+            TimeSpan start = new TimeSpan(0, bookSt, 0, 0);
+            TimeSpan end = new TimeSpan(0, bookEn, 0, 0);
+            TimeSpan ch_start = new TimeSpan(0, restSt, 0, 0);
+            TimeSpan ch_end = new TimeSpan(0, restEn, 0, 0);
+
+            int st_st = TimeSpan.Compare(start, ch_start);
+            int st_en = TimeSpan.Compare(start, ch_end);
+            int en_st = TimeSpan.Compare(end, ch_end);
+            int en_en = TimeSpan.Compare(end, ch_start);
+
+            Console.WriteLine(st_st + "  |  " + st_en + "  |  " + en_st + "  |  " + en_en);
+
+            var lst = new List<int>() { st_st, st_en, en_st, en_en };
+
+            var checkMinus = lst.All(x => x <= 0);
+            var checkPlus = lst.All(x => x >= 0);
+
+            if (checkMinus || checkPlus) Console.WriteLine("VALIDO >:3c");
+            else Debug.WriteLine("NO VALIDO Σ:(c");
         }
     }
 }

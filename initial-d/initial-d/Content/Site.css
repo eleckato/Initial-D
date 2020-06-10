@@ -193,6 +193,11 @@ h5.modal-title .fa {
 
 
 
+.bootstrap-datetimepicker-widget .fa {
+    color: black !important;
+}
+
+
 /* ---------------------------------------------------
     HEADERS        |        header
 ----------------------------------------------------- */

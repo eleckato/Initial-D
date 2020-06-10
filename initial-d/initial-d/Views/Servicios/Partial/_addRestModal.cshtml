@@ -1,27 +1,22 @@
-﻿@model initial_d.Models.APIModels.BookingVM
-@{ 
-    int servDur = Model.serv?.estimated_time ?? 0;
-}
+﻿@model initial_d.Models.APIModels.BookingRestVM
 
-<div id="update-store-sche-modal" class="modal fade" tabindex="-1" role="dialog">
+<div id="add-rest-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            @using (Html.BeginForm("RescheduleBook", "Booking", FormMethod.Post))
+
+            @using (Html.BeginForm("AddRest", "Booking", FormMethod.Post))
             {
-                @Html.HiddenFor(m => m.booking_id)
+                @Html.HiddenFor(m => m.restriction_id)
                 @Html.HiddenFor(m => m.serv_id)
-                @Html.HiddenFor(m => m.appuser_id)
-                @Html.HiddenFor(m => m.status_booking_id)
 
                 @Html.HiddenFor(m => m.updated_at)
                 @Html.HiddenFor(m => m.created_at)
                 @Html.HiddenFor(m => m.deleted)
 
-
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fa fa-history" aria-hidden="true"></i>
-                        Reagendar Reserva
+                        <i class="fa fa-calendar-times" aria-hidden="true"></i>
+                        Agregar Restricción
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -29,9 +24,12 @@
                 </div>
 
                 <div class="modal-body">
-
-                    <p>Selecciona la nueva hora para la reserva</p>
-                    <p>El servicio dura @servDur minutos</p>
+                    
+                    
+                    <strong class="text-danger">Advertencia</strong>
+                    <p>Se cancelará cualquier hora agendada en el rango indicado.</p>
+                    
+                    <p>Seleccione el lapsus a restringir</p>
 
                     <div class="form-group">
                         @Html.LabelFor(m => m.start_date_hour)
@@ -48,8 +46,15 @@
                     
                     <div class="form-group">
                         @Html.LabelFor(m => m.end_date_hour)
-                        @Html.Hidden("end_date_hour", Model.end_date_hour?.ToString("yyyy-MM-ddTHH:mm"))
-                        <h4 id="end_date_hour_view"> </h4>
+
+                        <div class="input-group date" id="end_date_hour_cont" data-target-input="nearest">
+                            @Html.TextBoxFor(m => m.end_date_hour, new { @class = "form-control datetimepicker-input h-100", data_target="#end_date_hour_cont" })
+                            <div class="input-group-append" data-target="#end_date_hour_cont" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+
+                        @Html.ValidationMessageFor(m => m.end_date_hour)
                     </div>
 
                 </div>
@@ -61,37 +66,13 @@
                     </a>
 
                     <button type="submit" class="btn btn-sm btn-green">
-                        <i class="fa fa-history" aria-hidden="true"></i>
-                        Reagendar
+                        <i class="fa fa-save" aria-hidden="true"></i>
+                        Agregar Restricción
                     </button>
                 </div>
+
             }
+                
         </div>
     </div>
 </div>
-
-<script>
-
-    WaitForJquery(function ()
-    {
-        // Initi End Datetime picker View
-        $('#end_date_hour_view').text(moment($('#end_date_hour').val()).format('DD/MM/YYYY HH:mm'))
-
-        // Cuando start_date_hour Cambia, cambia end_date_hour
-        $(document).on('input', '#start_date_hour', function ()
-        {
-            // Get start_date time
-            let newTime = $('#start_date_hour').val();
-
-            // Define the end time
-            let endTime = moment(newTime).add(@servDur, 'minutes').format('YYYY-MM-DDTHH:mm');
-
-            // Change the time on hidden input for end_date
-            $('#end_date_hour').val(endTime);
-
-            // Change view string for end_date
-            $('#end_date_hour_view').text(moment(endTime).format('DD/MM/YYYY HH:mm'))
-        });
-    });
-
-</script>

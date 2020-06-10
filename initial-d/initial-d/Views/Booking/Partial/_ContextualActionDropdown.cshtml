@@ -43,7 +43,7 @@
                 </a>
 			}
 
-            @if (isDetails && !isDeleted)
+            @if (isDetails && !isDeleted && statusId.Equals(actId))
             {
                 <!-- ACTUALIZAR DATOS -->
 				<a class="dropdown-item small" href="#update-store-sche-modal" data-toggle="modal">

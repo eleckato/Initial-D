@@ -1,4 +1,5 @@
 ﻿@model initial_d.Models.APIModels.Servicio
+@using initial_d.Models.APIModels;
 
 @{
     ViewBag.Title = $"{Model.name} | Servicio";
@@ -8,6 +9,9 @@
     bool isDeleted = Model.deleted;
 
     string goBack_Url = Url.Action(isDeleted ? "DeletedServList" : "ServList", "Servicios");
+
+    var bookList = (List<BookingVM>)ViewBag.bookList;
+    var restList = (List<BookingRestVM>)ViewBag.restList;
 
     // Ids to keep an eye on
     string actId = "ACT";
@@ -70,7 +74,7 @@
                 
                 <!-- STATUS -->
                 <tr>
-                    <th>@Html.DisplayNameFor(m => m.serv_desc)</th>
+                    <th>@Html.DisplayNameFor(m => m.status_name)</th>
                     <td>
                         @if (servStatus.Equals(inaId))
                         {<i class="fa fa-eye-slash mr-1 text-danger" aria-hidden="true"></i>}
@@ -121,6 +125,57 @@
 
 </div>
 
+@if (bookList.Any())
+{
+
+    <div class="row mt-3">
+        <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
+            <div class="c-jumbotron"> 
+                <h3 class="mb-4"> Reservas </h3>
+
+                <ul>
+                    @foreach (var book in bookList)
+                    {
+                        <li>
+                            <div>
+                                <a href="@Url.Action("UserDetails", "Usuarios", new { userId = book.appuser_id })" class="mr-3">
+                                    @book.userName
+                                </a>
+                                @book.schedule
+                            </div> 
+                        </li>
+                    }
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@if (restList.Any())
+{
+
+    <div class="row mt-3">
+        <div class="col-12 col-ms-11 col-md-10 col-lg-6 px-lg-2">
+            <div class="c-jumbotron"> 
+                <h3 class="mb-4"> Restricciones de Horario </h3>
+
+                <ul>
+                    @foreach (var rest in restList)
+                    {
+                        <li>@rest.schedule</li>
+                    }
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+}
 <!-- MODALS -->
 @Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })
 @Html.Partial("Partial/_ToggleStatusModal")
+
+@Html.Partial("Partial/_addRestModal", new BookingRestVM() { serv_id = Model.serv_id })
