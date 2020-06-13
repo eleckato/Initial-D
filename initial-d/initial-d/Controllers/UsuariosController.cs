@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace initial_d.Controllers
 {
-    [Authorize]
+    [Authorize(Roles="ADM,SUP,TES")]
     [RoutePrefix("usuarios-adm")]
     public class UsuariosController : BaseController
     {
@@ -68,6 +68,12 @@ namespace initial_d.Controllers
                 {
                     user = UC.ProcessUser(user, userTypeLst, userStatusLst);
                 });
+
+                userTypeLst.Remove(userTypeLst.FirstOrDefault(x => x.user_type_id.Equals("TES")));
+                if (!User.IsInRole("ADM"))
+                {
+                    userTypeLst.Remove(userTypeLst.FirstOrDefault(x => x.user_type_id.Equals("ADM")));
+                }
             }
             catch (Exception e)
             {
@@ -163,6 +169,12 @@ namespace initial_d.Controllers
                 if (userStatusLst == null) return Error_FailedRequest();
 
                 usuario = UC.ProcessUser(usuario, userTypeLst, userStatusLst);
+
+                userTypeLst.Remove(userTypeLst.FirstOrDefault(x => x.user_type_id.Equals("TES")));
+                if (!User.IsInRole("ADM"))
+                {
+                    userTypeLst.Remove(userTypeLst.FirstOrDefault(x => x.user_type_id.Equals("ADM")));
+                }
             }
             catch (Exception e)
             {
@@ -186,6 +198,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(updateRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult UpdateUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
@@ -224,6 +237,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(updateRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult UpdateUser(Usuario newUser)
         {
             if (newUser == null) return Error_InvalidUrl();
@@ -263,6 +277,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(addRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult AddUser()
         {
             List<UserType> userTypeLst;
@@ -301,6 +316,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(addRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult AddUser(Usuario newUser)
         {
             if (newUser == null) return Error_InvalidUrl();
@@ -340,6 +356,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult DeleteUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
@@ -368,6 +385,7 @@ namespace initial_d.Controllers
         /// <para> /Usuarios/RestoreUser </para>
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult RestoreUser(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return Error_InvalidUrl();
@@ -390,6 +408,7 @@ namespace initial_d.Controllers
 
             return RedirectToAction("DeletedUserList");
         }
+
 
         /* ---------------------------------------------------------------- */
         /* OTHER ACTIONS */
@@ -479,8 +498,12 @@ namespace initial_d.Controllers
             List<NavbarItems> InternalNavbar = new List<NavbarItems>()
             {
                 new NavbarItems("Usuarios", "UserList", "Listado de Usuarios"),
-                new NavbarItems("Usuarios", "AddUser", "Agregar Usuario"),
             };
+
+            if (isAdm || isTes)
+            {
+                InternalNavbar.Add(new NavbarItems("Usuarios", "AddUser", "Agregar Usuario"));
+            }
 
             ViewBag.InternalNavbar = InternalNavbar;
         }

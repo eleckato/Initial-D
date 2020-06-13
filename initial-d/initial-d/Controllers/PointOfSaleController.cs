@@ -14,6 +14,7 @@ namespace initial_d.Controllers
 {
     [Authorize]
     [RoutePrefix("point-of-sale")]
+    [Authorize(Roles = "VEN,TES")]
     public class PointOfSaleController : BaseController
     {
 
@@ -570,7 +571,6 @@ namespace initial_d.Controllers
             List<NavbarItems> InternalNavbar = new List<NavbarItems>()
             {
                 new NavbarItems("PointOfSale", "Index", "Hacer una Venta"),
-                new NavbarItems("PointOfSale", "AddServ", "Listado de Ventas"),
             };
 
             ViewBag.InternalNavbar = InternalNavbar;

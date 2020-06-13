@@ -27,6 +27,7 @@ namespace initial_d.Models.APIModels
         [Display(Name = "Comienzo")]
         [DataType(DataType.DateTime)]
         public DateTime? start_date_hour { get; set; }
+
         [Required]
         [Display(Name = "Término")]
         [DataType(DataType.DateTime)]
@@ -62,13 +63,13 @@ namespace initial_d.Models.APIModels
             get
             {
                 string date = start_date_hour?.ToString("dd/MM/yyyy") ?? string.Empty;
-                string startTime = start_date_hour?.ToString("HH:mm") ?? string.Empty;
-                string endTime = end_date_hour?.ToString("HH:mm") ?? string.Empty;
+                string startTime = start_date_hour?.ToString("dd/MM/yyyy HH:mm") ?? string.Empty;
+                string endTime = end_date_hour?.ToString("dd/MM/yyyy HH:mm") ?? string.Empty;
 
                 if (string.IsNullOrEmpty(date) || string.IsNullOrEmpty(startTime) || string.IsNullOrEmpty(endTime))
                     return "ERROR";
 
-                string final = $"{date} | {startTime} - {endTime}";
+                string final = $"{startTime} | {endTime}";
                 return final;
             }
         }

@@ -63,7 +63,7 @@ footer p {
 }
 
 input, select:not(.hourselect):not(.minuteselect) {
-    min-width: 250px;
+    min-width: 240px;
 }
 
 
@@ -198,16 +198,22 @@ h5.modal-title .fa {
 }
 
 
+
+.action-dw .dropdown {
+    display: flex;
+    margin-left: auto !important
+}
+
+
 /* ---------------------------------------------------
     HEADERS        |        header
 ----------------------------------------------------- */
-.header{
-    /* row */	
+.header {
+    /* row */
     display: -ms-flexbox;
-	display: flex;
-	-ms-flex-wrap: wrap;
+    display: flex;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    
     /* mt-3 mb-2rem*/
     margin-top: 1rem !important;
     margin-bottom: 0.5rem !important;
@@ -239,12 +245,40 @@ h5.modal-title .fa {
     .header .header-buttons {
         /* ml-auto  */
         margin-left: auto !important;
-        /* d-flex align-items-start */
+        /* d-flex */
         display: -ms-flexbox !important;
         display: flex !important;
         -ms-flex-align: start !important;
         align-items: flex-start !important;
+
+        -ms-flex-direction: column !important;
+        flex-direction: column !important;
     }
+
+        .header .header-buttons .btn,
+        .header .header-buttons .dropdown {
+            align-self: flex-end;
+            margin: 0rem !important;
+            margin-right: 0rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+
+    @media (min-width: 576px) {
+        .header .header-buttons {
+            -ms-flex-direction: row !important;
+            flex-direction: row !important;
+        }
+            .header .header-buttons .btn,
+            .header .header-buttons .dropdown {
+                align-self: flex-start;
+                margin-bottom: 0rem !important;
+            }
+                .header .header-buttons .btn:not(:last-child) {
+                    margin-right: 1rem !important;
+                }
+
+    }
+
 
 /* ---------------------------------------------------
     BACKGROUND AND COLORS
@@ -302,246 +336,257 @@ h5.modal-title .fa {
     font-weight: 600;
 }
 
+.navbar .navbar-collapse{
+    background-color: var(--black-1);
+}
 
-/* ---------------------------------------------------
+@media (min-width: 768px) {
+
+    .navbar .navbar-collapse {
+        background-color: transparent;
+    }
+}
+
+    /* ---------------------------------------------------
     GENERAL RESIZING FOR >1550px
 ----------------------------------------------------- */
+    @media (max-width: 1550px) {
+        : root {
+            --sidebar-width: 220px;
+            --sidebar-width-closed: 60px;
+        }
 
-@media (max-width: 1550px) {
-    :root {
-        --sidebar-width: 220px;
-        --sidebar-width-closed: 60px;
+        body {
+            font-size: 80%;
+        }
+
+        span {
+            /* font-size: 85% !important; */
+            font-size: inherit;
+        }
+
+        button, a:not(.small), td, textarea, select {
+            font-size: 100% !important;
+        }
+
+        input[type="text"], input[type="number"] {
+            font-size: 125% !important;
+        }
+
+        h1 {
+            font-size: 2.1rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+
+        h5 {
+            font-size: 1rem;
+        }
     }
 
-    body {
-        font-size: 80%;
+
+    @media (max-width: 580px) {
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        .title {
+            text-align: center;
+        }
     }
 
-    span {
-        /* font-size: 85% !important; */
-        font-size: inherit;
-    }
-
-    button, a:not(.small), td, input[type="text"], input[type="number"], textarea, select {
-        font-size: 100% !important;
-    }
-
-    h1 {
-        font-size: 2.1rem;
-    }
-
-    h2 {
-        font-size: 1.75rem;
-    }
-
-    h3 {
-        font-size: 1.5rem;
-    }
-
-    h4 {
-        font-size: 1.25rem;
-    }
-
-    h5 {
-        font-size: 1rem;
-    }
-
-}
-
-
-@media (max-width: 580px){
-    
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    .title{
-        text-align: center;
-    }
-}
-
-/* ---------------------------------------------------
+    /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
-.wrapper {
-    display: flex;
-    align-items: stretch;
-}
-
-#sb-toggle-in-button {
-    height: 50px;
-    /*  d-none w-100 rounded-0 */
-    display: none;
-    width: 100%;
-    border-radius: 0;
-}
-
-/*  Sidebar Base */
-#sidebar {
-    min-width: var(--sidebar-width);
-    max-width: var(--sidebar-width);
-    background: var(--black-1);
-    color: var(--white-1);
-    transition: all var(--transition-speed);
-}
-
-
-    #sidebar a {
-        color: var(--white-1);
-        font-size: 1em;
-        text-decoration: none;
+    .wrapper {
+        display: flex;
+        align-items: stretch;
     }
 
-    /* CLOSED Sidebar Base */
-    #sidebar.closed {
-        min-width: var(--sidebar-width-closed);
-        max-width: var(--sidebar-width-closed);
-        text-align: center;
+    #sb-toggle-in-button {
+        height: 50px;
+        /*  d-none w-100 rounded-0 */
+        display: none;
+        width: 100%;
+        border-radius: 0;
     }
 
-    #sidebar.pre-open {
+    /*  Sidebar Base */
+    #sidebar {
         min-width: var(--sidebar-width);
         max-width: var(--sidebar-width);
+        background: var(--black-1);
+        color: var(--white-1);
+        transition: all var(--transition-speed);
     }
 
-    /* CLOSED: Sidebar links style */
-    #sidebar.closed ul li a {
-        padding: 10px 0px;
-        text-align: center;
-        font-size: 0.80em;
-    }
-        /* CLOSED: Sidebar Links Icon style */
-        #sidebar.closed ul li a i {
-            display: block;
-            font-size: 1.1em;
-            margin-bottom: 5px;
-            /* margin-right: 0;
-            margin-left: 0; */
+
+        #sidebar a {
+            color: var(--white-1);
+            font-size: 1em;
+            text-decoration: none;
         }
 
-    /* CLOSED: Sidebar Sub-Links style */
-    #sidebar.closed ul ul a {
-        padding: 10px !important;
-    }
-
-    /* CLOSED: Flechita para los Sidebar Links colapsables */
-    #sidebar.closed .dropdown-toggle::after {
-        top: auto;
-        bottom: 10px;
-        right: 50%;
-        -webkit-transform: translateX(50%);
-        -ms-transform: translateX(50%);
-        transform: translateX(50%);
-    }
-
-    /* HEADER */
-    #sidebar .sidebar-header {
-        padding: 20px;
-        background: var(--black-2);
-        color: var(--yellow-3);
-    }
-
-        #sidebar .sidebar-header strong {
-            display: none;
-            font-size: 1.8em;
-        }
-    /* CLOSED: Hide the Big Header and the CTA */
-    #sidebar.closed .sidebar-header h3,
-    #sidebar.closed .CTAs,
-    #sidebar.closed .sidebar-header small {
-        display: none;
-    }
-
-    #sidebar.closed .sidebar-header {
-        padding: 20px 0px;
-    }
-
-    /* CLOSED: Show the Small Header */
-    #sidebar.closed .sidebar-header strong {
-        display: block;
-    }
-    /* Hide all text when is collapsed */
-    #sidebar.closed span {
-        display: none;
-    }
-
-
-    /* Links container */
-    #sidebar ul.components {
-        padding-top: 10px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid var(--yellow-3);
-    }
-
-    #sidebar.closed ul.components {
-        border: 0px;
-    }
-
-    /* Links */
-    #sidebar ul li a {
-        padding: 10px;
-        font-size: 1.1em !important;
-        display: block;
-    }
-        /* Links Hover */
-        #sidebar ul li a:hover, #sidebar ul li.active a {
-            color: var(--yellow-3) !important;
-            background: var(--black-2) !important;
-        }
-        /* Links Icons */
-        #sidebar ul li a i, #sidebar ul li.active a i {
-            margin-right: 10px;
-            margin-left: 5px;
-            font-size: 1.2em !important;
-        }
-
-    /* Sidebar CTA */
-    #sidebar ul.CTAs {
-        padding: 20px;
-    }
-        /* Sidebar CTA */
-        #sidebar ul.CTAs a {
+        /* CLOSED Sidebar Base */
+        #sidebar.closed {
+            min-width: var(--sidebar-width-closed);
+            max-width: var(--sidebar-width-closed);
             text-align: center;
-            font-size: 0.9em !important;
-            display: block;
-            border-radius: 5px;
-            margin-bottom: 5px;
+        }
+
+        #sidebar.pre-open {
+            min-width: var(--sidebar-width);
+            max-width: var(--sidebar-width);
+        }
+
+        /* CLOSED: Sidebar links style */
+        #sidebar.closed ul li a {
+            padding: 10px 0px;
+            text-align: center;
+            font-size: 0.80em;
+        }
+            /* CLOSED: Sidebar Links Icon style */
+            #sidebar.closed ul li a i {
+                display: block;
+                font-size: 1.1em;
+                margin-bottom: 5px;
+                /* margin-right: 0;
+            margin-left: 0; */
+            }
+
+        /* CLOSED: Sidebar Sub-Links style */
+        #sidebar.closed ul ul a {
+            padding: 10px !important;
+        }
+
+        /* CLOSED: Flechita para los Sidebar Links colapsables */
+        #sidebar.closed .dropdown-toggle::after {
+            top: auto;
+            bottom: 10px;
+            right: 50%;
+            -webkit-transform: translateX(50%);
+            -ms-transform: translateX(50%);
+            transform: translateX(50%);
+        }
+
+        /* HEADER */
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: var(--black-2);
+            color: var(--yellow-3);
+        }
+
+            #sidebar .sidebar-header strong {
+                display: none;
+                font-size: 1.8em;
+            }
+        /* CLOSED: Hide the Big Header and the CTA */
+        #sidebar.closed .sidebar-header h3,
+        #sidebar.closed .CTAs,
+        #sidebar.closed .sidebar-header small {
+            display: none;
+        }
+
+        #sidebar.closed .sidebar-header {
+            padding: 20px 0px;
+        }
+
+            /* CLOSED: Show the Small Header */
+            #sidebar.closed .sidebar-header strong {
+                display: block;
+            }
+        /* Hide all text when is collapsed */
+        #sidebar.closed span {
+            display: none;
         }
 
 
+        /* Links container */
+        #sidebar ul.components {
+            padding-top: 10px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--yellow-3);
+        }
 
-/* ---------------------------------------------------
+        #sidebar.closed ul.components {
+            border: 0px;
+        }
+
+        /* Links */
+        #sidebar ul li a {
+            padding: 10px;
+            font-size: 1.1em !important;
+            display: block;
+        }
+            /* Links Hover */
+            #sidebar ul li a:hover, #sidebar ul li.active a {
+                color: var(--yellow-3) !important;
+                background: var(--black-2) !important;
+            }
+                /* Links Icons */
+                #sidebar ul li a i, #sidebar ul li.active a i {
+                    margin-right: 10px;
+                    margin-left: 5px;
+                    font-size: 1.2em !important;
+                }
+
+        /* Sidebar CTA */
+        #sidebar ul.CTAs {
+            padding: 20px;
+        }
+            /* Sidebar CTA */
+            #sidebar ul.CTAs a {
+                text-align: center;
+                font-size: 0.9em !important;
+                display: block;
+                border-radius: 5px;
+                margin-bottom: 5px;
+            }
+
+
+
+    /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
 
-@media (max-width: 767px) {
-    #sidebar.closed {
-        min-width: 0px;
-        max-width: 0px;
+    @media (max-width: 767px) {
+        #sidebar.closed {
+            min-width: 0px;
+            max-width: 0px;
+        }
+
+            #sidebar.closed .sidebar-header {
+                display: none;
+            }
+
+            #sidebar.closed ul li a {
+                display: none;
+            }
     }
 
-        #sidebar.closed .sidebar-header {
-            display: none;
-        }
-        
-        #sidebar.closed ul li a{
-            display: none;
-        }
 
-}
+    .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+        padding-right: 0;
+        padding-left: 0;
+    }
 
+    .form-row > .col, .form-row > [class*="col-"] {
+        padding-right: 0;
+        padding-left: 0;
+    }
 
-.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
-	padding-right: 0;
-	padding-left: 0;
-}
-
-.form-row > .col, .form-row > [class*="col-"] {
-	padding-right: 0;
-	padding-left: 0;
-}
-
-.form-row {
-	margin-right: 0;
-	margin-left: 0;
-}
+    .form-row {
+        margin-right: 0;
+        margin-left: 0;
+    }

@@ -167,15 +167,16 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(ChangePasswordUrl)]
-        public ActionResult ChangePassword(string newPassword, string oldPassword1, string oldPassword2)
+        public ActionResult ChangePassword(string newPassword1, string newPassword2, string oldPassword1, string oldPassword2)
         {
-            if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(oldPassword1) || string.IsNullOrEmpty(oldPassword2)) return Error_InvalidForm(false);
+            if (string.IsNullOrEmpty(newPassword1) || string.IsNullOrEmpty(newPassword2) || string.IsNullOrEmpty(oldPassword1) || string.IsNullOrEmpty(oldPassword2)) return Error_InvalidForm(false);
 
-            if (!oldPassword1.Equals(oldPassword2)) return Error_CustomError("Las contraseñas ingresadas no coinciden");
+            if (!oldPassword1.Equals(oldPassword2)) return Error_CustomError("Las contraseñas ingresadas no coinciden", false);
+            if (!newPassword1.Equals(newPassword2)) return Error_CustomError("Las contraseñas ingresadas no coinciden", false);
 
             try
             {
-                var res = UP.UpdatePassword(newPassword, oldPassword1);
+                var res = UP.UpdatePassword(newPassword1, oldPassword1);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)

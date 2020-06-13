@@ -20,7 +20,7 @@
     string update_Url = Url.Action("UpdateServ", "Servicios", new { servId });
 }
 
-<div class="dropdown">
+<div class="dropdown w-max-content">
 
 	<button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
 			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,54 +41,69 @@
 
             @if (isDetails && !isDeleted)
             {
-                <!-- ACTUALIZAR DATOS -->
-				<a href="@update_Url" class="dropdown-item small">
-					<i class="fa fa-edit" aria-hidden="true"></i>
-					Actualizar Datos
-				</a>
-                <!-- AGREGAR RESTRICCIONES -->
-				<a class="dropdown-item small" href="#add-rest-modal" data-toggle="modal" >
-					<i class="fa fa-calendar-times" aria-hidden="true"></i>
-					Agregar Restricción de Horario
-				</a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- ACTUALIZAR DATOS -->
+					<a href="@update_Url" class="dropdown-item small">
+						<i class="fa fa-edit" aria-hidden="true"></i>
+						Actualizar Datos
+					</a>
+				}
+				
+                if (User.IsInRole("ADM") || User.IsInRole("TES") || User.IsInRole("SUP"))
+                {
+					<!-- AGREGAR RESTRICCIONES -->
+					<a class="dropdown-item small" href="#add-rest-modal" data-toggle="modal" >
+						<i class="fa fa-calendar-times" aria-hidden="true"></i>
+						Agregar Restricción de Horario
+					</a>
+				}
             }
 
 			@if ((isDetails || isList) && !isDeleted)
             {
-
-				<!-- HABILITAR/DESHABILITAR -->
-                if (servStatus.Equals(inaId))
+				
+                if (User.IsInRole("ADM") || User.IsInRole("TES") || User.IsInRole("SUP"))
                 {
-					<a class="dropdown-item small"
-					   data-toggle="modal" href="#status-modal" data-serv-id="@servId" data-new-state="@actId">
-						<i class="fa fa-eye" aria-hidden="true"></i>
-						Habilitar
+					<!-- HABILITAR/DESHABILITAR -->
+					if (servStatus.Equals(inaId))
+					{
+						<a class="dropdown-item small"
+						   data-toggle="modal" href="#status-modal" data-serv-id="@servId" data-new-state="@actId">
+							<i class="fa fa-eye" aria-hidden="true"></i>
+							Habilitar
+						</a>
+					}
+					else
+					{
+						<a class="dropdown-item small"
+						   data-toggle="modal" href="#status-modal" data-serv-id="@servId" data-new-state="@inaId">
+							<i class="fa fa-eye-slash" aria-hidden="true"></i>
+							Deshabilitar
+						</a>
+					}
+				}
+				
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- ELIMINAR -->
+					<a class="dropdown-item small" role="button" data-toggle="modal" data-serv-id="@servId" href="#delete-modal">
+						<i class="fa fa-trash" aria-hidden="true"></i>
+						Eliminar
 					</a>
 				}
-				else
-				{
-					<a class="dropdown-item small"
-					   data-toggle="modal" href="#status-modal" data-serv-id="@servId" data-new-state="@inaId">
-						<i class="fa fa-eye-slash" aria-hidden="true"></i>
-						Deshabilitar
-					</a>
-				}
-
-				<!-- ELIMINAR -->
-				<a class="dropdown-item small" role="button" data-toggle="modal" data-serv-id="@servId" href="#delete-modal">
-					<i class="fa fa-trash" aria-hidden="true"></i>
-					Eliminar
-				</a>
-
 			}
 
 			@if(isDeleted)
 			{
-				<!-- RESTAURAR -->
-				<a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-serv-id="@servId" href="#delete-modal">
-					<i class="fa fa-trash-restore" aria-hidden="true"></i>
-					Restaurar
-				</a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- RESTAURAR -->
+					<a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-serv-id="@servId" href="#delete-modal">
+						<i class="fa fa-trash-restore" aria-hidden="true"></i>
+						Restaurar
+					</a>
+				}
 			}
 
 		</div>

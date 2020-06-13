@@ -3,12 +3,12 @@
 @{
     ViewBag.Title = $"{Model.name} | Detalles de Usuario";
 
-    string update_Url = Url.Action("UpdateUser", "Usuarios", new { userId = Model.appuser_id });
-    string goBack_Url = Url.Action("UserList", "Usuarios");
-
     string userId = Model.appuser_id;
     string userStatus = Model.status_id;
     bool isDeleted = Model.deleted;
+
+    string update_Url = Url.Action("UpdateUser", "Usuarios", new { userId = Model.appuser_id });
+    string goBack_Url = isDeleted ? Url.Action("DeletedUserList", "Usuarios") : Url.Action("UserList", "Usuarios");
 
     string banId = "BAN";
     string actId = "ACT";

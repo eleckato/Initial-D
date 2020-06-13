@@ -32,14 +32,24 @@
     
     <!-- BUTTONS -->
     <div class="header-buttons">
-        <a href="@delListURL" class="btn btn-sm btn-secondary mr-3" role="button">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-            Reservas Eliminadas
-        </a>
-        <a class="btn btn-sm btn-yellow mr-3" role="button" href="#update-store-sche-modal" data-toggle="modal" >
-            <i class="fa fa-history" aria-hidden="true"></i>
-            Cambiar Horario de la Tienda
-        </a>
+
+        @if (User.IsInRole("ADM") || User.IsInRole("TES"))
+        {
+            <a href="@delListURL" class="btn btn-sm btn-secondary mr-3" role="button">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+                Reservas Eliminadas
+            </a>
+        }
+
+        
+        @if (User.IsInRole("ADM") || User.IsInRole("TES") || User.IsInRole("SUP"))
+        {
+            <a class="btn btn-sm btn-yellow mr-3" role="button" href="#update-store-sche-modal" data-toggle="modal" >
+                <i class="fa fa-history" aria-hidden="true"></i>
+                Cambiar Horario de la Tienda
+            </a>
+        }
+
     </div>
 </div>
 
@@ -84,7 +94,7 @@
                 <tr class="clickable-row" data-url="@detailsUrl">
                     
                     <!-- ACTION DROPDOWN -->
-                    <td data-label="Actions" class="not-clickable cell-compact">
+                    <td data-label="Actions" class="not-clickable cell-compact-sm action-dw">
                         @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(book) { { "context", "list" } } )
                     </td>
                     

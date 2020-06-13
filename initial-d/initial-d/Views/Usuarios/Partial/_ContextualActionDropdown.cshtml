@@ -40,10 +40,13 @@
 
             @if (isDetails && !isDeleted)
             {
-				<a href="@update_Url" class="dropdown-item small">
-					<i class="fa fa-user-edit" aria-hidden="true"></i>
-					Actualizar Datos
-				</a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<a href="@update_Url" class="dropdown-item small">
+						<i class="fa fa-user-edit" aria-hidden="true"></i>
+						Actualizar Datos
+					</a>
+				}
             }
 
 			@if ((isDetails || isList) && !isDeleted)
@@ -70,23 +73,30 @@
 						<i class="fa fa-lock" aria-hidden="true"></i>
 						Dar de Baja
 					</a>
-				}
+                }
 
-				<!-- ELIMINAR -->
-				<a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
-					<i class="fa fa-trash" aria-hidden="true"></i>
-					Eliminar
-				</a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- ELIMINAR -->
+					<a class="dropdown-item small" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
+						<i class="fa fa-trash" aria-hidden="true"></i>
+						Eliminar
+					</a>
+                }
+
 
 			}
 
 			@if(isdeleteList || (isDetails && isDeleted))
 			{
-				<!-- RESTAURAR -->
-				<a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
-					<i class="fa fa-trash-restore" aria-hidden="true"></i>
-					Restaurar
-				</a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- RESTAURAR -->
+					<a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-user-id="@userId" href="#delete-modal">
+						<i class="fa fa-trash-restore" aria-hidden="true"></i>
+						Restaurar
+					</a>
+                }
 			}
 
 		</div>

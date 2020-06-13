@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity;
 
 namespace initial_d.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "ADM,SUP,TES")]
     [RoutePrefix("mecanicos-adm")]
     public class MecanicosController : BaseController
     {
@@ -174,6 +174,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(updateRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult UpdateMech(string mechId)
         {
             if (string.IsNullOrEmpty(mechId)) return Error_InvalidUrl();
@@ -212,6 +213,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(updateRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult UpdateMech(Mecanico newMech)
         {
             if (newMech == null) return Error_InvalidUrl();
@@ -246,6 +248,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(addRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult AddMech()
         {
             List<UserStatus> userStatusLst;
@@ -278,6 +281,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(addRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult AddMech(Mecanico newMech)
         {
             if (newMech == null) return Error_InvalidUrl();
@@ -313,6 +317,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult DeleteMech(string mechId)
         {
             if (string.IsNullOrEmpty(mechId)) return Error_InvalidUrl();
@@ -340,6 +345,7 @@ namespace initial_d.Controllers
         /// <para> /Mecanicos/RestoreUser </para>
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult RestoreMech(string mechId)
         {
             if (string.IsNullOrEmpty(mechId)) return Error_InvalidUrl();
@@ -413,12 +419,11 @@ namespace initial_d.Controllers
 
         public void SetNavbar()
         {
-            List<NavbarItems> InternalNavbar = new List<NavbarItems>()
-            {
-                new NavbarItems("Mecanicos", "MechList", "Listado de Mecánicos"),
-                new NavbarItems("Mecanicos", "AddMech", "Agregar de Mecánico"),
-                new NavbarItems("PublicacionesMec", "PubList", "Publicaciones"),
-            };
+            List<NavbarItems> InternalNavbar = new List<NavbarItems>();
+
+            InternalNavbar.Add(new NavbarItems("Mecanicos", "MechList", "Listado de Mecánicos"));
+            if (isAdm || isTes) InternalNavbar.Add(new NavbarItems("Mecanicos", "AddMech", "Agregar de Mecánico"));
+            InternalNavbar.Add(new NavbarItems("PublicacionesMec", "PubList", "Publicaciones"));
 
             ViewBag.InternalNavbar = InternalNavbar;
         }

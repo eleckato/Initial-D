@@ -37,5 +37,5 @@ function toggleSidebar() {
 /** Update the cookie that store the status of the sidebar */
 function updateSdStatus() {
     var status = $('#sidebar').hasClass('closed') ? 'closed' : 'open';
-    Cookies.set('sdStatus', status);
+    //Cookies.set('sdStatus', status);
 }

@@ -10,6 +10,7 @@ namespace initial_d.Controllers
 {
     [Authorize]
     [RoutePrefix("ventas")]
+    [Authorize(Roles = "ADM,SUP,CAJ,VEN,TES")]
     public class SalesController : BaseController
     {
         readonly SalesCaller SaC = new SalesCaller();
@@ -75,6 +76,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deteledList)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult DeletedSaleList(string code, string statusId)
         {
             List<SaleVM> sales;
@@ -145,6 +147,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult DeleteSale(string saleId)
         {
             if (string.IsNullOrEmpty(saleId)) return Error_InvalidUrl();
@@ -176,6 +179,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(restoreRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult RestoreSale(string saleId)
         {
             if (string.IsNullOrEmpty(saleId)) return Error_InvalidUrl();
@@ -233,8 +237,6 @@ namespace initial_d.Controllers
         }
 
         
-
-
         /* ---------------------------------------------------------------- */
         /* HELPERS */
         /* ---------------------------------------------------------------- */

@@ -103,9 +103,6 @@ namespace initial_d.APICallers
                 {
                     RequestFormat = DataFormat.Json
                 };
-                // For pagination
-                //request.AddParameter("page", "1", ParameterType.UrlSegment);
-                //request.AddParameter("size", "1", ParameterType.UrlSegment);
 
                 var response = client.Execute<List<PublicacionMec>>(request);
 

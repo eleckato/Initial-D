@@ -1,23 +1,25 @@
-﻿.main-wrap {
+﻿.wrapper {
+    /*
+    width: 100vw;*/
     height: 100vh;
-    /* d-flex */
     display: -ms-flexbox !important;
     display: flex !important;
-    /* justify-content-center */
     -ms-flex-pack: center !important;
     justify-content: center !important;
-    /* align-items-center */
     -ms-flex-align: center !important;
     align-items: center !important;
     background: var(--black-1);
+    /* d-flex */
+    /* justify-content-center */
+    /* align-items-center */
 }
 
 .login-cont {
     max-width: 25rem;
     background: var(--yellow-3);
     padding: 20px 30px;
-    margin: 30px;
-    border-radius: 10px;
+    margin: 0px 20px;
+    border-radius: 5px;
     height: max-content;
 }
 
@@ -30,12 +32,22 @@
     border-color: var(--yellow-0);
 }
 
-a {
+a:not(.btn) {
     color: #a7800e;
     text-decoration: underline;
 }
-a:hover {
-    color: #daa60a;
-    text-decoration: underline;
+    a:not(.btn):hover {
+        color: #daa60a;
+        text-decoration: underline;
+    }
+
+
+
+input {
+    min-width: max-content;
 }
 
+input[type="password"] {
+    font-size: initial;
+    height: 2.1em;
+}

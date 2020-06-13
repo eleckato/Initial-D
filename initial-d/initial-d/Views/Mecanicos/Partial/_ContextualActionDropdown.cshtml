@@ -19,7 +19,7 @@
     string update_Url = Url.Action("UpdateMech", "Mecanicos", new { mechId });
 }
 
-<div class="dropdown">
+<div class="dropdown w-max-content">
 
 	<button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
 			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -40,11 +40,14 @@
 
             @if (isDetails && !isDeleted)
             {
-                <!-- ACTUALIZAR DATOS -->
-				<a href="@update_Url" class="dropdown-item small">
-					<i class="fa fa-user-edit" aria-hidden="true"></i>
-					Actualizar Datos
-				</a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- ACTUALIZAR DATOS -->
+					<a href="@update_Url" class="dropdown-item small">
+						<i class="fa fa-user-edit" aria-hidden="true"></i>
+						Actualizar Datos
+					</a>
+				}
             }
 
 			@if ((isDetails || isList) && !isDeleted)
@@ -67,22 +70,28 @@
 						Dar de Baja
 					</a>
 				}
-
-				<!-- ELIMINAR -->
-				<a class="dropdown-item small" role="button" data-toggle="modal" data-mech-id="@mechId" href="#delete-modal">
-					<i class="fa fa-trash" aria-hidden="true"></i>
-					Eliminar
-				</a>
+				
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- ELIMINAR -->
+					<a class="dropdown-item small" role="button" data-toggle="modal" data-mech-id="@mechId" href="#delete-modal">
+						<i class="fa fa-trash" aria-hidden="true"></i>
+						Eliminar
+					</a>
+				}
 
 			}
 
 			@if(isDeleted)
 			{
-				<!-- RESTAURAR -->
-				<a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-mech-id="@mechId" href="#delete-modal">
-					<i class="fa fa-trash-restore" aria-hidden="true"></i>
-					Restaurar
-				</a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- RESTAURAR -->
+					<a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-mech-id="@mechId" href="#delete-modal">
+						<i class="fa fa-trash-restore" aria-hidden="true"></i>
+						Restaurar
+					</a>
+				}
 			}
 
 		</div>

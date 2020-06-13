@@ -12,7 +12,6 @@
     string pagId = "PAG"; // Pagado
     string canId = "CAN"; // Cancelado
 
-
     string goBackURL = Url.Action(isDeleted ? "DeletedSaleList" : "SaleList", "Sales");
     string cashSaleURL = Url.Action("CashierIndex", "Cashier", new { saleId = sale.sale_id });
 }
@@ -34,7 +33,7 @@
             Volver
         </a>
 
-        @if (servStatus.Equals(penId))
+        @if (servStatus.Equals(penId) && (User.IsInRole("CAJ") || User.IsInRole("TES")))
         {
             <a href="@cashSaleURL" class="btn btn-sm btn-green mr-3" role="button">
                 <i class="fa fa-money-bill-wave" aria-hidden="true"></i>
@@ -86,7 +85,7 @@
     </div>
 
     <!-- DATOS BÁSICOS COL 1 -->
-    <div class="col-12 col-lg-6 pr-lg-3">
+    <div class="col-12 col-lg-6 pr-lg-3 mb-3 mb-lg-0">
         <table class="table c-info-table c-data-table-bordered mb-0 table-th-compact">
             
             <!-- VENDEDOR -->
@@ -117,7 +116,7 @@
     </div>
     
     <!-- DATOS BÁSICOS COL 2 -->
-    <div class="col-12 col-lg-6 d-none d-lg-block"> 
+    <div class="col-12 col-lg-6"> 
         <table class="table c-info-table c-data-table-bordered mb-0 table-th-compact">
             
             <!-- STATUS -->

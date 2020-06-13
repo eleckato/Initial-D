@@ -12,6 +12,10 @@
     var selItem = servList.FirstOrDefault(x => x.Value.Equals(servId));
     if (selItem != null) { selItem.Selected = true; }
 
+    bool isAdm = User.IsInRole("ADM");
+    bool isSup = User.IsInRole("SUP");
+    bool isTes = User.IsInRole("TES");
+
     // Action URL
     string delListURL = Url.Action("DeletedRestList", "Booking");
     string expiredListURL = Url.Action("ExpiredRestList", "Booking");
@@ -29,18 +33,21 @@
     
     <!-- BUTTONS -->
     <div class="header-buttons">
-        <a class="btn btn-sm btn-yellow mr-3" role="button" href="#add-rest-modal" data-toggle="modal">
-            <i class="fa fa-calendar-plus" aria-hidden="true"></i>
-            Agregar Restricción
-        </a>
-        <a href="@expiredListURL" class="btn btn-sm btn-secondary mr-3" role="button">
-            <i class="fa fa-backward" aria-hidden="true"></i>
-            Restricciones Vencidas
-        </a>
-        <a href="@delListURL" class="btn btn-sm btn-secondary mr-3" role="button">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-            Restricciones Eliminadas
-        </a>
+			@if (isAdm || isSup || isTes)
+            {
+                <a class="btn btn-sm btn-yellow mr-3 mb-2 mb-sm-0" role="button" href="#add-rest-modal" data-toggle="modal">
+                    <i class="fa fa-calendar-plus" aria-hidden="true"></i>
+                    Agregar Restricción
+                </a>
+                <a href="@expiredListURL" class="btn btn-sm btn-secondary mr-3 mb-2 mb-sm-0" role="button">
+                    <i class="fa fa-backward" aria-hidden="true"></i>
+                    Restricciones Vencidas
+                </a>
+                <a href="@delListURL" class="btn btn-sm btn-secondary mr-3 mb-2 mb-sm-0" role="button">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    Restricciones Eliminadas
+                </a>
+            }
     </div>
 </div>
 
@@ -67,7 +74,10 @@
         
         <thead>
             <tr>
-                <th>Actions</th>
+                @if (isAdm || isSup || isTes)
+                {
+                    <th>Actions</th>
+                }
                 <th>@Html.DisplayNameFor(m => m.servName)</th>
                 <th>@Html.DisplayNameFor(m => m.schedule)</th>
                 <th>@Html.DisplayNameFor(m => m.created_at)</th>
@@ -82,10 +92,13 @@
 
                 <tr>
                     
-                    <!-- ACTION DROPDOWN -->
-                    <td data-label="Actions" class="not-clickable cell-compact">
-                        @Html.Partial("Partial/_ContextualActionDropdown_Rest", new ViewDataDictionary(rest) { { "context", "list" } } )
-                    </td>
+                    @if (isAdm || isSup || isTes)
+                    {
+                        <!-- ACTION DROPDOWN -->
+                        <td data-label="Actions" class="not-clickable cell-compact-sm action-dw">
+                            @Html.Partial("Partial/_ContextualActionDropdown_Rest", new ViewDataDictionary(rest) { { "context", "list" } } )
+                        </td>
+                    }
                     
                     <!-- SERVICIO -->
                     <td data-label="@Html.DisplayNameFor(m => m.servName)">
@@ -125,7 +138,6 @@
         </div>
     </div>
 </div>
-
 
 @Html.Partial("Partial/_addRestModal", new BookingRestVM())
 

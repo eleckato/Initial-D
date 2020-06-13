@@ -5,11 +5,13 @@ using System.Web.Mvc;
 using initial_d.APICallers;
 using initial_d.Common;
 using initial_d.Models.APIModels;
+using Microsoft.AspNet.Identity;
 
 namespace initial_d.Controllers
 {
     [Authorize]
     [RoutePrefix("productos")]
+    [Authorize(Roles = "ADM,SUP,CAJ,VEN,TES")]
     public class ProductosController : BaseController
     {
         readonly ProductosCaller PC = new ProductosCaller();
@@ -72,6 +74,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deteledList)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult DeletedProdList(string brand, string name, string statusId)
         {
             List<Producto> prods;
@@ -143,6 +146,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(addRoute)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult AddProd()
         {
             Producto prodTemplate;
@@ -178,6 +182,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(addRoute)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult AddProd(Producto newProd)
         {
             if (newProd == null) return Error_InvalidUrl();
@@ -213,6 +218,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(updateRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult UpdateProd(string prodId)
         {
             if (string.IsNullOrEmpty(prodId)) return Error_InvalidUrl();
@@ -250,6 +256,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(updateRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult UpdateProd(Producto newProd)
         {
             if (newProd == null) return Error_InvalidUrl();
@@ -289,6 +296,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult DeleteProd(string prodId)
         {
             if (string.IsNullOrEmpty(prodId)) return Error_InvalidUrl();
@@ -317,6 +325,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(restoreRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult RestoreProd(string prodId)
         {
             if (string.IsNullOrEmpty(prodId)) return Error_InvalidUrl();
@@ -352,6 +361,7 @@ namespace initial_d.Controllers
         /// <param name="prodStatusId"> Id of the new Status for the Product </param>
         [HttpPost]
         [Route(changeStatusRoute)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult ChangeProdStatus(string prodId, string prodStatusId)
         {
             if (string.IsNullOrEmpty(prodId) || string.IsNullOrEmpty(prodStatusId)) return Error_InvalidForm();
@@ -395,11 +405,11 @@ namespace initial_d.Controllers
         /// </summary>
         private void SetNavbar()
         {
-            List<NavbarItems> InternalNavbar = new List<NavbarItems>()
-            {
-                new NavbarItems("Productos", "ProdList", "Listado de Productos"),
-                new NavbarItems("Productos", "AddProd", "Agregar Producto"),
-            };
+
+            List<NavbarItems> InternalNavbar = new List<NavbarItems>();
+
+            InternalNavbar.Add(new NavbarItems("Productos", "ProdList", "Listado de Productos"));
+            if (isAdm || isSup || isTes) InternalNavbar.Add(new NavbarItems("Productos", "AddProd", "Agregar Producto"));
 
             ViewBag.InternalNavbar = InternalNavbar;
         }

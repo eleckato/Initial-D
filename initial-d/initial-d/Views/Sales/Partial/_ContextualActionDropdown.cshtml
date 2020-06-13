@@ -25,7 +25,7 @@
     string update_Url = Url.Action("UpdateSale", "Sales", new { saleId });
 }
 
-<div class="dropdown">
+<div class="dropdown w-max-content">
 
 	<button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
 			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -43,15 +43,15 @@
                     Detalles
                 </a>
 			}
-
-            @if (isDetails && !isDeleted)
+			
+            <!-- ACTUALIZAR DATOS -->
+            @*@if (isDetails && !isDeleted)
             {
-                <!-- ACTUALIZAR DATOS -->
 				<a href="@update_Url" class="dropdown-item small">
 					<i class="fa fa-edit" aria-hidden="true"></i>
 					Actualizar Datos
 				</a>
-            }
+            }*@
 
 			@if ((isDetails || isList) && !isDeleted)
             {
@@ -65,21 +65,27 @@
 						Cancelar
 					</a>
 				}
-
-				<!-- ELIMINAR -->
-				<a class="dropdown-item small" role="button" data-toggle="modal" data-sale-id="@saleId" href="#delete-modal">
-					<i class="fa fa-trash" aria-hidden="true"></i>
-					Eliminar
-				</a>
+				
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- ELIMINAR -->
+					<a class="dropdown-item small" role="button" data-toggle="modal" data-sale-id="@saleId" href="#delete-modal">
+						<i class="fa fa-trash" aria-hidden="true"></i>
+						Eliminar
+					</a>
+				}
 			}
 
 			@if(isDeleted)
 			{
-				<!-- RESTAURAR -->
-				<a class="dropdown-item small" role="button" data-toggle="modal" data-sale-id="@saleId" href="#delete-modal">
-					<i class="fa fa-trash-restore" aria-hidden="true"></i>
-					Restaurar
-				</a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+					<!-- RESTAURAR -->
+					<a class="dropdown-item small" role="button" data-toggle="modal" data-sale-id="@saleId" href="#delete-modal">
+						<i class="fa fa-trash-restore" aria-hidden="true"></i>
+						Restaurar
+					</a>
+				}
 			}
 
 		</div>

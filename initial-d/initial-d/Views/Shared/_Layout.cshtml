@@ -13,6 +13,12 @@
     // Automatic Alert System
     string error = (string)TempData["ErrorMessage"] ?? "";
     string success = (string)TempData["SuccessMessage"] ?? "";
+    
+    bool isAdm = User.IsInRole("ADM");
+    bool isSup = User.IsInRole("SUP");
+    bool isVen = User.IsInRole("VEN");
+    bool isCaj = User.IsInRole("CAJ");
+    bool isTes = User.IsInRole("TES");
 
     // URLs
     string posURL = Url.Action("Index", "PointOfSale");
@@ -67,56 +73,83 @@
 
             <ul class="list-unstyled components">
                 @* Active or deactivate the button depending on the controller *@
-                <li class="@(controller.Equals("PointOfSale") ? "active" : "")">
-                    <a href="@posURL">
-                        <i class="fas fa-cart-arrow-down"></i>
-                        <span>Ventas</span>
-                    </a>
-                </li>
-                <li class="@(controller.Equals("Sales") ? "active" : "")">
-                    <a href="@salesURL">
-                        <i class="fas fa-credit-card"></i>
-                        <span>Adm. de Ventas</span>
-                    </a>
-                </li>
-                <li class="@(controller.Equals("Productos") ? "active" : "")">
-                    <a href="@prodURL">
-                        <i class="fas fa-boxes"></i>
-                        <span>Productos</span>
-                    </a>
-                </li>
+
+                <!-- PUNTO DE VENTA (PoS) -->
+                @if (isVen || isTes)
+                {
+                    <li class="@(controller.Equals("PointOfSale") ? "active" : "")">
+                        <a href="@posURL">
+                            <i class="fas fa-cart-arrow-down"></i>
+                            <span>Punto de Venta</span>
+                        </a>
+                    </li>
+                }
+
+                <!-- ADM DE VENTAS -->
+                @if (isAdm || isSup || isVen || isCaj || isTes)
+                {
+                    <li class="@(controller.Equals("Sales") ? "active" : "")">
+                        <a href="@salesURL">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Adm. de Ventas</span>
+                        </a>
+                    </li>
+                }
+
+                <!-- PRODUCTOS -->
+                @if (isAdm || isSup || isVen || isCaj || isTes)
+                {
+                    <li class="@(controller.Equals("Productos") ? "active" : "")">
+                        <a href="@prodURL">
+                            <i class="fas fa-boxes"></i>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                }
+
+                <!-- SERVICIOS -->
+                @if (isAdm || isSup || isVen || isCaj || isTes)
+                {
+                    <li class="@(controller.Equals("Servicios") ? "active" : "")">
+                        <a href="@servURL">
+                            <i class="fas fa-tools"></i>
+                            <span>Servicios</span>
+                        </a>
+                    </li>
+                }
+
+                <!-- RESERVAS -->
                 <li class="@(controller.Equals("Booking") ? "active" : "")">
                     <a href="@bookingURL">
                         <i class="fas fa-clock"></i>
                         <span>Reservas</span>
                     </a>
                 </li>
-                <li class="@(controller.Equals("Servicios") ? "active" : "")">
-                    <a href="@servURL">
-                        <i class="fas fa-tools"></i>
-                        <span>Servicios</span>
-                    </a>
-                </li>
-                <li class="@(controller.Equals("Mecanicos") || controller.Equals("PublicacionesMec") ? "active" : "")">
-                    <a href="@mechURL">
-                        <i class="fas fa-wrench"></i>
-                        <span>Mecánicos</span>
-                    </a>
-                </li>
-                <li class="@(controller.Equals("Usuarios") ? "active" : "")">
-                    <a href="@userURL">
-                        <i class="fas fa-user"></i>
-                        <span>Usuarios</span>
-                    </a>
-                </li>
+
+                <!-- MECÁNICOS -->
+                @if (isAdm || isSup || isTes)
+                {
+                    <li class="@(controller.Equals("Mecanicos") || controller.Equals("PublicacionesMec") ? "active" : "")">
+                        <a href="@mechURL">
+                            <i class="fas fa-wrench"></i>
+                            <span>Mecánicos</span>
+                        </a>
+                    </li>
+                }
+
+                <!-- USUARIOS -->
+                @if (isAdm || isSup || isTes)
+                {
+                    <li class="@(controller.Equals("Usuarios") ? "active" : "")">
+                        <a href="@userURL">
+                            <i class="fas fa-user"></i>
+                            <span>Usuarios</span>
+                        </a>
+                    </li>
+                }
 
             </ul>
 
-            <ul class="list-unstyled CTAs">
-                <li>
-                    <a href="#" class="btn-yellow">CTA Test</a>
-                </li>
-            </ul>
         </nav>
 
         <!-- Page Content  -->
@@ -134,7 +167,7 @@
                         <i class="fas fa-align-justify"></i>
                     </button>
 
-                    <div class="collapse navbar-collapse " id="internalNavbar">
+                    <div class="collapse navbar-collapse rounded" id="internalNavbar"  style="z-index:10">
                         <ul class="nav navbar-nav ml-3 ml-md-0 mt-2 mt-md-0">
                             @Html.Partial("_InternalNavbar", InternalNavbar)
                         </ul>

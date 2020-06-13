@@ -4,33 +4,33 @@
     var isProd = Model.prod != null;
 }
 
-<div class="px-5">
-    <table class="table c-info-table c-data-table-bordered mb-3">
+<div class="px-0 px-md-3 px-lg-5">
+    <table class="table c-info-table c-data-table-bordered mb-3" style="table-layout:fixed; width:100%;" >
         <tr>
-            <td>Id</td>
-            <td>@Model.id</td>
+            <th>Id</th>
+            <td style="overflow-wrap: anywhere;">@Model.id</td>
         </tr>
         <tr>
-            <td>Nombre</td>
+            <th>Nombre</th>
             <td>@Model.name</td>
         </tr>
         <tr>
-            <td>Tipo</td>
+            <th>Tipo</th>
             <td>@Model.type</td>
         </tr>
         <tr>
-            <td>Precio</td>
+            <th>Precio</th>
             <td>@Model.priceString</td>
         </tr>
         @if (isProd)
         {
             <tr>
-                <td>Stock</td>
+                <th>Stock</th>
                 <td>@Model.prod.stockString</td>
             </tr>
         }
         <tr>
-            <td>Descripción</td>
+            <th>Descripción</th>
             <td>@Model.desc</td>
         </tr>
     </table>

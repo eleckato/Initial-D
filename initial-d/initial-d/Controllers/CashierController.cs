@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity;
 
 namespace initial_d.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "CAJ,TES")]
     public class CashierController : BaseController
     {
         readonly SalesCaller SaC = new SalesCaller();

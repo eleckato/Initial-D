@@ -10,6 +10,7 @@ using Microsoft.Owin.Security;
 using initial_d.Models;
 using System.Configuration;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace initial_d
 {
@@ -91,6 +92,11 @@ namespace initial_d
     // Configure the application sign-in manager which is used in this application.
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {
+        readonly List<string> authorizedUsers = new List<string>()
+        {
+            "ADM", "SUP", "VEN", "CAJ", "TES"
+        };
+
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
             : base(userManager, authenticationManager)
         {
@@ -158,6 +164,10 @@ namespace initial_d
 
                 // ERROR: Malformed Token
                 if (payload == null) return SignInStatus.Failure;
+
+                // Check User type on login
+                string userType = payload.Usertype;
+                if (!authorizedUsers.Contains(userType)) return SignInStatus.Failure;
 
                 // Create an Identity Claim
                 ClaimsIdentity claims = jwtProvider.CreateIdentity(true, userName, payload, token);

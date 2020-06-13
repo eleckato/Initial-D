@@ -7,6 +7,16 @@
     white-space: nowrap;
     padding-right: 1rem !important;
 }
+
+/* SCREEN WIDTH > 579px */
+@media (min-width: 579px) {
+    .cell-compact-sm {
+        width: 1%;
+        white-space: nowrap;
+        padding-right: 1rem !important;
+    }
+}
+
 /* Make it small */
 .c-info-table td, 
 .c-info-table th {

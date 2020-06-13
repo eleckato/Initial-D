@@ -12,6 +12,7 @@ namespace initial_d.Controllers
 {
     [Authorize]
     [RoutePrefix("reservas")]
+    [Authorize(Roles = "ADM,SUP,CAJ,VEN,TES")]
     public class BookingController : BaseController
     {
         readonly BookingCaller BC = new BookingCaller();
@@ -110,6 +111,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deteledList)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult DeletedBookList(string statusId, string userRut)
         {
             List<BookingVM> bookList;
@@ -213,12 +215,11 @@ namespace initial_d.Controllers
                 if (isAvailable == null)
                 { 
                     Error_FailedRequest();
-                    return RedirectToAction("UpdateBook", new { bookId });
+                    return RedirectToAction("BookDetails", new { bookId });
                 }
                 else if (isAvailable == false)
                 {
-                    SetErrorMsg("Ya hay una hora agendada para esa hora o hay conflicto con el horario de la tienda, por favor seleccione una diferente");
-                    return RedirectToAction("UpdateBook", new { bookId });
+                    return RedirectToAction("BookDetails", new { bookId });
                 }
                 
                 Booking apiNewBook = newBook;
@@ -228,14 +229,14 @@ namespace initial_d.Controllers
                 if (!res)
                 {
                     Error_FailedRequest();
-                    return RedirectToAction("UpdateBook", new { bookId });
+                    return RedirectToAction("BookDetails", new { bookId });
                 }
             }
             catch (Exception e)
             {
                 ErrorWriter.ExceptionError(e);
                 Error_CustomError(e.Message);
-                return RedirectToAction("UpdateBook", new { bookId });
+                return RedirectToAction("BookDetails", new { bookId });
             }
 
             string successMsg = "La Reserva fue reagendada con éxito";
@@ -255,6 +256,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult DeleteBook(string bookid)
         {
             if (string.IsNullOrEmpty(bookid)) return Error_InvalidUrl();
@@ -286,6 +288,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(restoreRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult RestoreBook(string bookid)
         {
             if (string.IsNullOrEmpty(bookid)) return Error_InvalidUrl();
@@ -397,6 +400,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(expiredListRest)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult ExpiredRestList(string servId)
         {
             List<BookingRestVM> restList;
@@ -427,6 +431,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deteledListRest)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult DeletedRestList(string servId)
         {
             List<BookingRestVM> restList;
@@ -454,6 +459,7 @@ namespace initial_d.Controllers
         /* ADD RESTRICTION */
         /* ---------------------------------------------------------------- */
 
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult AddRest(BookingRestVM newRest)
         {
             if (newRest == null) return Error_InvalidUrl();
@@ -492,6 +498,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deleteRouteRest)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult DeleteRest(string restId)
         {
             if (string.IsNullOrEmpty(restId)) return Error_InvalidUrl();
@@ -536,6 +543,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(restoreRouteRest)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult RestoreRest(string restId)
         {
             if (string.IsNullOrEmpty(restId)) return Error_InvalidUrl();
@@ -567,6 +575,7 @@ namespace initial_d.Controllers
         /// POST  |  API call to reschedule the data of a Restriction
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult RescheduleRest(BookingRestVM newRest)
         {
             if (newRest == null) return Error_InvalidUrl();
@@ -632,6 +641,7 @@ namespace initial_d.Controllers
         /// POST  |  API call to change the Store Schedule
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult UpdateStoreSche(StoreSchedule model)
         {
             if (model == null) return Error_InvalidForm();
@@ -712,6 +722,7 @@ namespace initial_d.Controllers
                 if (!checkMorning || !checkEvening || !checkLunch)
                 {
                     Debug.WriteLine("> CONFLICT FOUND;");
+                    SetErrorMsg("El horario seleccionado está fuera el horario de la tienda");
                     return false;
                 }
 
@@ -739,6 +750,7 @@ namespace initial_d.Controllers
                     if (!check)
                     {
                         Debug.WriteLine("> CONFLICT FOUND;");
+                        SetErrorMsg("El horario seleccionado no está disponible");
                         return false;
                     }
                 }
@@ -771,6 +783,7 @@ namespace initial_d.Controllers
                     if (!check)
                     {
                         Debug.WriteLine("> CONFLICT FOUND;");
+                        SetErrorMsg("Ya hay otra reserva agendada a esa hora");
                         return false;
                     }
                 }
@@ -783,6 +796,15 @@ namespace initial_d.Controllers
                 ErrorWriter.ExceptionError(e);
                 return null;
             }
+        }
+
+        public enum bookingResult
+        {
+            store_error,
+            rest_error,
+            book_error,
+            success,
+            error
         }
 
         [NonAction]

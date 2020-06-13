@@ -18,7 +18,7 @@
     string detailsUrl = Url.Action("PubDetails", "PublicacionesMec", new { pubId = pubId });
 }
 
-<div class="dropdown">
+<div class="dropdown w-max-content">
 
     <button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -67,19 +67,25 @@
                 </a>
                 }
                 
-                <!-- ELIMINAR -->
-                <a class="dropdown-item small" role="button" data-toggle="modal" data-pub-id="@pubId" href="#delete-pub-modal">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                    Eliminar
-                </a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+                    <!-- ELIMINAR -->
+                    <a class="dropdown-item small" role="button" data-toggle="modal" data-pub-id="@pubId" href="#delete-pub-modal">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        Eliminar
+                    </a>
+                }
             }
             else
             {
-                <!-- RESTAURAR -->
-                <a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-pub-id="@pubId" href="#delete-pub-modal">
-                    <i class="fa fa-trash-restore" aria-hidden="true"></i>
-                    Restaurar
-                </a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                {
+                    <!-- RESTAURAR -->
+                    <a class="dropdown-item small mr-3" role="button" data-toggle="modal" data-pub-id="@pubId" href="#delete-pub-modal">
+                        <i class="fa fa-trash-restore" aria-hidden="true"></i>
+                        Restaurar
+                    </a>
+                }
             }
 
         </div>

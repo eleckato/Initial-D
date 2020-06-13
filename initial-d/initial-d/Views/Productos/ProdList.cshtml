@@ -28,14 +28,21 @@
     
     <!-- BUTTONS -->
     <div class="header-buttons">
-        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-            Productos Eliminados
-        </a>
-        <a href="@addUrl" class="btn btn-sm btn-green" role="button">
-            <i class="fa fa-plus"></i>
-            Agregar Producto
-        </a>
+        @if (User.IsInRole("ADM") || User.IsInRole("TES") || User.IsInRole("SUP"))
+        {
+            <a href="@delList" class="btn btn-sm btn-secondary" role="button">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+                Productos Eliminados
+            </a>
+        }
+
+        @if (User.IsInRole("ADM") || User.IsInRole("TES"))
+        {
+            <a href="@addUrl" class="btn btn-sm btn-green ml-3" role="button">
+                <i class="fa fa-plus"></i>
+                Agregar Producto
+            </a>
+        }
     </div>
 </div>
 
@@ -83,7 +90,7 @@
                 <tr class="clickable-row" data-url="@detailsUrl">
                     
                     <!-- ACTION DROPDOWN -->
-                    <td data-label="Actions" class="not-clickable cell-compact">
+                    <td data-label="Actions" class="not-clickable cell-compact-sm action-dw">
                         @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(prod) { { "context", "list" } } )
                     </td>
                     

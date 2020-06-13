@@ -30,14 +30,17 @@
     
     <!-- BUTTONS -->
     <div class="header-buttons">
-        <a href="@delList" class="btn btn-sm btn-secondary mr-3" role="button">
+        <a href="@delList" class="btn btn-sm btn-secondary" role="button">
             <i class="fa fa-trash" aria-hidden="true"></i>
             Usuarios Eliminados
         </a>
-        <a href="@addUrl" class="btn btn-sm btn-green" role="button">
-            <i class="fa fa-user-plus"></i>
-            Agregar Usuario
-        </a>
+        @if (User.IsInRole("ADM") || User.IsInRole("TES"))
+        {
+            <a href="@addUrl" class="btn btn-sm btn-green ml-3" role="button">
+                <i class="fa fa-user-plus"></i>
+                Agregar Usuario
+            </a>
+        }
     </div>
 
 </div>
@@ -85,7 +88,7 @@
                 <tr class="clickable-row" data-url="@detailsUrl">
 
                     <!-- ACTION DROPDOWN -->
-                    <td data-label="Actions" class="not-clickable cell-compact">
+                    <td data-label="Actions" class="not-clickable cell-compact-sm action-dw">
                         @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(user) { { "context", "list" } } )
                     </td>
 
@@ -127,13 +130,6 @@
     </table>
 
 </div>
-
-
-<!-- ERROR TRIGGER FOR TESTING -->
-<a href="@Url.Action("UserDetails", "Usuarios", new { userId = "FFF" })" class="btn btn-xsm btn-secondary mr-2" role="button">
-    <i class="fa fa-bug mr-1" aria-hidden="true"></i>
-    TRIGGER PARA ID NO INVÁLIDO
-</a>
 
 <!-- MODALS -->
 @Html.Partial("Partial/_ToggleUserStatusModal")

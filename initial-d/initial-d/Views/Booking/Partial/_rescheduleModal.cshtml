@@ -6,6 +6,7 @@
 <div id="update-store-sche-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+
             @using (Html.BeginForm("RescheduleBook", "Booking", FormMethod.Post))
             {
                 @Html.HiddenFor(m => m.booking_id)
@@ -34,10 +35,13 @@
                     <p>El servicio dura @servDur minutos</p>
 
                     <div class="form-group">
-                        @Html.LabelFor(m => m.start_date_hour)
+                        @Html.LabelFor(m => m.start_date_hour, new { @class="font-weight-bold" })
 
                         <div class="input-group date" id="start_date_hour_cont" data-target-input="nearest">
-                            @Html.TextBoxFor(m => m.start_date_hour, new { @class = "form-control datetimepicker-input h-100", data_target="#start_date_hour_cont" })
+                            @Html.Hidden("start_date_hour", Model.start_date_hour?.ToString("yyyy-MM-ddTHH:mm"))
+
+                            <input type="text"  value="@Model.start_date_hour" class = "form-control datetimepicker-input h-100" data-target="#start_date_hour_cont" 
+                                   id="start_date_hour_view" />
                             <div class="input-group-append" data-target="#start_date_hour_cont" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
@@ -80,8 +84,11 @@
         // Cuando start_date_hour Cambia, cambia end_date_hour
         $(document).on('input', '#start_date_hour', function ()
         {
-            // Get start_date time
-            let newTime = $('#start_date_hour').val();
+            // Get start_date time from the view input
+            let newTime = $('#start_date_hour_view').val();
+
+            // Change the actual input *with the right format*
+            $('#start_date_hour').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
 
             // Define the end time
             let endTime = moment(newTime).add(@servDur, 'minutes').format('YYYY-MM-DDTHH:mm');
@@ -92,6 +99,9 @@
             // Change view string for end_date
             $('#end_date_hour_view').text(moment(endTime).format('DD/MM/YYYY HH:mm'))
         });
+
+        let startTime = new Date( $('#start_date_hour').val() );
+        $("#start_date_hour_cont").datetimepicker("date", startTime);
     });
 
 </script>

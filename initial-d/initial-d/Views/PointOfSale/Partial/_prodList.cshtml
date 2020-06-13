@@ -9,12 +9,12 @@
 
     <!-- SEARCH BOXES -->
     <div class="row mb-3">
-
-        <div class="col-5 mr-3">
+        
+        <div class=" mr-3 mb-2 mb-sm-0">
             <input type="text" name="" value="" class="form-control" placeholder="Nombre"/>
         </div>
-
-        <button role="button" class="btn btn-sm btn-yellow">
+        
+        <button role="button" class="btn btn-sm btn-yellow mb-2 mb-sm-0">
             <i class="fa fa-search mx-3" aria-hidden="true"></i>
         </button>
 
@@ -38,15 +38,15 @@
                 {
                     <tr class="modal-add-item-row cursor-pointer" data-id="@prod.product_id">
                         <!-- NOMBRE -->
-                        <td data-label="">
+                        <td data-label="@Html.DisplayNameFor(m => prod.name)">
                             @prod.name
                         </td>
                         <!-- STOCK -->
-                        <td data-label="">
+                        <td data-label="@Html.DisplayNameFor(m => prod.stockString)">
                             @prod.stockString
                         </td>
                         <!-- PRECIO -->
-                        <td data-label="">
+                        <td data-label="@Html.DisplayNameFor(m => prod.priceString)">
                             @prod.priceString
                         </td>
                     </tr>

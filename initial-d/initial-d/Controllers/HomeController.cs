@@ -16,18 +16,6 @@ namespace initial_d.Controllers
             return View();
         }
 
-        public ActionResult About()
-        {
-            SetNavbar();
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            SetNavbar();
-            return View();
-        }
-
 
         [Route("pagina-no-encontrada")]
         public ActionResult Error()

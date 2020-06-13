@@ -4,6 +4,7 @@ using initial_d.Providers;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace initial_d.APICallers
@@ -120,6 +121,18 @@ namespace initial_d.APICallers
                 var response = client.Execute<List<Mecanico>>(request);
 
                 CheckStatusCode(response);
+
+                List<Mecanico> mechList = response.Data;
+
+                var pubList = new PublicacionesMecCaller().GetAllPub("", "", "", "").ToList();
+
+                foreach (var mech in mechList)
+                {
+                    var thisPubList = pubList.Where(x => x.appuser_id.Equals(mech.appuser_id)).ToList();
+
+                    if (thisPubList.Any(x => x.public_status_id.Equals("DEB"))) mech.hasDebt = true;
+                    if (thisPubList.Any(x => x.public_status_id.Equals("PEN"))) mech.hasPendingPublication = true;
+                }
 
                 return response.Data;
             }

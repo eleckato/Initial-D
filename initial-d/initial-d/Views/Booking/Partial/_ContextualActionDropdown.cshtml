@@ -24,7 +24,7 @@
     string update_Url = Url.Action("UpdateBook", "Booking", new { bookId });
 }
 
-<div class="dropdown">
+<div class="dropdown w-max-content">
 
 	<button class="btn btn-yellow btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
 			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -63,22 +63,28 @@
 						<i class="fa fa-ban" aria-hidden="true"></i>
 						Cancelar
 					</a>
-				}
+                }
 
-				<!-- ELIMINAR -->
-				<a class="dropdown-item small" role="button" data-toggle="modal" data-book-id="@bookId" href="#delete-modal">
-					<i class="fa fa-trash" aria-hidden="true"></i>
-					Eliminar
-				</a>
-			}
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                { 
+				    <!-- ELIMINAR -->
+				    <a class="dropdown-item small" role="button" data-toggle="modal" data-book-id="@bookId" href="#delete-modal">
+					    <i class="fa fa-trash" aria-hidden="true"></i>
+					    Eliminar
+				    </a>
+                }
+            }
 
 			@if(isDeleted)
 			{
-				<!-- RESTAURAR -->
-				<a class="dropdown-item small" role="button" data-toggle="modal" data-book-id="@bookId" href="#delete-modal">
-					<i class="fa fa-trash-restore" aria-hidden="true"></i>
-					Restaurar
-				</a>
+                if (User.IsInRole("ADM") || User.IsInRole("TES"))
+                { 
+				    <!-- RESTAURAR -->
+				    <a class="dropdown-item small" role="button" data-toggle="modal" data-book-id="@bookId" href="#delete-modal">
+					    <i class="fa fa-trash-restore" aria-hidden="true"></i>
+					    Restaurar
+				    </a>
+			    }
 			}
 
 		</div>

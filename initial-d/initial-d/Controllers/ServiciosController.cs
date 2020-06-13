@@ -10,6 +10,7 @@ namespace initial_d.Controllers
 {
     [Authorize]
     [RoutePrefix("servicios")]
+    [Authorize(Roles = "ADM,SUP,CAJ,VEN,TES")]
     public class ServiciosController : BaseController
     {
         readonly ServiciosCaller SC = new ServiciosCaller();
@@ -71,6 +72,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deteledList)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult DeletedServList(string name, string statusId)
         {
             List<Servicio> serv;
@@ -150,6 +152,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(addRoute)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult AddServ()
         {
             Servicio servTemplate;
@@ -182,6 +185,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(addRoute)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult AddServ(Servicio newServ)
         {
             if (newServ == null) return Error_InvalidUrl();
@@ -217,6 +221,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(updateRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult UpdateServ(string servId)
         {
             if (string.IsNullOrEmpty(servId)) return Error_InvalidUrl();
@@ -249,6 +254,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(updateRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult UpdateServ(Servicio newServ)
         {
             if (newServ == null) return Error_InvalidUrl();
@@ -288,6 +294,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult DeleteServ(string servId)
         {
             if (string.IsNullOrEmpty(servId)) return Error_InvalidUrl();
@@ -316,6 +323,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(restoreRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult RestoreServ(string servId)
         {
             if (string.IsNullOrEmpty(servId)) return Error_InvalidUrl();
@@ -351,6 +359,7 @@ namespace initial_d.Controllers
         /// <param name="servStatusId"> Id of the new Status for the Service </param>
         [HttpPost]
         [Route(changeStatusRoute)]
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult ChangeServStatus(string servId, string servStatusId)
         {
             if (string.IsNullOrEmpty(servId) || string.IsNullOrEmpty(servStatusId)) return Error_InvalidForm();
@@ -389,6 +398,7 @@ namespace initial_d.Controllers
         /* ADD RESTRICTION */
         /* ---------------------------------------------------------------- */
 
+        [Authorize(Roles = "ADM,SUP,TES")]
         public ActionResult AddRest(BookingRestVM newRest)
         {
             if (newRest == null) return Error_InvalidUrl();
@@ -425,11 +435,10 @@ namespace initial_d.Controllers
         /// </summary>
         private void SetNavbar()
         {
-            List<NavbarItems> InternalNavbar = new List<NavbarItems>()
-            {
-                new NavbarItems("Servicios", "ServList", "Listado de Servicios"),
-                new NavbarItems("Servicios", "AddServ", "Agregar Servicio"),
-            };
+            List<NavbarItems> InternalNavbar = new List<NavbarItems>();
+
+            InternalNavbar.Add(new NavbarItems("Servicios", "ServList", "Listado de Servicios"));
+            if (isAdm || isSup || isTes) InternalNavbar.Add(new NavbarItems("Servicios", "AddServ", "Agregar Servicio"));
 
             ViewBag.InternalNavbar = InternalNavbar;
         }

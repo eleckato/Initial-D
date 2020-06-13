@@ -35,10 +35,13 @@
             <i class="fa fa-trash" aria-hidden="true"></i>
             Mecánicos Eliminados
         </a>
-        <a href="@addUrl" class="btn btn-sm btn-green" role="button">
-            <i class="fa fa-plus"></i>
-            Agregar Mecánico
-        </a>
+        @if (User.IsInRole("ADM") || User.IsInRole("TES"))
+        {
+            <a href="@addUrl" class="btn btn-sm btn-green" role="button">
+                <i class="fa fa-plus"></i>
+                Agregar Mecánico
+            </a>
+        }
     </div>
 
 </div>
@@ -86,7 +89,7 @@
                 <tr class="clickable-row" data-url="@detailsUrl">
 
                     <!-- ACTION DROPDOWN -->
-                    <td data-label="Actions" class="not-clickable cell-compact">
+                    <td data-label="Actions" class="not-clickable cell-compact-sm action-dw">
                         @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(mech) { { "context", "list" } } )
                     </td>
 

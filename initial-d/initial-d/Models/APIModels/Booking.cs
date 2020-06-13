@@ -40,7 +40,6 @@ namespace initial_d.Models.APIModels
         [Required]
         [Display(Name = "Término")]
         [DataType(DataType.DateTime)]
-        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/MM/yyyy HH:mm}")]
         public DateTime? end_date_hour { get; set; }
 
         public Booking()
@@ -50,18 +49,7 @@ namespace initial_d.Models.APIModels
 
         public Booking(bool isTemplate)
         {
-            booking_id = Guid.NewGuid().ToString();
 
-            appuser_id = null;
-
-            status_booking_id = "ACT";
-            updated_at = null;
-            created_at = null;
-            deleted = false;
-
-            serv_id = null;
-            start_date_hour = null;
-            end_date_hour = null;
         }
     }
 

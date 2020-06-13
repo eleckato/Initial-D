@@ -9,6 +9,21 @@ namespace initial_d.Controllers
 {
     public class BaseController : Controller
     {
+        public bool isAdm { get; set; }
+        public bool isSup { get; set; }
+        public bool usVen { get; set; }
+        public bool isCaj { get; set; }
+        public bool isTes { get; set; }
+
+        public BaseController()
+        {
+            isAdm = System.Web.HttpContext.Current.User.IsInRole("ADM");
+            isSup = System.Web.HttpContext.Current.User.IsInRole("SUP");
+            usVen = System.Web.HttpContext.Current.User.IsInRole("VEN");
+            isCaj = System.Web.HttpContext.Current.User.IsInRole("CAJ");
+            isTes = System.Web.HttpContext.Current.User.IsInRole("TES");
+        }
+
         public void SetErrorMsg(string errroMessage)
         {
             TempData["ErrorMessage"] = errroMessage;

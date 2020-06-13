@@ -9,6 +9,7 @@ using initial_d.Models.APIModels;
 namespace initial_d.Controllers
 {
     [Authorize]
+    [Authorize(Roles = "ADM,SUP,TES")]
     [RoutePrefix("mecanicos/publicaciones")]
     public class PublicacionesMecController : BaseController
     {
@@ -166,6 +167,7 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deleteRoute)]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult DeletePub(string pubId)
         {
             if (string.IsNullOrEmpty(pubId)) return Error_InvalidUrl();
@@ -193,6 +195,7 @@ namespace initial_d.Controllers
         /// <para> /PublicacionesMec/RestorePub </para>
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "ADM,TES")]
         public ActionResult RestorePub(string pubId)
         {
             if (string.IsNullOrEmpty(pubId)) return Error_InvalidUrl();
