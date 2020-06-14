@@ -68,7 +68,7 @@
                 <th>@Html.DisplayNameFor(m => m.bussiness_name)</th>
                 <th>@Html.DisplayNameFor(m => m.created_at)</th>
                 <th>@Html.DisplayNameFor(m => m.comuna)</th>
-                <th>@Html.DisplayNameFor(m => m.mobile_number)</th>
+                <th>@Html.DisplayNameFor(m => m.landline)</th>
                 <th class="cell-hidden-xl">@Html.DisplayNameFor(m => m.views)</th>
             </tr>
         </thead>
@@ -128,8 +128,8 @@
                     </td>
 
                     <!-- TELEFONO -->
-                    <td data-label="@Html.DisplayNameFor(m => m.mobile_number)">
-                        @pub.mobile_number
+                    <td data-label="@Html.DisplayNameFor(m => m.landline)">
+                        @(pub.landline ?? "Teléfono no Ingresado")
                     </td>
 
                     <!-- VISITAS -->

@@ -46,7 +46,7 @@ namespace initial_d.APICallers
                 var userList = new UsuariosCaller().GetAllUsers(string.Empty, string.Empty, string.Empty, "ACT").ToList();
                 if (userList == null) return null;
 
-                var servList = new ServiciosCaller().GetAllServ(string.Empty, "ACT").ToList();
+                var servList = new ServiciosCaller().GetAllServ(string.Empty, string.Empty).ToList();
                 if (servList == null) return null;
 
 
@@ -640,7 +640,7 @@ namespace initial_d.APICallers
             var thisUser = userList.FirstOrDefault(user => user.appuser_id.Equals(book.appuser_id));
             book.user = thisUser ?? null;
 
-            var thisServ = servList.FirstOrDefault(serv => serv.serv_id.Equals(serv.serv_id));
+            var thisServ = servList.FirstOrDefault(serv => serv.serv_id.Equals(book.serv_id));
             book.serv = thisServ ?? null;
 
             return book;

@@ -1,0 +1,120 @@
+﻿@model initial_d.Models.APIModels.SaleVM
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Comprobante de Compra</title>
+        @Styles.Render("~/ContentCSS")
+    </head>
+
+    <body>
+        <style>
+            @@page { size: auto;  margin: 0mm; }
+            body{
+                padding: 3rem;
+            }
+            .data-list {
+                margin: 0px;
+                padding: 0px;
+            }
+            .data-list div {
+                margin: 0px;
+                padding: 0px;
+            }
+            .data-list div p {
+                margin: 0px;
+                padding: 0px;
+            }
+
+            .item-list div p {
+                margin: 0px;
+                margin-bottom: 0.1rem;
+                padding: 0px;
+            }
+        </style>
+
+        <div class="row justify-content-start">
+            <div class="col-6">
+                
+                <p class="mb-2">Jaramillo</p>
+
+                <h1 class="mb-2 font-weight-bold">Comprobante de Compra </h1>
+
+                <small class="font-italic mb-2"> <strong class="mr-3">Código</strong> @Model.code  </small>
+
+                <div class="row mb-0">
+                    <p class="font-weight-bold mr-3">Estado</p>
+                    <p>@(Model.sale_status_name ?? "ERROR")</p>
+                </div>
+
+                <div class="data-list">
+                    @if (Model.user != null)
+                    {
+                        <div class="row">
+                            <p class="font-weight-bold mr-3">Usuario</p>
+                            <p>@(Model.user?.fullName ?? "ERROR")</p>
+                        </div>
+                        <div class="row mb-2">
+                            <p class="font-weight-bold mr-3">Rut</p>
+                            <p>@(Model.user?.rut ?? "ERROR")</p>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <p class="font-weight-bold mr-3">Vendedor(a)</p>
+                        <p>@(Model.seller?.fullName ?? "ERROR")</p>
+                    </div>
+                    <div class="row">
+                        <p class="font-weight-bold mr-3">Fecha del Pedido</p>
+                        <p>@(Model.dateOrderString ?? "ERROR")</p>
+                    </div>
+                    
+                    @if (Model.sale_status_id.Equals("PAG"))
+                    {
+                        <div class="row mt-2">
+                            <p class="font-weight-bold mr-3">Cajero(a)</p>
+                            <p>@(Model.cashier?.fullName ?? "ERROR")</p>
+                        </div>
+                        <div class="row">
+                            <p class="font-weight-bold mr-3">Fecha del Pedido</p>
+                            <p>@(Model.saleDateString ?? "ERROR")</p>
+                        </div>
+                    }
+                </div>
+
+                <div class="mt-4 item-list">
+
+                    <h2 class="font-weight-bold">Items de la Compra</h2>
+
+                    @foreach (var item in Model.saleItems)
+                    {
+                        <div class="mb-3">
+                            <p class="font-weight-bold mr-3 ">@(item.itemName)</p>
+                            <div class="row">
+                                <p class="mr-4">@(item.quantityString)</p>
+                                <p>@(item.totalString)</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+                
+                <div class="mt-3">
+                    <div class="row">
+                        <p class="font-weight-bold mr-3">Total</p>
+                        <p>@(Model.totalString ?? "ERROR")</p>
+                    </div>
+
+
+                    <small>Comprobante generado por Initial-D: Sistema de Administración</small>
+                </div>
+
+            </div>
+        </div>
+
+        <script>
+            window.print();
+        </script>
+
+    </body>
+</html>

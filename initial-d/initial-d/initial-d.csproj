@@ -660,6 +660,7 @@
     <Content Include="Views\Booking\Partial\_rescheduleRestModal.cshtml" />
     <Content Include="Views\Booking\Partial\_addRestModal.cshtml" />
     <Content Include="Views\Servicios\Partial\_addRestModal.cshtml" />
+    <Content Include="Views\Sales\Partial\_penSaleReceipt.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

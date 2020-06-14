@@ -167,13 +167,13 @@
             <table class="table c-info-table c-data-table-bordered mb-3 table-th-compact">
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.mobile_number)</th>
-                    <td>@Model.mobile_number</td>
+                    <td>@(Model.mobile_number ?? "Celular no Ingresado")</td>
                 </tr>
                 @if (thereIsLandline)
                 {
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.landline)</th>
-                        <td>@Model.landline</td>
+                        <td>@(Model.landline ?? "Teléfono no Ingresado")</td>
                     </tr>
                 }
                 <tr>

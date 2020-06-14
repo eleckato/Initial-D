@@ -9,6 +9,12 @@
     string bussName = ViewBag.bussName ?? string.Empty;
     string pubTitle = ViewBag.pubTitle ?? string.Empty;
     var pubStatusList = (SelectList)ViewBag.pubStatusList;
+    
+    string penId = "PEN"; // Pendiente
+    string actId = "ACT"; // Activa / Visible
+    string debId = "DEB"; // Debt / Con Deuda
+    string inaId = "INA"; // Inactiva / No visible
+    string rejId = "REJ"; // Rechazada
 
     // Action URL
     string goBackUrl = Url.Action("PubList", "PublicacionesMec");
@@ -58,13 +64,13 @@
         <thead>
             <tr>
                 <th>Actions</th>
+                <th>@Html.DisplayNameFor(m => m.public_status_id)</th>
                 <th>@Html.DisplayNameFor(m => m.appuser_id)</th>
                 <th>@Html.DisplayNameFor(m => m.bussiness_name)</th>
                 <th>@Html.DisplayNameFor(m => m.created_at)</th>
                 <th>@Html.DisplayNameFor(m => m.comuna)</th>
-                <th>@Html.DisplayNameFor(m => m.mobile_number)</th>
+                <th>@Html.DisplayNameFor(m => m.landline)</th>
                 <th class="cell-hidden-xl">@Html.DisplayNameFor(m => m.views)</th>
-                <th>@Html.DisplayNameFor(m => m.public_status_id)</th>
             </tr>
         </thead>
 
@@ -74,12 +80,32 @@
             @foreach (var pub in Model)
             {
                 string detailsUrl = Url.Action("PubDetails", "PublicacionesMec", new { pubId = pub.public_id });
+                string status = pub.public_status_id;
+
+                var statClass = "fa-exclamation-triangle color-red";
+                var color = "color-red";
+
+                if (status.Equals(actId))       { statClass = "fa-eye"; color = "text-success"; }
+                else if (status.Equals(penId))  { statClass = "fa-hourglass-half"; color = "text-warning"; }
+                else if (status.Equals(debId))  { statClass = "fa-money-bill"; color = "text-danger"; }
+                else if (status.Equals(inaId))  { statClass = "fa-eye-slash"; color = "text-secondary";  }
+                else if (status.Equals(rejId))  { statClass = "fa-times"; color = "text-danger";  }
+
 
                 <tr class="clickable-row" data-url="@detailsUrl">
                     
                     <!-- ACTION DROPDOWN -->
-                    <td data-label="Actions" class="not-clickable cell-compact">
-                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(pub) { { "context", "deleteLList" } } )
+                    <td data-label="Actions" class="not-clickable cell-compact-sm action-dw">
+                        @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(pub) { { "context", "list" } } )
+                    </td>
+
+                    <!-- STATUS -->
+                    <td data-label="@Html.DisplayNameFor(m => m.public_status_id)">
+                        <div class="w-max-content row ">
+
+                            <i class=" fa  @statClass @color d-flex align-items-center mr-2" aria-hidden="true"></i>
+                            @pub.status_name
+                        </div>
                     </td>
                     
                     <!-- MECÁNICO -->
@@ -103,20 +129,14 @@
                     </td>
 
                     <!-- TELEFONO -->
-                    <td data-label="@Html.DisplayNameFor(m => m.mobile_number)">
-                        @pub.mobile_number
+                    <td data-label="@Html.DisplayNameFor(m => m.landline)">
+                        @(pub.landline ?? "Teléfono no Ingresado")
                     </td>
 
                     <!-- VISITAS -->
                     <td data-label="@Html.DisplayNameFor(m => m.views)" class="cell-hidden-xl">
                         @pub.views
                     </td>
-
-                    <!-- STATUS -->
-                    <td data-label="@Html.DisplayNameFor(m => m.public_status_id)">
-                        @pub.status_name
-                    </td>
-
 
                 </tr>
 

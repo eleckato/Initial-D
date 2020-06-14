@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using initial_d.APICallers;
 using initial_d.Common;
+using initial_d.Common.Extensions;
 using initial_d.Models.APIModels;
 
 namespace initial_d.Controllers
@@ -236,7 +237,32 @@ namespace initial_d.Controllers
             return Redirect(referer);
         }
 
-        
+
+        public string GetPendingReceipt(string saleId)
+        {
+            if (string.IsNullOrEmpty(saleId))
+            {
+                ErrorWriter.InvalidArgumentsError();
+                return Resources.Messages.Error_SolicitudFallida;
+            }
+
+            string html;
+
+            try
+            {
+                var item = SaC.GetSale(saleId);
+
+                html = PartialView("Partial/_penSaleReceipt", item).RenderToString();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Resources.Messages.Error_SolicitudFallida;
+            }
+
+            return html;
+        }
+
         /* ---------------------------------------------------------------- */
         /* HELPERS */
         /* ---------------------------------------------------------------- */

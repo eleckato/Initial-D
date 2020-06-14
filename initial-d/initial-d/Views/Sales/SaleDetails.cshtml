@@ -40,6 +40,14 @@
                 Facturar
             </a>
         }
+        
+        @if (servStatus.Equals(penId) || servStatus.Equals(pagId))
+        {
+            <button class="btn btn-sm btn-green mr-3" role="button" id="print-receipt" data-sale-id="@Model.sale_id">
+                <i class="fa fa-print" aria-hidden="true"></i>
+                @(servStatus.Equals(penId) ? "Generar Comprobante" : "Generar Boleta")
+            </button>
+        }
 
         <!-- ACTIONS DROPDOWN -->
         @Html.Partial("Partial/_ContextualActionDropdown", new ViewDataDictionary(ViewData) { { "context", "details" } } )
@@ -244,6 +252,44 @@
 <!-- MODAL SALE ITEM DETAILS -->
 
 
+<iframe id="print-iframe" name="print-frame-name" class="d-none"></iframe>
+
 <!-- MODALS -->
 @Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })
 @Html.Partial("Partial/_CancelSaleModal")
+
+
+@section customScripts{
+    
+<script>
+    WaitForJquery(function () {
+
+        $(document).on('click', '#print-receipt', function () {
+            
+            let saleId = $('#print-receipt').data('sale-id');
+
+            let url = '@Url.Action("GetPendingReceipt", "Sales", new { saleId = "replace_this_id" } )';
+            url = url.replace("replace_this_id", saleId);
+
+            var data = {
+                "saleId": saleId
+            }
+
+            return  $.ajax({
+                type: "GET",
+                url: url,
+                data: data,
+                success: function (data) {
+
+                    $("#print-iframe").attr('srcdoc', data);
+
+                }
+            });
+        });
+
+    })
+
+
+</script>
+
+}

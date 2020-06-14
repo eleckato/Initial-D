@@ -46,6 +46,7 @@ namespace initial_d.Controllers
         {
             List<Usuario> usuarios;
             List<UserType> userTypeLst;
+            List<UserType> filterUserTypeLst;
             List<UserStatus> userStatusLst;
 
             try
@@ -69,6 +70,8 @@ namespace initial_d.Controllers
                     user = UC.ProcessUser(user, userTypeLst, userStatusLst);
                 });
 
+                filterUserTypeLst = userTypeLst.ToList();
+
                 userTypeLst.Remove(userTypeLst.FirstOrDefault(x => x.user_type_id.Equals("TES")));
                 if (!User.IsInRole("ADM"))
                 {
@@ -85,7 +88,9 @@ namespace initial_d.Controllers
             ViewBag.userName = userName;
             ViewBag.userRut = userRut;
 
-            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name", userTypeId);
+            ViewBag.filterUserTypeLst = new SelectList(filterUserTypeLst, "user_type_id", "name", userTypeId);
+
+            ViewBag.userTypeLst = new SelectList(userTypeLst, "user_type_id", "name");
             ViewBag.userStatusLst = new SelectList(userStatusLst, "status_id", "status", userStatusId);
 
             return View(usuarios);

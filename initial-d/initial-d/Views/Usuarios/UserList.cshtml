@@ -8,6 +8,7 @@
     string userName = ViewBag.userName ?? string.Empty;
     string userRut = ViewBag.userRut ?? string.Empty;
     var userTypeList = (SelectList)ViewBag.userTypeLst;
+    var filterUserTypeLst = (SelectList)ViewBag.filterUserTypeLst;
     var userStatusList = (SelectList)ViewBag.userStatusLst;
     
     string banId = "BAN";
@@ -55,7 +56,7 @@
         {
             Html.TextBox("userName", userName, new { @class = "form-control form-control-sm h-100", @placeholder = "Nombre de Usuario" }),
             Html.TextBox("userRut", userRut, new { @class = "form-control form-control-sm h-100", @placeholder = "Rut" }),
-            Html.DropDownList("userTypeId", userTypeList, "Tipo", new { @class = "custom-select custom-select-sm form-control" }),
+            Html.DropDownList("userTypeId", filterUserTypeLst, "Tipo", new { @class = "custom-select custom-select-sm form-control" }),
             Html.DropDownList("userStatusId", userStatusList, "Status", new { @class = "custom-select custom-select-sm form-control" })
         }
     };
