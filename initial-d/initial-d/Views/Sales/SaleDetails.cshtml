@@ -55,7 +55,7 @@
 
 </div>
 
-<!-- DATOS DE LA VETNA -->
+<!-- DATOS DE LA VENTA -->
 <div class="c-jumbotron row mb-3">
     
     <h4 class="col-12 mb-3">Datos de la Venta</h4>
@@ -249,19 +249,17 @@
 
 </div>
 
-<!-- MODAL SALE ITEM DETAILS -->
-
-
-<iframe id="print-iframe" name="print-frame-name" class="d-none"></iframe>
 
 <!-- MODALS -->
 @Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })
 @Html.Partial("Partial/_CancelSaleModal")
+<!--? MODAL SALE ITEM DETAILS -->
 
 
 @section customScripts{
     
 <script>
+
     WaitForJquery(function () {
 
         $(document).on('click', '#print-receipt', function () {
@@ -288,7 +286,6 @@
         });
 
     })
-
 
 </script>
 

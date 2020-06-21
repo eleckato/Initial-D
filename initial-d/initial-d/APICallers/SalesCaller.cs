@@ -379,7 +379,14 @@ namespace initial_d.APICallers
 
 
                 var prodList = new ProductosCaller().GetAllProd(string.Empty, string.Empty, string.Empty).ToList();
+                var delProdList = new ProductosCaller().GetAllProd(string.Empty, string.Empty, string.Empty, true).ToList();
+
+                prodList.AddRange(delProdList);
+
                 var servList = new ServiciosCaller().GetAllServ(string.Empty, string.Empty).ToList();
+                var delServList = new ServiciosCaller().GetAllServ(string.Empty, string.Empty, true).ToList();
+
+                servList.AddRange(delServList);
 
                 saleItems.ForEach(x => 
                 {
@@ -447,6 +454,45 @@ namespace initial_d.APICallers
                 };
 
                 var response = client.Execute<List<SaleStatus>>(request);
+
+                CheckStatusCode(response);
+
+                return response.Data;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+        }
+
+
+        /* ---------------------------------------------------------------- */
+        /* SALES REPORT */
+        /* ---------------------------------------------------------------- */
+
+        /// <summary>
+        /// Get a Sales Report 
+        /// </summary>
+        /// <param name="fecha_inicio"> Start Date for the Report </param>
+        /// <param name="fecha_final"> End Date for the Report </param>
+        public SalesReport GetSalesReport(DateTime fecha_inicio, DateTime fecha_final)
+        {
+            try
+            {
+                string url = $"{prefix}/sale_report?fecha_inicio={fecha_inicio.ToString("o")}&fecha_final={fecha_final.ToString("o")}";
+
+                var request = new RestRequest(url, Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                var response = client.Execute<SalesReport>(request);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new SalesReport();
+                }
 
                 CheckStatusCode(response);
 

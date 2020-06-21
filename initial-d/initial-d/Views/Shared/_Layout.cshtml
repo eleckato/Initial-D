@@ -28,6 +28,7 @@
     string bookingURL = Url.Action("BookList", "Booking");
     string mechURL = Url.Action("MechList", "Mecanicos");
     string userURL = Url.Action("UserList", "Usuarios");
+    string salesReportURL = Url.Action("SalesReport", "SalesReport");
 
 }
 <!DOCTYPE html>
@@ -92,6 +93,17 @@
                         <a href="@salesURL">
                             <i class="fas fa-credit-card"></i>
                             <span>Adm. de Ventas</span>
+                        </a>
+                    </li>
+                }
+
+                <!-- ADM DE VENTAS -->
+                @if (isAdm || isSup || isTes)
+                {
+                    <li class="@(controller.Equals("SalesReport") ? "active" : "")">
+                        <a href="@salesReportURL">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>Reporte de Ventas</span>
                         </a>
                     </li>
                 }

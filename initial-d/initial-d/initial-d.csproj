@@ -220,6 +220,7 @@
     <Compile Include="Controllers\PublicacionesMecController.cs" />
     <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
+    <Compile Include="Controllers\SalesReportController.cs" />
     <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
@@ -227,6 +228,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\APIModels\SalesReport.cs" />
     <Compile Include="Models\APIModels\StoreSchedule.cs" />
     <Compile Include="Models\APIModels\Mecanico.cs" />
     <Compile Include="Models\APIModels\ProdStatus.cs" />
@@ -661,6 +663,7 @@
     <Content Include="Views\Booking\Partial\_addRestModal.cshtml" />
     <Content Include="Views\Servicios\Partial\_addRestModal.cshtml" />
     <Content Include="Views\Sales\Partial\_penSaleReceipt.cshtml" />
+    <Content Include="Views\SalesReport\SalesReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

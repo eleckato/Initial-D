@@ -22,44 +22,12 @@ namespace initial_d.Models.APIModels
         public int price { get; set; }
 
         [Required]
-        [Display(Name = "Precio")]
-        public string priceString
-        {
-            get
-            {
-                return price.ToString("C", CultureInfo.CreateSpecificCulture("es-CL"));
-            }
-        }
-
-        [Required]
         [Display(Name = "Stock")]
         public int stock { get; set; }
-
-        public string stockString { 
-            get 
-            {
-                string unitName = Unit?.name ?? "";
-                string unitPruralName = Unit?.plural_name ?? "";
-
-                string str = $"{stock} {(stock == 1 ? unitName : unitPruralName)}";
-                return str;
-            } 
-        }
 
         [Required]
         [Display(Name = "Alerta de Stock")]
         public int stock_alert { get; set; }
-
-        public string stockAlertString {
-            get
-            {
-                string unitName = Unit?.name ?? "";
-                string unitPruralName = Unit?.plural_name ?? "";
-
-                string str = $"{stock_alert} {(stock_alert == 1 ? unitName : unitPruralName)}";
-                return str;
-            }
-        }
 
         [Required]
         [Display(Name = "Marca")]
@@ -77,16 +45,55 @@ namespace initial_d.Models.APIModels
         [Display(Name = "Eliminado")]
         public bool deleted { get; set; }
 
-
         [Required]
         [Display(Name = "Unidad")]
         public string unit_id { get; set; }
-        public ProdUnit Unit { get; set; }
-
 
         [Required]
         [Display(Name = "Status")]
         public string product_status { get; set; }
+
+
+
+
+
+
+        [Required]
+        [Display(Name = "Precio")]
+        public string priceString
+        {
+            get
+            {
+                return price.ToString("C", CultureInfo.CreateSpecificCulture("es-CL"));
+            }
+        }
+
+        public string stockString
+        {
+            get
+            {
+                string unitName = Unit?.name ?? "";
+                string unitPruralName = Unit?.plural_name ?? "";
+
+                string str = $"{stock} {(stock == 1 ? unitName : unitPruralName)}";
+                return str;
+            }
+        }
+
+        public string stockAlertString
+        {
+            get
+            {
+                string unitName = Unit?.name ?? "";
+                string unitPruralName = Unit?.plural_name ?? "";
+
+                string str = $"{stock_alert} {(stock_alert == 1 ? unitName : unitPruralName)}";
+                return str;
+            }
+        }
+
+        public ProdUnit Unit { get; set; }
+
         public string status_name { get; set; }
 
         public Producto()

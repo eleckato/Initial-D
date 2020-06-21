@@ -1,0 +1,327 @@
+﻿@model initial_d.Models.APIModels.SalesReport
+@using initial_d.Common.FilterBar;
+@{
+    ViewBag.Title = "Reporte de Ventas Realizadas";
+
+    var report = Model;
+    var saleList = report.sale_list;
+    var prodList = report.prod_sold_list;
+    var servList = report.serv_sold_list;
+
+    var dateStart = (DateTime)ViewBag.dateStart;
+    var dateEnd = (DateTime)ViewBag.dateEnd;
+}
+
+
+<!-- TITULO  |  BUTTONS -->
+<div class="header">
+
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-money-bill" aria-hidden="true"></i>
+            @ViewBag.Title
+        </h2>
+    </div>
+
+</div>
+
+
+<!-- BUSCAR -->
+<div class="mb-4">
+
+    @using (Html.BeginForm("SalesReport", "SalesReport", FormMethod.Get))
+    {
+
+        <div class="form-row">
+            
+            <div class="row col-12">
+                
+                <div class="col-12 col-md-11 row">
+
+                    <div class="input-group col-12 col-md-5 mb-2 mb-md-0 pr-0 pr-md-3">
+
+                        <label for="dateStart"> Desde </label>
+                
+                        @Html.Hidden("dateStart", dateStart.ToString("o"))
+
+                        <div class="input-group date" id="date_start_cont" data-target-input="nearest">
+
+                            <input type="text" class = "form-control datetimepicker-input h-100" 
+                                    data-target="#date_start_cont" id="date_start_view" />
+
+                            <div class="input-group-append" data-target="#date_start_cont" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="input-group col-12 col-md-5 mb-2 mb-md-0 pr-0 pr-md-3">
+
+                        <label for="dateStart"> Hasta </label>
+                
+                        @Html.Hidden("dateEnd", dateEnd.ToString("o"))
+
+                        <div class="input-group date" id="date_end_cont" data-target-input="nearest">
+
+                            <input type="text" class = "form-control datetimepicker-input h-100" 
+                                    data-target="#date_end_cont" id="date_end_view" />
+
+                            <div class="input-group-append" data-target="#date_end_cont" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                        
+                    <div class="col-12 col-md-1 mt-2 mt-md-auto">
+                        
+                        <button class="btn btn-sm btn-yellow w-100" style="height: 35.6px;" role="button" type="submit">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    }
+</div>
+
+
+@if (!report.sale_list?.Any() ?? true)
+{
+    <div>
+        <h4>No hay ninguna Venta pagada en este rango de tiempo</h4>
+    </div>
+}
+else
+{
+
+<!-- SALE ITEMS -->
+<div class="c-jumbotron row col-lg-8 mb-3">
+    
+    <h4 class="col-12 mb-3">Ventas Concretadas</h4>
+    
+    <div class="col-12 d-flex justify-content-center ">
+        <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+            
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Fecha de Orden</th>
+                    <th>Fecha de Venta</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            @foreach (var sale in saleList)
+            {
+                string saleURL = Url.Action("SaleDetails", "Sales", new { saleId = sale.sale_id });
+                
+                <tr data-id="@sale.sale_id">
+
+                    <!-- CÓDIGO -->
+                    <td data-label="Código">
+                        <a href="@saleURL">@(sale.code)</a>
+                    </td>
+
+                    <!-- Fecha de Orden -->
+                    <td data-label="Fecha de Orden">
+                        @(sale.dateOrderString)
+                    </td>
+
+                    <!-- Fecha de Venta -->
+                    <td data-label="Fecha de Venta">
+                        @(sale.saleDateString)
+                    </td>
+
+                    <!-- TOTAL -->
+                    <td data-label="Total">
+                        @(sale.totalString)
+                    </td>
+
+                </tr>
+            }
+
+        </table>
+    </div>
+
+</div>
+
+<!-- PRODUCTOS -->
+<div class="c-jumbotron row col-lg-8 mb-3">
+    
+    <h4 class="col-12 mb-3">Productos Vendidos</h4>
+    
+    @if (!prodList.Any())
+    {
+        <h5>No hay ningún Producto vendido en este rango de tiempo</h5>
+    }
+    else
+    {
+        <div class="col-12 d-flex justify-content-center">
+
+                <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+            
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Marca</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+
+            
+                    @foreach (var prod in prodList)
+                    {
+                        string prodURL = Url.Action("ProdDetails", "Productos", new { prodId = prod.product_id });
+
+                        <tr data-id="@prod.product_id">
+
+                            <!-- NOMBRE -->
+                            <td data-label="Nombre">
+                                <a href="@prodURL">@(prod.name)</a>
+                            </td>
+
+                            <!-- MARCA -->
+                            <td data-label="Marca">
+                                @(prod.brand)
+                            </td>
+
+                            <!-- CANTIDAD -->
+                            <td data-label="Cantidad">
+                                @(prod.prodNString)
+                            </td>
+
+                            <!-- TOTAL -->
+                            <td data-label="Total">
+                                @(prod.prodTotalString)
+                            </td>
+
+                        </tr>
+                    }
+
+                </table>
+
+        
+        </div>
+    }
+    
+</div>
+
+
+<!-- SERVICIOS -->
+<div class="c-jumbotron row col-lg-8 mb-3">
+    
+    <h4 class="col-12 mb-3">Servicios Contratados</h4>
+    
+    @if (!servList.Any())
+    {
+        <h5>No hay ningún Servicio contratado en este rango de tiempo</h5>
+    }
+    else
+    {
+
+        <div class="col-12 d-flex justify-content-center">
+        
+            <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+            
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+            
+                @foreach (var serv in servList)
+                {
+                    string servURL = Url.Action("ServDetails", "Servicios", new { servId = serv.serv_id });
+
+                    <tr data-id="@serv.serv_id">
+
+                        <!-- NOMBRE -->
+                        <td data-label="Nombre">
+                            <a href="@servURL">@(serv.name)</a>
+                        </td>
+
+                        <!-- CANTIDAD -->
+                        <td data-label="Cantidad">
+                            @(serv.serv_n)
+                        </td>
+
+                        <!-- TOTAL -->
+                        <td data-label="Total">
+                            @(serv.servTotalString)
+                        </td>
+
+                    </tr>
+                }
+
+
+            </table>
+        
+        </div>
+    
+    }
+</div>
+
+}
+
+
+<script>
+
+    WaitForJquery(function ()
+    {
+        $('#date_start_cont').datetimepicker({
+            format: 'DD-MM-YYYY'
+        });
+        $('#date_end_cont').datetimepicker({
+            format: 'DD-MM-YYYY'
+        });
+
+        let startTime = new Date( $('#dateStart').val() );
+        $("#date_start_cont").datetimepicker("date", startTime);
+        
+        let endTime = new Date( $('#dateEnd').val() );
+        $("#date_end_cont").datetimepicker("date", endTime);
+
+
+        // 
+        $(document).on('input', '#date_start_view', function ()
+        {
+            // Get start_date time from the view input
+            let newTime = $('#date_start_cont').datetimepicker('viewDate');
+
+            // Change the actual input *with the right format*
+            $('#dateStart').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+
+        });
+
+        // 
+        $(document).on('input', '#date_end_view', function ()
+        {
+            // Get end_date time from the view input
+            let newTime = $('#date_end_cont').datetimepicker('viewDate');
+
+            // Change the actual input *with the right format*
+            $('#dateEnd').val(newTime.format('YYYY-MM-DDTHH:mm'))
+
+            console.log('newTime  :  ' + (newTime.format('YYYY-MM-DDTHH:mm')));
+            console.log('#dateEnd  :  ' + $('#dateEnd').val());
+
+        });
+        
+
+    });
+
+</script>

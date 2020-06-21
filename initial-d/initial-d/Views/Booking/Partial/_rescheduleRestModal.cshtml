@@ -30,11 +30,14 @@
                 @Html.Hidden("start_date_hour", Model.start_date_hour?.ToString("yyyy-MM-ddTHH:mm"))
 
                 <div class="input-group date" id="start_date_hour_cont" data-target-input="nearest">
-                    <input type="text"  value="@Model.start_date_hour" class = "form-control datetimepicker-input h-100" data-target="#start_date_hour_cont" 
-                            id="start_date_hour_view" />
+
+                    <input type="text"  value="@Model.start_date_hour" class = "form-control datetimepicker-input h-100" 
+                           data-target="#start_date_hour_cont" id="start_date_hour_view" />
+
                     <div class="input-group-append" data-target="#start_date_hour_cont" data-toggle="datetimepicker">
                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                     </div>
+
                 </div>
 
                 @Html.ValidationMessageFor(m => m.start_date_hour)
@@ -78,7 +81,7 @@
     WaitForJquery(function ()
     {
 
-        // Cuando start_date_hour Cambia, cambia end_date_hour
+        // 
         $(document).on('input', '#start_date_hour', function ()
         {
             // Get start_date time from the view input
@@ -87,7 +90,11 @@
             $('#start_date_hour').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
         });
 
-        // Cuando end_date_hour Cambia, cambia end_date_hour
+        let startTime = new Date( $('#start_date_hour').val() );
+        $("#start_date_hour_cont").datetimepicker("date", startTime);
+
+
+        // 
         $(document).on('input', '#end_date_hour', function ()
         {
             // Get end_date time from the view input
@@ -95,9 +102,6 @@
             // Change the actual input *with the right format*
             $('#end_date_hour').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
         });
-
-        let startTime = new Date( $('#start_date_hour').val() );
-        $("#start_date_hour_cont").datetimepicker("date", startTime);
         
         let endTime = new Date( $('#end_date_hour').val() );
         $("#end_date_hour_cont").datetimepicker("date", endTime);
