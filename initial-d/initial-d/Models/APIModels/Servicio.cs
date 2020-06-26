@@ -12,6 +12,7 @@ namespace initial_d.Models.APIModels
 
         [Required]
         [Display(Name = "Nombre")]
+        [StringLength(30, ErrorMessage = "Debe tener menos de {1} caracteres")]
         public string name { get; set; }
 
         [Required]
@@ -29,10 +30,12 @@ namespace initial_d.Models.APIModels
 
         [Required]
         [Display(Name = "Descripción")]
+        [StringLength(250, ErrorMessage = "Debe tener menos de {1} caracteres")]
         public string serv_desc { get; set; }
 
         [Required]
         [Display(Name = "Tiempo")]
+        [Range(1, 9999, ErrorMessage = "Debe tener menos de 4 dígitos y ser mayor a 0")]
         public int estimated_time { get; set; }
 
         [Required]

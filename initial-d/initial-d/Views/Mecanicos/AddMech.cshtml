@@ -54,6 +54,13 @@
                         </td>
                     </tr>
                     <tr>
+                        <th>Repita la Contraseña</th>
+                        <td>
+                            <input type="password" name="hash_validation" id="hash_validation" value="" class="form-control" />
+                            <span class="field-validation-valid" data-valmsg-for="hash_validation" data-valmsg-replace="true"></span>
+                        </td>
+                    </tr>
+                    <tr>
                         <th>@Html.DisplayNameFor(m => m.status_id)</th>
                         <td>
                             @Html.DropDownListFor(m => m.status_id, userStatusList, new { @class = "custom-select custom-select-sm form-control" })
@@ -116,7 +123,7 @@
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.birthday)</th>
                         <td>
-                            @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker", @Value = string.Empty })
+                            @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker-bd", @Value = string.Empty })
                             @Html.ValidationMessageFor(x => x.birthday)
                         </td>
                     </tr>
@@ -149,6 +156,38 @@
         $(document).on('click', '#mail_confirmed_col', function () {
             let c = $('#mail_confirmed').prop("checked")
             $('#mail_confirmed').prop("checked", !c);
+        });
+        
+        
+        $('.datepicker-bd').datepicker({
+            startDate: '-110y',
+            endDate: '-18y'
+        });
+
+        $(function() {
+            // Validar que ambas contraseñas sean iguales
+            $('#hash_validation').rules('add', { 
+                equalTo: "#hash", 
+                required: true,
+                messages: { 
+                    equalTo: 'Las contraseñas deben ser iguales',
+                    required: 'Este campo es obligatorio'
+                } 
+            });
+
+            $.validator.addMethod(
+                "regex",
+                function(value, element, regexp) {
+                    var re = new RegExp(regexp);
+                    return this.optional(element) || re.test(value);
+                },
+                "Rut Invalido. Debe tener el formato: 12.123.123-1"
+            );
+
+            $('#rut').rules('add', {
+                regex: /^\d{1,2}\.\d{3}\.\d{3}-[k|K|\d]{1}$/
+            });
+
         });
     </script>
 }

@@ -1,6 +1,7 @@
 ﻿using initial_d.APICallers;
 using initial_d.Common;
 using initial_d.Models.APIModels;
+using initial_d.Models.Viewmodels;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -153,11 +154,19 @@ namespace initial_d.Controllers
         [Route(ChangePasswordUrl)]
         public ActionResult ChangePassword()
         {
-            // Get current userId
-            var userId = User.Identity.GetUserId();
-            if (userId == null) return Error_FailedRequest();
+            try
+            {
+                // Get current userId
+                var userId = User.Identity.GetUserId();
+                if (userId == null) return Error_FailedRequest();
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                return Error_CustomError(e.Message);
+            }
 
-            return View();
+            return View(new ChangePasswordVM());
         }
 
 
@@ -167,16 +176,18 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpPost]
         [Route(ChangePasswordUrl)]
-        public ActionResult ChangePassword(string newPassword1, string newPassword2, string oldPassword1, string oldPassword2)
+        public ActionResult ChangePassword(ChangePasswordVM model)
         {
-            if (string.IsNullOrEmpty(newPassword1) || string.IsNullOrEmpty(newPassword2) || string.IsNullOrEmpty(oldPassword1) || string.IsNullOrEmpty(oldPassword2)) return Error_InvalidForm(false);
+            if (string.IsNullOrEmpty(model.newPassword1) || string.IsNullOrEmpty(model.newPassword2) || 
+                string.IsNullOrEmpty(model.oldPassword1) || string.IsNullOrEmpty(model.oldPassword2)) 
+                    return Error_InvalidForm(false);
 
-            if (!oldPassword1.Equals(oldPassword2)) return Error_CustomError("Las contraseñas ingresadas no coinciden", false);
-            if (!newPassword1.Equals(newPassword2)) return Error_CustomError("Las contraseñas ingresadas no coinciden", false);
+            if (!model.oldPassword1.Equals(model.oldPassword2)) return Error_CustomError("Las contraseñas ingresadas no coinciden", false);
+            if (!model.newPassword1.Equals(model.newPassword2)) return Error_CustomError("Las contraseñas ingresadas no coinciden", false);
 
             try
             {
-                var res = UP.UpdatePassword(newPassword1, oldPassword1);
+                var res = UP.UpdatePassword(model.newPassword1, model.oldPassword1);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)

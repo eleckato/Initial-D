@@ -255,6 +255,8 @@
 @Html.Partial("Partial/_CancelSaleModal")
 <!--? MODAL SALE ITEM DETAILS -->
 
+<iframe id="print-iframe" name="print-frame-name" class="d-none"></iframe>
+
 
 @section customScripts{
     
@@ -263,6 +265,7 @@
     WaitForJquery(function () {
 
         $(document).on('click', '#print-receipt', function () {
+            console.log('> PRINT RECEIPT');
             
             let saleId = $('#print-receipt').data('sale-id');
 
@@ -272,6 +275,10 @@
             var data = {
                 "saleId": saleId
             }
+            
+            console.log('> url : ' + url);
+            console.log('> data : ');
+            console.log(data);
 
             return  $.ajax({
                 type: "GET",

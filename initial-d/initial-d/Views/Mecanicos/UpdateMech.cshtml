@@ -109,7 +109,7 @@
                     <tr>
                         <th>@Html.DisplayNameFor(m => m.birthday)</th>
                         <td>
-                            @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker", @Value = Model.birthday.ToString("dd/MM/yyyy") })
+                            @Html.TextBoxFor(m => m.birthday, new { @class = "form-control datepicker-bd", @Value = Model.birthday.ToString("dd/MM/yyyy") })
                             @Html.ValidationMessageFor(x => x.birthday)
                         </td>
                     </tr>
@@ -142,6 +142,27 @@
         $(document).on('click', '#mail_confirmed_col', function () {
             let c = $('#mail_confirmed').prop("checked")
             $('#mail_confirmed').prop("checked", !c);
+        });
+        
+        $('.datepicker-bd').datepicker({
+            startDate: '-110y',
+            endDate: '-18y'
+        });
+
+        $(function() {
+            $.validator.addMethod(
+                "regex",
+                function(value, element, regexp) {
+                    var re = new RegExp(regexp);
+                    return this.optional(element) || re.test(value);
+                },
+                "Rut Invalido. Debe tener el formato: 12.123.123-1"
+            );
+
+            $('#rut').rules('add', {
+                regex: /^\d{1,2}\.\d{3}\.\d{3}-[k|K|\d]{1}$/
+            });
+
         });
     </script>
 }

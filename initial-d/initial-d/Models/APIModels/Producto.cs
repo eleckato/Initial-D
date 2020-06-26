@@ -10,10 +10,12 @@ namespace initial_d.Models.APIModels
 
         [Required]
         [Display(Name = "Nombre")]
+        [StringLength(30, ErrorMessage = "Debe tener menos de {1} caracteres")]
         public string name { get; set; }
 
         [Required]
         [Display(Name = "Descripción")]
+        [StringLength(250, ErrorMessage = "Debe tener menos de {1} caracteres")]
         public string product_desc { get; set; }
 
 
@@ -23,14 +25,17 @@ namespace initial_d.Models.APIModels
 
         [Required]
         [Display(Name = "Stock")]
+        [Range(1, 9999999999, ErrorMessage = "Debe tener menos de 10 dígitos y ser mayor a 0")]
         public int stock { get; set; }
 
         [Required]
         [Display(Name = "Alerta de Stock")]
+        [Range(1, 9999999999, ErrorMessage = "Debe tener menos de 10 dígitos y ser mayor a 0")]
         public int stock_alert { get; set; }
 
         [Required]
         [Display(Name = "Marca")]
+        [StringLength(30, ErrorMessage = "Debe tener menos de {1} caracteres")]
         public string brand { get; set; }
 
         [Required]
@@ -52,10 +57,6 @@ namespace initial_d.Models.APIModels
         [Required]
         [Display(Name = "Status")]
         public string product_status { get; set; }
-
-
-
-
 
 
         [Required]
