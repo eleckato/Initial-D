@@ -103,6 +103,37 @@
 }
 else
 {
+    
+<div class="c-jumbotron row col-lg-8 mb-3">
+    <h4 class="col-12 mb-3">Resumen de Ventas</h4>
+    
+    <div class="col-12 d-flex justify-content-center ">
+        <table class="table table-borderless c-info-table table-th-compact">
+            
+            <tr>
+                <th>Numero de Ventas</th>
+                <td>@saleList.Count</td>
+            </tr>
+            <tr>
+                <th>Servicios Contratados</th>
+                <td>@servList.Count</td>
+            </tr>
+            <tr>
+                <th>Total Vendido en Productos</th>
+                <td>@Model.prodTotalString</td>
+            </tr>
+            <tr>
+                <th>Total Vendido en Servicios</th>
+                <td>@Model.servTotalString</td>
+            </tr>
+            <tr>
+                <th>Total Vendido</th>
+                <td>@Model.totalString</td>
+            </tr>
+
+        </table>
+    </div>
+</div>
 
 <!-- SALE ITEMS -->
 <div class="c-jumbotron row col-lg-8 mb-3">
@@ -289,36 +320,53 @@ else
             format: 'DD-MM-YYYY'
         });
 
-        let startTime = new Date( $('#dateStart').val() );
-        $("#date_start_cont").datetimepicker("date", startTime);
+        let dateStart = new Date( $('#dateStart').val() );
+        $("#date_start_cont").datetimepicker("date", dateStart);
         
-        let endTime = new Date( $('#dateEnd').val() );
-        $("#date_end_cont").datetimepicker("date", endTime);
+        let dateEnd = new Date( $('#dateEnd').val() );
+        $("#date_end_cont").datetimepicker("date", dateEnd);
+        
+        $("#date_end_cont").datetimepicker("minDate", dateStart);
+        $("#date_start_cont").datetimepicker("maxDate", dateEnd);
 
 
-        // 
+        // Cada vez que cambia date_start
         $(document).on('input', '#date_start_view', function ()
         {
             // Get start_date time from the view input
-            let newTime = $('#date_start_cont').datetimepicker('viewDate');
+            let dateStart = $('#date_start_cont').datetimepicker('viewDate');
+
+            $("#date_end_cont").datetimepicker("minDate", dateStart);
 
             // Change the actual input *with the right format*
-            $('#dateStart').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+            $('#dateStart').val(moment(dateStart).format('YYYY-MM-DDTHH:mm'));
 
         });
-
-        // 
+        
+        // Cada vez que cambia date_end
         $(document).on('input', '#date_end_view', function ()
         {
             // Get end_date time from the view input
-            let newTime = $('#date_end_cont').datetimepicker('viewDate');
+            let dateEnd = $('#date_end_cont').datetimepicker('viewDate');
+            
+            $("#date_start_cont").datetimepicker("maxDate", dateEnd);
 
             // Change the actual input *with the right format*
-            $('#dateEnd').val(newTime.format('YYYY-MM-DDTHH:mm'))
+            $('#dateEnd').val(dateEnd.format('YYYY-MM-DDTHH:mm'))
 
-            console.log('newTime  :  ' + (newTime.format('YYYY-MM-DDTHH:mm')));
-            console.log('#dateEnd  :  ' + $('#dateEnd').val());
 
+            //console.log('--------------------------------');
+            //console.log('START : ' + dateStart.format('DD-MM-YYYY'));
+            //console.log('END : ' + dateEnd.format('DD-MM-YYYY'));
+
+            //var isBad = dateEnd.isBefore(dateStart);
+            //console.log('END < START ? : ' + isBad);
+
+            //if (isBad) {
+            //    dateEnd = dateStart;
+            //    console.log('Cambio la hora?');
+            //    $("#date_end_cont").datetimepicker("date", dateEnd);
+            //}
         });
         
 

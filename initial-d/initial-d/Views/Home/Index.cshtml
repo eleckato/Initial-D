@@ -1,10 +1,65 @@
-﻿@{
+﻿@using initial_d.Models.APIModels
+@{
     ViewBag.Title = "Inicio";
+
+    var lowStockProds = (List<Producto>)ViewBag.lowStockProds;
 }
 
+    <style>
+        .notification-container{
+            border: 1px solid #808080
+        }
+    </style>
+
 <div class="c-jumbotron">
-    <h2 class="font-weight-bold">Initial-D</h2>
-    <p class="font-italic"> Sistema de Administración para jaramillo.cl </p>
+    <div>
+        <h2 class="font-weight-bold">Initial-D</h2>
+        <p class="font-italic"> Sistema de Administración para jaramillo.cl </p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-12 col-lg-6 c-jumbotron">
+            
+            <h4 class="color-red">
+                <i class="fa fa-exclamation-triangle mr-1"></i>
+                Alerta
+            </h4>
+            <p>Hay productos con bajo stock</p>
+
+            <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Stock</th>
+                        <th>Alerta de Stock</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    
+                    @foreach (var prod in lowStockProds)
+                    {
+                        string detailsURL = Url.Action("ProdDetails", "Productos", new { prodId = prod.product_id });
+                        <tr>
+                            <td data-label="Nombre">
+                                <a href="@detailsURL">@prod.name</a>
+                            </td>
+                            <td data-label="Stock">
+                                @prod.stockString
+                            </td>
+                            <td data-label="Alerta de Stock">
+                                @prod.stockAlertString
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
 </div>
 
 

@@ -27,7 +27,7 @@
                     var item = Model.soldItems[i];
                     var isProd = item.prod != null;
 
-                    <tr data-url="#" data-id="@item.id">
+                    <tr data-url="#" data-id="@item.id" data-stock="@(item.prod?.stock ?? '1')">
                     
                         <!-- ACTION DROPDOWN -->
                         <td data-label="Acciones" class="not-clickable cell-compact-sm action-dw">

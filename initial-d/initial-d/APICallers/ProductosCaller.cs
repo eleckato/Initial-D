@@ -267,6 +267,46 @@ namespace initial_d.APICallers
             }
         }
 
+        public List<Producto> GetLowStockProds()
+        {
+            try
+            {
+                var url = $"{fullPrefix}/low-stock";
+
+                // Request Base
+                var request = new RestRequest(url, Method.GET)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+
+                // Ejecutar request y guardar la respuesta
+                var response = client.Execute<List<Producto>>(request);
+
+                // Levanta una excepción si el status code es diferente de 200
+                CheckStatusCode(response);
+
+                var prods = response.Data;
+
+                var prodStatusLst = GetAllStatus().ToList();
+                if (prodStatusLst == null) return null;
+
+                var prodUnitLst = GetAllUnits().ToList();
+                if (prodUnitLst == null) return null;
+
+                prods.ForEach(pub =>
+                {
+                    pub = ProcessProd(pub, prodStatusLst, prodUnitLst);
+                });
+
+                // Retorna el producto
+                return prods;
+            }
+            catch (Exception e)
+            {
+                ErrorWriter.ExceptionError(e);
+                throw e;
+            }
+        }
 
         /* ---------------------------------------------------------------- */
         /* GET SECONDARY DATA */

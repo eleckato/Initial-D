@@ -444,6 +444,11 @@ namespace initial_d.Controllers
 
                 item.amount += c;
                 if (item.amount < 1) item.amount = 1;
+                if(item.prod != null)
+                {
+                    if (item.amount > item.prod.stock) item.amount = item.prod.stock;
+                }
+
 
                 html = PartialView("Partial/_itemList", sale).RenderToString();
             }

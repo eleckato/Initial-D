@@ -10,17 +10,17 @@
     <div class="row mb-3">
 
         <div class="col-5 mr-3">
-            <input type="text" name="" value="" class="form-control" placeholder="Nombre"/>
+            <input type="text" name="" value="" class="form-control" placeholder="Rut"  id="user-modal-search-txtbox"/>
         </div>
 
-        <button role="button" class="btn btn-sm btn-yellow">
+        <button role="button" class="btn btn-sm btn-yellow"  id="user-modal-search-submit">
             <i class="fa fa-search mx-3" aria-hidden="true"></i>
         </button>
 
     </div>
                 
     <!-- DATA LIST -->
-    <div class=" d-flex justify-content-center" id="prod-data-list">
+    <div class=" d-flex justify-content-center" id="user-data-list">
                     
         <table class="table c-info-table c-table-sm-responsive c-table-bordered">
 
@@ -36,7 +36,7 @@
 
                 @foreach (var user in Model.userList)
                 {
-                    <tr class="modal-add-item-row cursor-pointer" data-id="@user.appuser_id">
+                    <tr class="modal-add-item-row cursor-pointer" data-id="@user.appuser_id" data-name="@user.rut">
                         <!-- USERNAME -->
                         <td data-label="Username">
                             @user.username

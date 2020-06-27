@@ -11,10 +11,10 @@
     <div class="row mb-3">
         
         <div class=" mr-3 mb-2 mb-sm-0">
-            <input type="text" name="" value="" class="form-control" placeholder="Nombre"/>
+            <input type="text" name="" value="" class="form-control" placeholder="Nombre" id="prod-modal-search-txtbox"/>
         </div>
         
-        <button role="button" class="btn btn-sm btn-yellow mb-2 mb-sm-0">
+        <button role="button" class="btn btn-sm btn-yellow mb-2 mb-sm-0" id="prod-modal-search-submit">
             <i class="fa fa-search mx-3" aria-hidden="true"></i>
         </button>
 
@@ -36,7 +36,7 @@
             <tbody>
                 @foreach (var prod in Model.prodList)
                 {
-                    <tr class="modal-add-item-row cursor-pointer" data-id="@prod.product_id">
+                    <tr class="modal-add-item-row cursor-pointer" data-id="@prod.product_id" data-name="@prod.name">
                         <!-- NOMBRE -->
                         <td data-label="@Html.DisplayNameFor(m => prod.name)">
                             @prod.name

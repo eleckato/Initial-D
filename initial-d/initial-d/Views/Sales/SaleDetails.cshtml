@@ -253,7 +253,6 @@
 <!-- MODALS -->
 @Html.Partial("Partial/_DeleteModalAndScript", new ViewDataDictionary(ViewData) { { "isDeleted", isDeleted } })
 @Html.Partial("Partial/_CancelSaleModal")
-<!--? MODAL SALE ITEM DETAILS -->
 
 <iframe id="print-iframe" name="print-frame-name" class="d-none"></iframe>
 
@@ -275,10 +274,6 @@
             var data = {
                 "saleId": saleId
             }
-            
-            console.log('> url : ' + url);
-            console.log('> data : ');
-            console.log(data);
 
             return  $.ajax({
                 type: "GET",

@@ -19,6 +19,9 @@ WaitForJquery(function () {
 
         modal.find('input[name="sell-quantity"]').val("1");
         modal.find('input[name="sell-quantity"]').prop("disabled", false);
+
+        let stock = row.data('stock');
+        modal.find('input[name="sell-quantity"]').data("stock", stock);
     }
     $(document).on('click', '.modal-add-item-row', function () { selectRow(this) })
 
@@ -369,8 +372,7 @@ WaitForJquery(function () {
         $('#add-user').modal('hide');
     });
 
-
-
+    // Elimina el producto
     $(document).on('click', '#remove-user-modal button[type=submit]', function () {
         console.log("REQUEST Remove User");
 
@@ -395,6 +397,112 @@ WaitForJquery(function () {
         $('#remove-user-modal').modal('hide');
     });
 
+    // Cuando cambia la textbox para seleccionar la cantidad del producto en el modal, no permite números menores a 1
+    $(document).on('input', '#select-prod-sell-quantity', function () {
+        console.log('> select-prod-sell-quantity CHANGED');
+
+        let input = $(this);
+
+        let val = input.val();
+
+        if (val != "" && val <= 0) {
+            input.val(1);
+        }
+
+        let stock = input.data('stock');
+
+        console.log({ 'stock': stock });
+
+        if (val > stock) {
+            input.val(stock);
+        }
+    });
+
+
+    $(document).on('click', '#prod-modal-search-submit', searchProd);
+    $(document).on('keypress', '#prod-modal-search-txtbox' , function (e) {
+        if (e.which == 13) {
+            searchProd();
+        }
+    });
+
+    // Filtra la lista de productos para que sean solo 
+    function searchProd() {
+        let search = $('#prod-modal-search-txtbox').val();
+        var regexObj = new RegExp(search, 'i');
+
+        let allRows = $('#prod-data-list').find('table tbody tr');
+
+        $.each(allRows, function (i, row) {
+            let r = $(row);
+
+            let name = r.data('name');
+
+            if (!name.match(regexObj)) {
+                r.hide();
+            }
+            else {
+                r.show();
+            }
+        });
+    }
+
+
+    $(document).on('click', '#serv-modal-search-submit', searchServ);
+    $(document).on('keypress', '#serv-modal-search-txtbox', function (e) {
+        if (e.which == 13) {
+            searchServ();
+        }
+    });
+
+    function searchServ() {
+        let search = $('#serv-modal-search-txtbox').val();
+        var regexObj = new RegExp(search, 'i');
+
+        let allRows = $('#serv-data-list').find('table tbody tr');
+
+        $.each(allRows, function (i, row) {
+            let r = $(row);
+
+            let name = r.data('name');
+
+            if (!name.match(regexObj)) {
+                r.hide();
+            }
+            else {
+                r.show();
+            }
+        });
+    }
+
+
+
+    $(document).on('click', '#user-modal-search-submit', searchServ);
+    $(document).on('keypress', '#user-modal-search-txtbox', function (e) {
+        if (e.which == 13) {
+            searchServ();
+        }
+    });
+
+    function searchServ() {
+        let search = $('#user-modal-search-txtbox').val();
+        var regexObj = new RegExp(search, 'i');
+
+        let allRows = $('#user-data-list').find('table tbody tr');
+
+        $.each(allRows, function (i, row) {
+            let r = $(row);
+
+            let name = r.data('name');
+
+            if (!name.match(regexObj)) {
+                r.hide();
+            }
+            else {
+                r.show();
+            }
+        });
+    }
 
 
     // Check if the AJAX HTML load of an element is successful and take some actions

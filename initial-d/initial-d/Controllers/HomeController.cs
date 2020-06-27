@@ -3,16 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using initial_d.APICallers;
 using initial_d.Common;
+using initial_d.Models.APIModels;
 
 namespace initial_d.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        public ActionResult Index()
+        public HomeController()
         {
             SetNavbar();
+        }
+
+        public ActionResult Index()
+        {
+            List<Producto> lowStockProds;
+
+            try
+            {
+                lowStockProds = new ProductosCaller().GetLowStockProds();
+
+                ViewBag.lowStockProds = lowStockProds;
+            }
+            catch (Exception)
+            {
+                ViewBag.lowStockProds = null;
+                return View();
+            }
+
             return View();
         }
 
@@ -29,8 +49,6 @@ namespace initial_d.Controllers
             List<NavbarItems> InternalNavbar = new List<NavbarItems>()
             {
                 new NavbarItems("Home", "Index", "Inicio"),
-                new NavbarItems("Home", "About", "Acerca de Nosotros"),
-                new NavbarItems("Home", "Contact", "Contacto"),
             };
 
             ViewBag.InternalNavbar = InternalNavbar;

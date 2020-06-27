@@ -10,17 +10,17 @@
     <div class="row mb-3">
 
         <div class=" mr-3 mb-2 mb-sm-0">
-            <input type="text" name="" value="" class="form-control" placeholder="Nombre"/>
+            <input type="text" name="" value="" class="form-control" placeholder="Nombre" id="serv-modal-search-txtbox"/>
         </div>
 
-        <button role="button" class="btn btn-sm btn-yellow mb-2 mb-sm-0">
+        <button role="button" class="btn btn-sm btn-yellow mb-2 mb-sm-0" id="serv-modal-search-submit">
             <i class="fa fa-search mx-3" aria-hidden="true"></i>
         </button>
 
     </div>
                 
     <!-- DATA LIST -->
-    <div class=" d-flex justify-content-center ">
+    <div class=" d-flex justify-content-center" id="serv-data-list">
         <table class="table c-info-table c-table-sm-responsive c-table-bordered">
 
             <thead>
@@ -34,7 +34,7 @@
             <tbody>
                 @foreach (var serv in Model.servList)
                 {
-                    <tr class="modal-add-item-row cursor-pointer" data-id="@serv.serv_id">
+                    <tr class="modal-add-item-row cursor-pointer" data-id="@serv.serv_id" data-name="@serv.name">
                         <!-- NOMBRE -->
                         <td data-label="@Html.DisplayNameFor(m => serv.name)">
                             @serv.name

@@ -45,6 +45,27 @@ namespace initial_d.Models.APIModels
             }
         }
 
+        public string prodTotalString
+        {
+            get
+            {
+                int t = 0;
+                prod_sold_list.ForEach(x => { t += x.prod_total; });
+
+                return t.ToString("C", CultureInfo.CreateSpecificCulture("es-CL"));
+            }
+        }
+
+        public string servTotalString
+        {
+            get
+            {
+                int t = 0;
+                serv_sold_list.ForEach(x => { t += x.serv_total; });
+
+                return t.ToString("C", CultureInfo.CreateSpecificCulture("es-CL"));
+            }
+        }
 
         public SalesReport()
         {
