@@ -248,6 +248,7 @@
     <Compile Include="Models\APIModels\UserType.cs" />
     <Compile Include="Models\APIModels\Usuario.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Viewmodels\CashSuccessVM.cs" />
     <Compile Include="Models\Viewmodels\ChangePasswordVM.cs" />
     <Compile Include="Models\Viewmodels\PointOfSaleVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -659,6 +660,8 @@
     <Content Include="Views\Servicios\Partial\_addRestModal.cshtml" />
     <Content Include="Views\Sales\Partial\_penSaleReceipt.cshtml" />
     <Content Include="Views\SalesReport\SalesReport.cshtml" />
+    <Content Include="Views\Cashier\CashSuccess.cshtml" />
+    <Content Include="Views\Cashier\_scheduleModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

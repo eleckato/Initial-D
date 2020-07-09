@@ -66,6 +66,12 @@ namespace initial_d.Models.APIModels
         [Display(Name = "Status")]
         public string status_name { get; set; }
 
+
+        [Required]
+        [Display(Name = "Es Periódico")]
+        public bool is_recurring { get; set; }
+
+
         [Required]
         [Display(Name = "Fecha de Creación")]
         public DateTime created_at { get; set; }
@@ -80,7 +86,7 @@ namespace initial_d.Models.APIModels
 
         public Servicio()
         {
-
+            is_recurring = true;
         }
 
         public Servicio(bool isTemplate)
@@ -91,6 +97,7 @@ namespace initial_d.Models.APIModels
 
             price = 0;
             estimated_time = 0;
+            is_recurring = false;
 
             serv_status = string.Empty;
             status_name = string.Empty;

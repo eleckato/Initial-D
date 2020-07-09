@@ -75,6 +75,14 @@
                             @Html.ValidationMessageFor(x => x.serv_status)
                         </td>
                     </tr>
+                    <tr>
+                        <th colspan="2" id="is_recurring_col">
+                            <div class="custom-control custom-checkbox">
+                                @Html.CheckBoxFor(m => m.is_recurring, new { @class = "custom-control-input" })
+                                @Html.LabelFor(m => m.is_recurring, new { @class = "custom-control-label" })
+                            </div>
+                        </th>
+                    </tr>
                 </table>
 
             </div>
@@ -98,4 +106,14 @@
 
 @section customScripts{
     @Scripts.Render("~/Content/JS/money-editor.js")
+
+    <script>
+    
+        // Toggle "Email Confirmed" checkbox when the row is clicked
+        $(document).on('click', '#is_recurring_col', function () {
+            let c = $('#is_recurring').prop("checked")
+            $('#is_recurring').prop("checked", !c);
+        });
+
+    </script>
 }

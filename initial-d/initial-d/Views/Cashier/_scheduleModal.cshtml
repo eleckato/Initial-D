@@ -1,0 +1,151 @@
+﻿@model initial_d.Models.APIModels.BookingVM
+@using initial_d.Models.APIModels;
+
+@{ 
+    int servDur = Model.serv?.estimated_time ?? 0;
+    string servId = Model.serv_id;
+
+    string saleId = (string)ViewData["saleId"];
+    var bookList =  (List<BookingVM>)ViewData["bookList"];
+    var restList =  (List<BookingRestVM>)ViewData["restList"];
+
+    restList = restList.Where(x => x.serv_id.Equals(servId)).ToList();
+    bookList = bookList.Where(x => x.serv_id.Equals(servId)).ToList();
+}
+
+<div id="modal-@(servId)" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            
+            @using (Html.BeginForm("ScheduleBook", "Cashier", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.booking_id)
+                @Html.HiddenFor(m => m.serv_id)
+                @Html.HiddenFor(m => m.appuser_id)
+                @Html.HiddenFor(m => m.status_booking_id)
+
+                @Html.HiddenFor(m => m.updated_at)
+                @Html.HiddenFor(m => m.created_at)
+                @Html.HiddenFor(m => m.deleted)
+                @Html.Hidden("saleId", saleId)
+
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fa fa-clock mr-2" aria-hidden="true"></i>
+                        Agendar Hora
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <p>Selecciona la nueva hora para la reserva</p>
+                    <p>El servicio dura @servDur minutos</p>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.start_date_hour, new { @class="font-weight-bold" })
+
+                        <div class="input-group date" id="start_date_hour_cont-@servId" data-target-input="nearest">
+                            @Html.Hidden("start_date_hour", Model.start_date_hour?.ToString("yyyy-MM-ddTHH:mm"))
+
+                            <input type="text"  value="@Model.start_date_hour" class = "form-control datetimepicker-input h-100" data-target="#start_date_hour_cont-@servId" 
+                                   id="start_date_hour_view-@servId" />
+                            <div class="input-group-append" data-target="#start_date_hour_cont-@servId" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+
+                        @Html.ValidationMessageFor(m => m.start_date_hour)
+                    </div>
+                    
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.end_date_hour)
+                        @Html.Hidden("end_date_hour", Model.end_date_hour?.ToString("yyyy-MM-ddTHH:mm"))
+                        <h4 id="end_date_hour_view-@servId"> </h4>
+                    </div>
+                    
+                    <hr />
+
+                    @if (bookList.Any())
+                    {
+                        <div>
+                            <p>Horas Agendadas para este Servicio</p>
+                        
+                            <ul>
+                            @foreach (var book in bookList)
+                            {
+                                <li>@book.schedule</li>
+                            }
+                            </ul>
+                        </div>
+                    }
+
+                    @if (restList.Any())
+                    {
+                        <div>
+                            <p>Restricciones de horario para este Servicio</p>
+                        
+                            <ul>
+                            @foreach (var rest in restList)
+                            {
+                                <li>@rest.schedule</li>
+                            }
+                            </ul>
+                        </div>
+                    }
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <a role="button" href="#" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-backspace" aria-hidden="true"></i>
+                        <span>Volver</span>
+                    </a>
+
+                    <button type="submit" class="btn btn-sm btn-green">
+                        <i class="fa fa-history" aria-hidden="true"></i>
+                        Agendar
+                    </button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    WaitForJquery(function ()
+    {
+        let modal = $('#modal-@(servId)');
+
+
+        // Cuando start_date_hour Cambia, cambia end_date_hour
+        $(document).on('input', '#modal-@(servId) input[name="start_date_hour"]', function ()
+        {
+            // Get start_date time from the view input
+            let newTime = $('#start_date_hour_view-@servId').val();
+
+            // Change the actual input *with the right format*
+            $('#modal-@(servId) input[name="start_date_hour"]').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+
+            // Define the end time
+            let endTime = moment(newTime).add(@servDur, 'minutes').format('YYYY-MM-DDTHH:mm');
+
+            // Change the time on hidden input for end_date
+            modal.find('input[name="end_date_hour"]').val(endTime);
+
+            // Change view string for end_date
+            $('#end_date_hour_view-@servId').text(moment(endTime).format('DD/MM/YYYY HH:mm'))
+        });
+
+        let startTime = moment(modal.find('input[name="start_date_hour"]').val())
+        $('#start_date_hour_cont-@servId').datetimepicker("date", startTime);
+    });
+
+</script>

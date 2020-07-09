@@ -72,6 +72,19 @@
                     <td>@serv.timeString</td>
                 </tr>
                 
+                <!-- ES PERIÓDICO -->
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.is_recurring)</th>
+                    <td>
+                        @{
+                            var hasDebt = serv.is_recurring;
+                            var str = hasDebt ? "Si" : "No";
+                            var color = hasDebt ? "bg-green" : "bg-black";
+                        }
+                        <div class="c-badge  @color">@str</div>
+                    </td>
+                </tr>
+                
                 <!-- STATUS -->
                 <tr>
                     <th>@Html.DisplayNameFor(m => m.status_name)</th>

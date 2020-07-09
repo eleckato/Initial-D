@@ -1,0 +1,88 @@
+﻿@model initial_d.Models.Viewmodels.CashSuccessVM
+@{
+    ViewBag.Title = "Facturación Exitosa";
+
+    bool isServRec = Model.recServList?.Any() ?? false;
+
+    string saleURL = Url.Action("SaleDetails","Sales", new { saleId = Model.saleId });
+}
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-title">
+        <h2>
+            <i class="fa fa-money-bill-wave" aria-hidden="true"></i>
+            Facturación Exitosa
+        </h2>
+    </div>
+</div>
+
+<div>
+
+    <p>¡La compra fue facturada con éxito!</p>
+
+</div>
+
+@if (isServRec)
+{
+<div>
+
+    <p>Los siguientes servicios de la compra son periódicos, consulta al cliente si quiere reagendar hora para estos</p>
+
+    
+    @foreach (var serv in Model.recServList)
+    {
+        <div class="c-jumbotron mb-3 col-12 col-sm-10 col-md-8 col-lg-6">
+            <div class="row w-100">
+                
+                <h4 class="mr-5">@serv.name</h4>
+                
+                <button class="btn btn-yellow ml-auto" data-toggle="modal" data-target="#modal-@(serv.serv_id)">
+                    <i class="fa fa-clock"></i>
+                    Agendar Hora
+                </button>
+            </div>
+
+            <div class="row">
+
+                <div class="mr-4">
+                    <label class="font-weight-bold mb-2">Precio</label>
+                    <p class="mb-0">@serv.priceString</p>
+                </div>
+                
+                <div class="mr-4">
+                    <label class="font-weight-bold mb-2">Duración</label>
+                    <p class="mb-0">@serv.timeString</p>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+}
+
+<div>
+    <a href="@saleURL" class="btn btn-yellow" role="button">
+        <i class="fa fa-credit-card"></i>
+        Ir a la Venta
+    </a>
+</div>
+
+
+<!-- CANCELAR MODAL -->
+@foreach (var template in Model.templateBookList)
+{
+
+    @Html.Partial("_scheduleModal", template, new ViewDataDictionary(ViewData) { { "saleId", Model.saleId } , { "restList", Model.restList } , { "bookList" , Model.bookList } })
+
+}
+
+
+
+<script>
+    WaitForJquery(function () {
+
+
+
+    });
+</script>
