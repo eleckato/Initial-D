@@ -57,28 +57,14 @@
 
 <!-- DATOS DE LA VENTA -->
 <div class="c-jumbotron row mb-3">
-    
-    <h4 class="col-12 mb-3">Datos de la Venta</h4>
-
-    <!-- CODIGO / ELIMINADA -->
-    <div class="w-100 mb-3 d-md-flex flex-md-row justify-content-md-between">
+    <div class="w-100 row mb-3">
         
-        <!-- CODIGO -->
-        <div class="w-100 @(isDeleted ? "mr-md-3 mb-2 mb-md-0" : "")">
-            <table class="table c-info-table c-data-table-bordered mb-0  table-th-compact">
-
-                <tr>
-                    <th>@Html.DisplayNameFor(m => m.code)</th>
-                    <td>@sale.code</td>
-                </tr>
-
-            </table>
-        </div>
+        <h4 class="col-12 col-sm-auto">Datos de la Venta</h4>
         
         @if (isDeleted)
         {
             <!-- PUBLICACIÓN ELIMINADA -->
-            <div style="flex-basis: 0px">
+            <div class="ml-auto col-12 col-sm-auto">
                 <table class="table c-info-table c-data-table-bordered mb-0  table-th-compact w-max-content-md">
                         <tr>
                             <td colspan="2" class="text-center px-4">
@@ -89,6 +75,23 @@
                 </table>
             </div>
         }
+
+    </div>
+
+    <!-- CODIGO / ELIMINADA -->
+    <div class="w-100 mb-3 d-md-flex flex-md-row justify-content-md-between">
+        
+        <!-- CODIGO -->
+        <div class="w-100">
+            <table class="table c-info-table c-data-table-bordered mb-0  table-th-compact">
+
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.code)</th>
+                    <td>@sale.code</td>
+                </tr>
+
+            </table>
+        </div>
 
     </div>
 

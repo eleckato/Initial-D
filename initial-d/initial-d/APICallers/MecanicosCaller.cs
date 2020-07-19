@@ -124,7 +124,7 @@ namespace initial_d.APICallers
 
                 List<Mecanico> mechList = response.Data;
 
-                var pubList = new PublicacionesMecCaller().GetAllPub("", "", "", "").ToList();
+                var pubList = new PublicacionesMecCaller().GetAllPub("", "", "", "", "").ToList();
 
                 foreach (var mech in mechList)
                 {

@@ -69,8 +69,7 @@ namespace initial_d.Controllers
                 SaleVM sale = (SaleVM)Session[$"cash_sale_{model.sale_id}"];
                 if (sale == null) return Error_FailedRequest();
 
-                //? Cambiado para hacer test a RF-4  
-                var res = true; //SaC.CashSale(model, sale.cashier_id);
+                var res = SaC.CashSale(model, sale.cashier_id);
                 if (!res) return Error_FailedRequest();
             }
             catch (Exception e)
@@ -101,56 +100,60 @@ namespace initial_d.Controllers
                 SaleVM sale = SaC.GetSale(saleId);//(SaleVM)Session[$"cash_sale_{saleId}"];
                 if (sale == null) return Error_FailedRequest();
 
-
-                // Si hay algún servicio periódico en la compra
-                if (sale.saleItems.Any(x => x.serv != null && x.serv.is_recurring))
+                if (!string.IsNullOrEmpty(sale.appuser_id))
                 {
-                    var recItems = sale.saleItems.Where(x => x.serv != null && x.serv.is_recurring).ToList();
-                    foreach (var item in recItems)
+                    // Si hay algún servicio periódico en la compra
+                    if (sale.saleItems.Any(x => x.serv != null && x.serv.is_recurring))
                     {
-                        model.recServList.Add(item.serv);
+                        var recItems = sale.saleItems.Where(x => x.serv != null && x.serv.is_recurring).ToList();
+                        foreach (var item in recItems)
+                        {
+                            model.recServList.Add(item.serv);
+                        }
                     }
-                }
 
-                var servIds = model.recServList.Select(x => x.serv_id).ToList();
+                    var servIds = model.recServList.Select(x => x.serv_id).ToList();
 
-                var bookList = BC.GetAllBookings("ACT").ToList()
-                    .Where(x => servIds.Contains(x.serv_id))
-                    .ToList();
-                var restList = BC.GetAllBookRest().ToList()
-                    .Where(x => servIds.Contains(x.serv_id))
-                    .ToList();
+                    var bookList = BC.GetAllBookings("ACT").ToList()
+                        .Where(x => servIds.Contains(x.serv_id) && x.start_date_hour > DateTime.Now)
+                        .ToList();
+                    var restList = BC.GetAllBookRest().ToList()
+                        .Where(x => servIds.Contains(x.serv_id) && x.start_date_hour > DateTime.Now)
+                        .ToList();
 
-                model.bookList = bookList;
-                model.restList = restList;
+                    model.bookList = bookList;
+                    model.restList = restList;
 
 
-                var templateBookList = new List<BookingVM>();
+                    var templateBookList = new List<BookingVM>();
 
-                foreach (var serv in model.recServList)
-                {
-                    var book = new BookingVM()
+                    var dateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1, 10, 0, 0);
+
+                    foreach (var serv in model.recServList)
                     {
-                        serv_id = serv.serv_id,
-                        appuser_id = sale.appuser_id,
-                        booking_id = Guid.NewGuid().ToString().Replace("-", ""),
-                        status_booking_id = "ACT",
+                        var book = new BookingVM()
+                        {
+                            serv_id = serv.serv_id,
+                            appuser_id = sale.appuser_id,
+                            booking_id = Guid.NewGuid().ToString().Replace("-", ""),
+                            status_booking_id = "ACT",
 
-                        start_date_hour = DateTime.Now.AddDays(1),
-                        end_date_hour = DateTime.Now.AddDays(1).AddMinutes(serv.estimated_time),
+                            start_date_hour = dateStart,
+                            end_date_hour = dateStart.AddMinutes(serv.estimated_time),
 
-                        created_at = DateTime.Now,
-                        updated_at = DateTime.Now,
-                        deleted = false,
+                            created_at = DateTime.Now,
+                            updated_at = DateTime.Now,
+                            deleted = false,
 
-                        serv = serv,
-                        
-                    };
+                            serv = serv,
+                        };
 
-                    templateBookList.Add(book);
+                        templateBookList.Add(book);
+                    }
+
+                    model.templateBookList = templateBookList;
                 }
 
-                model.templateBookList = templateBookList;
             }
             catch (Exception e)
             {

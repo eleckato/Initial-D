@@ -313,21 +313,19 @@ else
 
     WaitForJquery(function ()
     {
+        let dateStart = new Date($('#dateStart').val());
+        let dateEnd = new Date( $('#dateEnd').val() );
+
         $('#date_start_cont').datetimepicker({
-            format: 'DD-MM-YYYY'
+            format: 'DD-MM-YYYY',
+            date: dateStart,
+            maxDate: dateEnd,
         });
         $('#date_end_cont').datetimepicker({
-            format: 'DD-MM-YYYY'
+            format: 'DD-MM-YYYY',
+            date: dateEnd,
+            minDate: dateStart,
         });
-
-        let dateStart = new Date( $('#dateStart').val() );
-        $("#date_start_cont").datetimepicker("date", dateStart);
-        
-        let dateEnd = new Date( $('#dateEnd').val() );
-        $("#date_end_cont").datetimepicker("date", dateEnd);
-        
-        $("#date_end_cont").datetimepicker("minDate", dateStart);
-        $("#date_start_cont").datetimepicker("maxDate", dateEnd);
 
 
         // Cada vez que cambia date_start
@@ -354,19 +352,6 @@ else
             // Change the actual input *with the right format*
             $('#dateEnd').val(dateEnd.format('YYYY-MM-DDTHH:mm'))
 
-
-            //console.log('--------------------------------');
-            //console.log('START : ' + dateStart.format('DD-MM-YYYY'));
-            //console.log('END : ' + dateEnd.format('DD-MM-YYYY'));
-
-            //var isBad = dateEnd.isBefore(dateStart);
-            //console.log('END < START ? : ' + isBad);
-
-            //if (isBad) {
-            //    dateEnd = dateStart;
-            //    console.log('Cambio la hora?');
-            //    $("#date_end_cont").datetimepicker("date", dateEnd);
-            //}
         });
         
 

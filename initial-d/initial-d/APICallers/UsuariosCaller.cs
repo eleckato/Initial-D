@@ -460,6 +460,9 @@ namespace initial_d.APICallers
 
                 var response = client.Execute(request);
 
+                if(response.StatusCode == HttpStatusCode.NotFound)
+                    return true;
+
                 // Throw an exception if the StatusCode is different from 200
                 CheckStatusCode(response);
 

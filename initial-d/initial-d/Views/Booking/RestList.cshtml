@@ -19,6 +19,8 @@
     // Action URL
     string delListURL = Url.Action("DeletedRestList", "Booking");
     string expiredListURL = Url.Action("ExpiredRestList", "Booking");
+
+    var dateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1, 10, 0, 0);
 }
 
 <!-- HEADER | ACTION BUTTONS -->
@@ -139,7 +141,12 @@
     </div>
 </div>
 
-@Html.Partial("Partial/_addRestModal", new BookingRestVM())
+@Html.Partial("Partial/_addRestModal",
+    new BookingRestVM() { 
+        start_date_hour = dateStart,
+        end_date_hour = dateStart
+    }
+)
 
 
 <script>
@@ -167,6 +174,33 @@
                 checkHtmlLoad(responseText, textStatus, res);
             });
 
+        });
+
+        
+        // 
+        $(document).on('input', '#reschedule-start_date_hour_view', function ()
+        {
+            // Get start_date time from the view input
+            let newTime = $('#reschedule-start_date_hour_cont').datetimepicker('date');
+
+            if (newTime) {
+                //Change the actual input *with the right format*
+                $('#update-rest-modal input[name="start_date_hour"]').val(newTime.format('YYYY-MM-DDTHH:mm'));
+
+                $('#reschedule-end_date_hour_cont').datetimepicker('minDate', newTime)
+            }
+        });
+
+        // 
+        $(document).on('input', '#reschedule-end_date_hour_view', function ()
+        {
+            // Get end_date time from the view input
+            let newTime = $('#reschedule-end_date_hour_cont').datetimepicker('date');
+
+            if (newTime) {
+                // Change the actual input *with the right format*
+                $('#update-rest-modal input[name="end_date_hour"]').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+            }
         });
     });
 

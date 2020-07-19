@@ -85,9 +85,41 @@
     
     <!-- USUARIO / TOTAL -->
     <div class="col-12 col-lg-6 row">
+
+        <!-- TOTAL -->
+        <div class="col-12 mb-3">
+
+            <div class="c-jumbotron">
+                <div class="mx-0 mx-lg-2 mx-xl-5">
+
+                    <div class="mb-3">
+                        <h5>Total</h5>
+                        <h4 class="font-weight-bold">@Model.totalString</h4>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5>Método de Pago</h5>
+                        @Html.DropDownListFor(m => m.payment_method, payMethodList, new { @class="form-control" })
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <a class="btn btn-sm btn-red mr-3 mb-3" role="button" data-toggle="modal" data-target="#cancel-modal">
+                            <i class="fa fa-times"></i>
+                            Cancelar
+                        </a>
+                        <a class="btn btn-sm btn-green  mb-3" role="button" data-toggle="modal" data-target="#cash-modal">
+                            <i class="fa fa-shopping-cart"></i>
+                            Facturar Venta
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
         
         <!-- USUARIO -->
-        <div class="col-12 mb-3">
+        <div class="col-12">
 
             <div class="c-jumbotron">
                 
@@ -116,42 +148,11 @@
                     }
                     else
                     {
-                        <h5 class="mb-3">No hay ningún Usuario seleccionado</h5>
+                        <h5>No hay ningún Usuario asociado a esta venta</h5>
                     }
 
                 </div>
 
-            </div>
-
-        </div>
-
-        <!-- TOTAL -->
-        <div class="col-12">
-
-            <div class="c-jumbotron">
-                <div class="mx-0 mx-lg-2 mx-xl-5">
-
-                    <div class="row mb-2 justify-content-center">
-                        <h5 class="mr-4 my-0 d-inline" style="vertical-align: middle">Total</h5>
-                        <h4 class="font-weight-bold">@Model.totalString</h4>
-                    </div>
-
-                    <div class="row mb-3 justify-content-center">
-                        @Html.DropDownListFor(m => m.payment_method, payMethodList, new { @class="form-control" })
-                    </div>
-
-                    <div class="row justify-content-center">
-                        <a class="btn btn-sm btn-red mr-3 mb-3" role="button" data-toggle="modal" data-target="#cancel-modal">
-                            <i class="fa fa-times"></i>
-                            Cancelar
-                        </a>
-                        <a class="btn btn-sm btn-green  mb-3" role="button" data-toggle="modal" data-target="#cash-modal">
-                            <i class="fa fa-shopping-cart"></i>
-                            Facturar Venta
-                        </a>
-                    </div>
-
-                </div>
             </div>
 
         </div>

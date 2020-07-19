@@ -21,6 +21,7 @@ WaitForJquery(function () {
         modal.find('input[name="sell-quantity"]').prop("disabled", false);
 
         let stock = row.data('stock');
+        console.log('ROW STOCK : ' + stock);
         modal.find('input[name="sell-quantity"]').data("stock", stock);
     }
     $(document).on('click', '.modal-add-item-row', function () { selectRow(this) })

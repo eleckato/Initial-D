@@ -36,7 +36,7 @@
             <tbody>
                 @foreach (var prod in Model.prodList)
                 {
-                    <tr class="modal-add-item-row cursor-pointer" data-id="@prod.product_id" data-name="@prod.name">
+                    <tr class="modal-add-item-row cursor-pointer" data-id="@prod.product_id" data-name="@prod.name" data-stock="@prod.stock">
                         <!-- NOMBRE -->
                         <td data-label="@Html.DisplayNameFor(m => prod.name)">
                             @prod.name

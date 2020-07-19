@@ -29,7 +29,6 @@
 
     <p>Los siguientes servicios de la compra son periódicos, consulta al cliente si quiere reagendar hora para estos</p>
 
-    
     @foreach (var serv in Model.recServList)
     {
         <div class="c-jumbotron mb-3 col-12 col-sm-10 col-md-8 col-lg-6">
@@ -58,6 +57,7 @@
             </div>
         </div>
     }
+
 </div>
 }
 
@@ -70,11 +70,14 @@
 
 
 <!-- CANCELAR MODAL -->
-@foreach (var template in Model.templateBookList)
+@if (isServRec)
 {
+    foreach (var template in Model.templateBookList)
+    {
 
-    @Html.Partial("_scheduleModal", template, new ViewDataDictionary(ViewData) { { "saleId", Model.saleId } , { "restList", Model.restList } , { "bookList" , Model.bookList } })
+        @Html.Partial("_scheduleModal", template, new ViewDataDictionary(ViewData) { { "saleId", Model.saleId } , { "restList", Model.restList } , { "bookList" , Model.bookList } })
 
+    }
 }
 
 

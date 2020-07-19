@@ -93,12 +93,12 @@ namespace initial_d.APICallers
         /// <summary>
         /// API call to list all the Mechanic Publications
         /// </summary>
-        public IEnumerable<PublicacionMec> GetAllPub(string comuna, string statusId, string bussName, string title, bool deleted = false)
+        public IEnumerable<PublicacionMec> GetAllPub(string comuna, string statusId, string bussName, string title, string userId, bool deleted = false)
         {
             try
             {
                 var delString = deleted ? "&deleted=true" : "";
-                string url = $"{prefix}/publications?comuna={comuna}&public_status_id={statusId}&bussiness_name={bussName}&title={title}{delString}";
+                string url = $"{prefix}/publications?comuna={comuna}&public_status_id={statusId}&bussiness_name={bussName}&title={title}&user_id={userId}{delString}";
                 var request = new RestRequest(url, Method.GET)
                 {
                     RequestFormat = DataFormat.Json

@@ -25,12 +25,10 @@ namespace initial_d.Models.APIModels
 
         [Required]
         [Display(Name = "Comienzo")]
-        [DataType(DataType.DateTime)]
         public DateTime? start_date_hour { get; set; }
 
         [Required]
         [Display(Name = "Término")]
-        [DataType(DataType.DateTime)]
         public DateTime? end_date_hour { get; set; }
 
         public BookingRestriction()

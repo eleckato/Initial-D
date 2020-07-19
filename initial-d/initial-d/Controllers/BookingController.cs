@@ -183,6 +183,16 @@ namespace initial_d.Controllers
             {
                 book = BC.GetBook(bookId);
                 if (book == null) return Error_FailedRequest();
+
+                var bookList = BC.GetAllBookings("ACT").ToList()
+                    .Where(x => x.serv_id.Equals(book.serv_id) && x.start_date_hour > DateTime.Now)
+                    .ToList();
+                var restList = BC.GetAllBookRest().ToList()
+                    .Where(x => x.serv_id.Equals(book.serv_id) && x.start_date_hour > DateTime.Now)
+                    .ToList();
+
+                ViewBag.bookList = bookList;
+                ViewBag.restList = restList;
             }
             catch (Exception e)
             {
@@ -192,8 +202,6 @@ namespace initial_d.Controllers
 
             return View(book);
         }
-
-
 
 
         /* ---------------------------------------------------------------- */
@@ -263,8 +271,14 @@ namespace initial_d.Controllers
 
             try
             {
-                var canRes = BC.ChangeBookStatus(bookid, "CAN");
-                if (!canRes) return Error_FailedRequest();
+                var book = BC.GetBook(bookid);
+                if (book == null) return Error_FailedRequest();
+
+                if (book.status_booking_id.Equals("ACT"))
+                {
+                    var canRes = BC.ChangeBookStatus(bookid, "CAN");
+                    if (!canRes) return Error_FailedRequest();
+                }
 
                 var res = BC.DeleteBooking(bookid);
                 if (!res) return Error_FailedRequest();

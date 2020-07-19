@@ -17,49 +17,56 @@
         <p class="font-italic"> Sistema de Administración para jaramillo.cl </p>
     </div>
 
-    <div class="row">
+    @if (lowStockProds != null && lowStockProds.Any())
+    {
+        
+        <div class="row">
 
-        <div class="col-12 col-lg-6 c-jumbotron">
+            <div class="col-12 col-lg-6 c-jumbotron">
             
-            <h4 class="color-red">
-                <i class="fa fa-exclamation-triangle mr-1"></i>
-                Alerta
-            </h4>
-            <p>Hay productos con bajo stock</p>
+                <h4 class="color-red">
+                    <i class="fa fa-exclamation-triangle mr-1"></i>
+                    Alerta
+                </h4>
+                <p>Hay productos con bajo stock</p>
 
-            <table class="table c-info-table c-table-sm-responsive c-table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Stock</th>
-                        <th>Alerta de Stock</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    
-                    @foreach (var prod in lowStockProds)
-                    {
-                        string detailsURL = Url.Action("ProdDetails", "Productos", new { prodId = prod.product_id });
+                <table class="table c-info-table c-table-sm-responsive c-table-bordered">
+                    <thead>
                         <tr>
-                            <td data-label="Nombre">
-                                <a href="@detailsURL">@prod.name</a>
-                            </td>
-                            <td data-label="Stock">
-                                @prod.stockString
-                            </td>
-                            <td data-label="Alerta de Stock">
-                                @prod.stockAlertString
-                            </td>
+                            <th>Nombre</th>
+                            <th>Stock</th>
+                            <th>Alerta de Stock</th>
                         </tr>
-                    }
+                    </thead>
 
-                </tbody>
-            </table>
+                    <tbody>
+                    
+                        @foreach (var prod in lowStockProds)
+                        {
+                            string detailsURL = Url.Action("ProdDetails", "Productos", new { prodId = prod.product_id });
+                            <tr>
+                                <td data-label="Nombre">
+                                    <a href="@detailsURL">@prod.name</a>
+                                </td>
+                                <td data-label="Stock">
+                                    @prod.stockString
+                                </td>
+                                <td data-label="Alerta de Stock">
+                                    @prod.stockAlertString
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
 
         </div>
 
-    </div>
+    }
+
+
 </div>
 
 

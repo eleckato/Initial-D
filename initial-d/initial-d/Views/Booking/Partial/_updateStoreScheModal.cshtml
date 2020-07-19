@@ -9,6 +9,10 @@
                 @Html.HiddenFor(m => m.updated_at)
                 @Html.HiddenFor(m => m.created_at)
                 @Html.HiddenFor(m => m.deleted)
+                @Html.Hidden("start_hour", Model.start_hour.ToString("o"))
+                @Html.Hidden("start_lunch_hour", Model.start_lunch_hour.ToString("o"))
+                @Html.Hidden("end_lunch_hour", Model.end_lunch_hour.ToString("o"))
+                @Html.Hidden("end_hour", Model.end_hour.ToString("o"))
 
                 <div class="modal-header">
                     <h5 class="modal-title">
@@ -26,22 +30,54 @@
 
                     <div class="form-group">
                         @Html.LabelFor(m => m.start_hour)
-                        @Html.EditorFor(m => m.start_hour, new { htmlAttributes = new { @class = "form-control", @type = "time", @Value = Model.start_hour.ToString("HH:mm") } })
+                        
+                        <div class="input-group date" id="store-start_hour-cont" data-target-input="nearest">
+                            <input type="text"  value="@(Model.start_hour.ToString("o"))" class = "form-control datetimepicker-input h-100" 
+                                   data-target="#store-start_hour-cont" id="store-start_hour-view" />
+                            <div class="input-group-append" data-target="#store-start_hour-cont" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                            </div>
+                        </div>
+
                         @Html.ValidationMessageFor(m => m.start_hour)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.start_lunch_hour)
-                        @Html.EditorFor(m => m.start_lunch_hour, new { htmlAttributes = new { @class="form-control", @type="time", @Value=Model.start_lunch_hour.ToString("HH:mm") } })
+
+                        <div class="input-group date" id="store-start_lunch_hour-cont" data-target-input="nearest">
+                            <input type="text"  value="@(Model.start_hour.ToString("o"))" class = "form-control datetimepicker-input h-100" 
+                                   data-target="#store-start_lunch_hour-cont" id="store-start_lunch_hour-view" />
+                            <div class="input-group-append" data-target="#store-start_lunch_hour-cont" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                            </div>
+                        </div>
+
                         @Html.ValidationMessageFor(m => m.start_lunch_hour)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.end_lunch_hour)
-                        @Html.EditorFor(m => m.end_lunch_hour, new { htmlAttributes = new { @class="form-control", @type="time", @Value=Model.end_lunch_hour.ToString("HH:mm") } })
+
+                        <div class="input-group date" id="store-end_lunch_hour-cont" data-target-input="nearest">
+                            <input type="text"  value="@(Model.start_hour.ToString("o"))" class = "form-control datetimepicker-input h-100" 
+                                   data-target="#store-end_lunch_hour-cont" id="store-end_lunch_hour-view" />
+                            <div class="input-group-append" data-target="#store-end_lunch_hour-cont" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                            </div>
+                        </div>
+
                         @Html.ValidationMessageFor(m => m.end_lunch_hour)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.end_hour)
-                        @Html.EditorFor(m => m.end_hour, new { htmlAttributes = new { @class="form-control", @type="time", @Value=Model.end_hour.ToString("HH:mm") } })
+
+                        <div class="input-group date" id="store-end_hour-cont" data-target-input="nearest">
+                            <input type="text"  value="@(Model.start_hour.ToString("o"))" class = "form-control datetimepicker-input h-100" 
+                                   data-target="#store-end_hour-cont" id="store-end_hour-view" />
+                            <div class="input-group-append" data-target="#store-end_hour-cont" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                            </div>
+                        </div>
+
                         @Html.ValidationMessageFor(m => m.end_hour)
                     </div>
 
@@ -62,3 +98,95 @@
         </div>
     </div>
 </div>
+
+<script>
+    WaitForJquery(function () {
+
+        let start = moment($('#update-store-sche-modal input[name="start_hour"]').val());
+        let startLunch = moment($('#update-store-sche-modal input[name="start_lunch_hour"]').val());
+        let endLunch = moment($('#update-store-sche-modal input[name="end_lunch_hour"]').val());
+        let end = moment($('#update-store-sche-modal input[name="end_hour"]').val());
+        
+
+        $('#store-start_hour-cont').datetimepicker({
+            format: 'HH:mm',
+            date: start,
+        });
+        $('#store-start_lunch_hour-cont').datetimepicker({
+            format: 'HH:mm',
+            date: startLunch,
+            showClear: true,
+            showClose: true,
+        });
+        $('#store-end_lunch_hour-cont').datetimepicker({
+            format: 'HH:mm',
+            date: endLunch,
+            showClear: true,
+            showClose: true,
+        });
+        $('#store-end_hour-cont').datetimepicker({
+            format: 'HH:mm',
+            date: end,
+            showClear: true,
+            showClose: true,
+        });
+        
+        $('#store-start_lunch_hour-cont').datetimepicker('minDate', start.format('HH:mm'));
+        $('#store-end_lunch_hour-cont').datetimepicker('minDate', startLunch.format('HH:mm'));
+        $('#store-end_hour-cont').datetimepicker('minDate', endLunch.format('HH:mm'));
+        
+        $('#store-start_hour-cont').datetimepicker('maxDate', startLunch.format('HH:mm'));
+        $('#store-start_lunch_hour-cont').datetimepicker('maxDate', endLunch.format('HH:mm'));
+        $('#store-end_lunch_hour-cont').datetimepicker('maxDate', end.format('HH:mm'));
+
+        
+        $(document).on('input', '#store-start_lunch_hour-view', function ()
+        {
+            // Get start_date time from the view input
+            let newTime = $('#store-start_hour-cont').datetimepicker('date');
+
+            // Change the actual input *with the right format*
+            $('#update-store-sche-modal input[name="start_hour"]').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+
+            $('#store-start_lunch_hour-cont').datetimepicker('minDate', moment(newTime).format('HH:mm'));
+        });
+        
+        $(document).on('input', '#store-start_lunch_hour-view', function ()
+        {
+            // Get start_date time from the view input
+            let newTime = $('#store-start_lunch_hour-cont').datetimepicker('date');
+
+            // Change the actual input *with the right format*
+            $('#update-store-sche-modal input[name="start_lunch_hour"]').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+            
+            $('#store-end_lunch_hour-cont').datetimepicker('minDate', newTime.format('HH:mm'));
+            $('#store-start_hour-cont').datetimepicker('maxDate', newTime.format('HH:mm'));
+        });
+        
+        $(document).on('input', '#store-end_lunch_hour-view', function ()
+        {
+            // Get start_date time from the view input
+            let newTime = $('#store-end_lunch_hour-cont').datetimepicker('date');
+
+            // Change the actual input *with the right format*
+            $('#update-store-sche-modal input[name="end_lunch_hour"]').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+            
+            $('#store-end_hour-cont').datetimepicker('minDate', newTime.format('HH:mm'));
+            $('#store-start_lunch_hour-cont').datetimepicker('maxDate', newTime.format('HH:mm'));
+        });
+        
+        $(document).on('input', '#store-end_hour-view', function ()
+        {
+            // Get start_date time from the view input
+            let newTime = $('#store-end_hour-cont').datetimepicker('date');
+
+            // Change the actual input *with the right format*
+            $('#update-store-sche-modal input[name="end_hour"]').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+            
+            $('#store-end_lunch_hour-cont').datetimepicker('maxDate', newTime.format('HH:mm'));
+        });
+
+
+
+    })
+</script>

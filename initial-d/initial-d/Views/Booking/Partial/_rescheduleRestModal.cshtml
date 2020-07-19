@@ -1,8 +1,10 @@
 ﻿@model initial_d.Models.APIModels.BookingRestVM
 
               
-@using (Html.BeginForm("RescheduleRest", "Booking", FormMethod.Post))
+@using (Html.BeginForm("RescheduleRest", "Booking", FormMethod.Post, new { @id = "reschedule-form" }))
 {
+    Html.EnableClientValidation(false);
+
     @Html.HiddenFor(m => m.restriction_id)
     @Html.HiddenFor(m => m.serv_id)
 
@@ -26,18 +28,14 @@
         
             <div class="form-group">
                 @Html.LabelFor(m => m.start_date_hour, new { @class="font-weight-bold" })
+                @Html.TextBox("start_date_hour", Model.end_date_hour?.ToString("o"))
                 
-                @Html.Hidden("start_date_hour", Model.start_date_hour?.ToString("yyyy-MM-ddTHH:mm"))
-
-                <div class="input-group date" id="start_date_hour_cont" data-target-input="nearest">
-
-                    <input type="text"  value="@Model.start_date_hour" class = "form-control datetimepicker-input h-100" 
-                           data-target="#start_date_hour_cont" id="start_date_hour_view" />
-
-                    <div class="input-group-append" data-target="#start_date_hour_cont" data-toggle="datetimepicker">
+                <div class="input-group date" id="reschedule-start_date_hour_cont" data-target-input="nearest">
+                    <input type="text"  value="@(Model.start_date_hour?.ToString("o"))" class = "form-control datetimepicker-input h-100" 
+                           data-target="#reschedule-start_date_hour_cont" id="reschedule-start_date_hour_view" />
+                    <div class="input-group-append" data-target="#reschedule-start_date_hour_cont" data-toggle="datetimepicker">
                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                     </div>
-
                 </div>
 
                 @Html.ValidationMessageFor(m => m.start_date_hour)
@@ -45,13 +43,12 @@
                     
             <div class="form-group">
                 @Html.LabelFor(m => m.end_date_hour, new { @class="font-weight-bold" })
+                @Html.TextBox("end_date_hour", Model.end_date_hour?.ToString("o"))
                 
-                @Html.Hidden("end_date_hour", Model.end_date_hour?.ToString("yyyy-MM-ddTHH:mm"))
-
-                <div class="input-group date" id="end_date_hour_cont" data-target-input="nearest">
-                    <input type="text"  value="@Model.end_date_hour" class = "form-control datetimepicker-input h-100" data-target="#end_date_hour_cont" 
-                            id="end_date_hour_view" />
-                    <div class="input-group-append" data-target="#end_date_hour_cont" data-toggle="datetimepicker">
+                <div class="input-group date" id="reschedule-end_date_hour_cont" data-target-input="nearest">
+                    <input type="text"  value="@(Model.end_date_hour?.ToString("o"))" class = "form-control datetimepicker-input h-100" 
+                           data-target="#reschedule-end_date_hour_cont" id="reschedule-end_date_hour_view" />
+                    <div class="input-group-append" data-target="#reschedule-end_date_hour_cont" data-toggle="datetimepicker">
                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                     </div>
                 </div>
@@ -78,33 +75,23 @@
 
 <script>
 
-    WaitForJquery(function ()
-    {
+    WaitForJquery(function () {
+    
+        let startTime = moment($('#update-rest-modal input[name="start_date_hour"]').val());
+        let endTime = moment($('#update-rest-modal input[name="end_date_hour"]').val());
 
-        // 
-        $(document).on('input', '#start_date_hour', function ()
-        {
-            // Get start_date time from the view input
-            let newTime = $('#start_date_hour_view').val();
-            // Change the actual input *with the right format*
-            $('#start_date_hour').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+        $('#reschedule-start_date_hour_cont').datetimepicker({
+            format: 'DD-MM-YYYY HH:mm',
+            date: startTime,
+            minDate: moment(),
         });
 
-        let startTime = new Date( $('#start_date_hour').val() );
-        $("#start_date_hour_cont").datetimepicker("date", startTime);
-
-
-        // 
-        $(document).on('input', '#end_date_hour', function ()
-        {
-            // Get end_date time from the view input
-            let newTime = $('#end_date_hour_view').val();
-            // Change the actual input *with the right format*
-            $('#end_date_hour').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+        $('#reschedule-end_date_hour_cont').datetimepicker({
+            format: 'DD-MM-YYYY HH:mm',
+            date: endTime,
+            minDate: startTime,
         });
-        
-        let endTime = new Date( $('#end_date_hour').val() );
-        $("#end_date_hour_cont").datetimepicker("date", endTime);
+
 
     });
 

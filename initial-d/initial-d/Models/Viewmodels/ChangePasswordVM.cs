@@ -7,12 +7,10 @@ namespace initial_d.Models.Viewmodels
     {
         [Required]
         [Display(Name = "Contraseña Actual")]
-        [StringLength(25, ErrorMessage = "Debe tener menos de {1} caracteres")]
         public string oldPassword1 { get; set; }
 
         [Required]
         [Display(Name = "Repita su Contraseña Antigua")]
-        [StringLength(25, ErrorMessage = "Debe tener menos de {1} caracteres")]
         public string oldPassword2 { get; set; }
 
         [Required]

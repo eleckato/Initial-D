@@ -39,14 +39,14 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route]
-        public ActionResult PubList(string comuna, string bussName, string pubTitle, string statusId)
+        public ActionResult PubList(string comuna, string bussName, string pubTitle, string statusId, string userId)
         {
             List<PublicacionMec> pubs;
             List<PublicStatus> pubStatusList;
 
             try
             {
-                pubs = PMC.GetAllPub(comuna, statusId, bussName, pubTitle).ToList();
+                pubs = PMC.GetAllPub(comuna, statusId, bussName, pubTitle, userId).ToList();
                 if (pubs == null) return Error_FailedRequest();
 
                 pubStatusList = PMC.GetAllStatus().ToList();
@@ -82,14 +82,14 @@ namespace initial_d.Controllers
         /// </summary>
         [HttpGet]
         [Route(deteledList)]
-        public ActionResult DeletedPubList(string comuna, string bussName, string pubTitle, string statusId)
+        public ActionResult DeletedPubList(string comuna, string bussName, string pubTitle, string statusId, string userId)
         {
             List<PublicacionMec> pubs;
             List<PublicStatus> pubStatusList;
 
             try
             {
-                pubs = PMC.GetAllPub(comuna, statusId, bussName, pubTitle, true).ToList();
+                pubs = PMC.GetAllPub(comuna, statusId, bussName, pubTitle, userId, true).ToList();
                 if (pubs == null) return Error_FailedRequest();
 
                 pubStatusList = PMC.GetAllStatus().ToList();
