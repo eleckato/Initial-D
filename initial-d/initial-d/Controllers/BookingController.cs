@@ -388,7 +388,7 @@ namespace initial_d.Controllers
                 restList = BC.GetAllBookRest(servId).ToList();
                 if (restList == null) return Error_FailedRequest();
 
-                restList = restList.Where(x => x.start_date_hour?.Date >= DateTime.Now.Date).ToList();
+                restList = restList.Where(x => x.start_date_hour >= DateTime.Now).ToList();
 
 
                 var servListApi = SC.GetAllServ(string.Empty, "ACT");

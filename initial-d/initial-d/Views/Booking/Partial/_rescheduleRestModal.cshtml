@@ -28,7 +28,7 @@
         
             <div class="form-group">
                 @Html.LabelFor(m => m.start_date_hour, new { @class="font-weight-bold" })
-                @Html.TextBox("start_date_hour", Model.end_date_hour?.ToString("o"))
+                @Html.TextBox("start_date_hour", Model.start_date_hour?.ToString("o"), new { @class="d-none" })
                 
                 <div class="input-group date" id="reschedule-start_date_hour_cont" data-target-input="nearest">
                     <input type="text"  value="@(Model.start_date_hour?.ToString("o"))" class = "form-control datetimepicker-input h-100" 
@@ -43,7 +43,7 @@
                     
             <div class="form-group">
                 @Html.LabelFor(m => m.end_date_hour, new { @class="font-weight-bold" })
-                @Html.TextBox("end_date_hour", Model.end_date_hour?.ToString("o"))
+                @Html.TextBox("end_date_hour", Model.end_date_hour?.ToString("o"), new { @class="d-none" })
                 
                 <div class="input-group date" id="reschedule-end_date_hour_cont" data-target-input="nearest">
                     <input type="text"  value="@(Model.end_date_hour?.ToString("o"))" class = "form-control datetimepicker-input h-100" 
@@ -79,6 +79,9 @@
     
         let startTime = moment($('#update-rest-modal input[name="start_date_hour"]').val());
         let endTime = moment($('#update-rest-modal input[name="end_date_hour"]').val());
+        
+        console.log('> Modal script executed')
+        console.log({'startTime' : startTime, 'endTime' : endTime})
 
         $('#reschedule-start_date_hour_cont').datetimepicker({
             format: 'DD-MM-YYYY HH:mm',
@@ -91,7 +94,37 @@
             date: endTime,
             minDate: startTime,
         });
+        
+        // 
+        $(document).on('input', '#reschedule-start_date_hour_view', function ()
+        {
+            console.log('> input on start_time')
 
+            // Get start_date time from the view input
+            let newTime = $('#reschedule-start_date_hour_cont').datetimepicker('date');
+
+            if (newTime) {
+                //Change the actual input *with the right format*
+                $('#update-rest-modal input[name="start_date_hour"]').val(newTime.format('YYYY-MM-DDTHH:mm'));
+
+                $('#reschedule-end_date_hour_cont').datetimepicker('minDate', newTime)
+            }
+        });
+
+        // 
+        $(document).on('input', '#reschedule-end_date_hour_view', function ()
+        {
+            console.log('> input on end_time')
+
+            // Get end_date time from the view input
+            let newTime = $('#reschedule-end_date_hour_cont').datetimepicker('date');
+            console.log(newTime)
+
+            if (newTime) {
+                // Change the actual input *with the right format*
+                $('#update-rest-modal input[name="end_date_hour"]').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
+            }
+        });
 
     });
 

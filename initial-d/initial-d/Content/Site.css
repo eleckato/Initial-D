@@ -93,7 +93,7 @@ p, li, a, td, input  {
 
 input[type="text"], input[type="number"]
 {
-    font-size: 0.8em;
+    font-size: 125%;
     height: 2.1em;
 }
 input[type="password"]

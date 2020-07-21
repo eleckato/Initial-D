@@ -160,7 +160,7 @@
             // Extract the userId
             var restId = button.data('rest-id')
 
-            let cont = $('#update-rest-modal .modal-content');// Button that triggered the modal
+            let cont = $('#update-rest-modal .modal-content');
 
             let url = '@(Url.Action("GetUpdateModalHtml", "Booking", new { restId = "replace_this_id" } ))';
 
@@ -175,32 +175,9 @@
             });
 
         });
-
-        
-        // 
-        $(document).on('input', '#reschedule-start_date_hour_view', function ()
-        {
-            // Get start_date time from the view input
-            let newTime = $('#reschedule-start_date_hour_cont').datetimepicker('date');
-
-            if (newTime) {
-                //Change the actual input *with the right format*
-                $('#update-rest-modal input[name="start_date_hour"]').val(newTime.format('YYYY-MM-DDTHH:mm'));
-
-                $('#reschedule-end_date_hour_cont').datetimepicker('minDate', newTime)
-            }
-        });
-
-        // 
-        $(document).on('input', '#reschedule-end_date_hour_view', function ()
-        {
-            // Get end_date time from the view input
-            let newTime = $('#reschedule-end_date_hour_cont').datetimepicker('date');
-
-            if (newTime) {
-                // Change the actual input *with the right format*
-                $('#update-rest-modal input[name="end_date_hour"]').val(moment(newTime).format('YYYY-MM-DDTHH:mm'));
-            }
+        $(document).on('hide.bs.modal', '#update-rest-modal', function (event) {
+            let cont = $('#update-rest-modal .modal-content');
+            cont.empty();
         });
     });
 

@@ -31,7 +31,7 @@ namespace initial_d.Controllers
         {
             if (dateStart == null || dateEnd == null || dateStart > DateTime.Today || dateStart > dateEnd)
             {
-                dateStart = DateTime.Today.AddDays(-30);
+                dateStart = DateTime.Today.AddDays(-1);
                 dateEnd = DateTime.Today;
             }
             else if (dateStart == dateEnd)

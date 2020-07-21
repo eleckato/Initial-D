@@ -5,7 +5,7 @@
 
     string update_Url = Url.Action("UpdateMech", "Mecanicos", new { userId = Model.appuser_id });
     string goBack_Url = Url.Action("MechList", "Mecanicos");
-    string publications_Url = Url.Action("PubList", "PublicacionesMec", new { userId = User.Identity.GetUserId() });
+    string publications_Url = Url.Action("PubList", "PublicacionesMec", new { userId = Model.appuser_id });
 
     string mechId = Model.appuser_id;
     string mechStatus = Model.status_id;
